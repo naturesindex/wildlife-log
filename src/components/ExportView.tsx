@@ -14,6 +14,8 @@ interface ExportViewProps {
 export function ExportView({ loggedSpecies, language, guideName, onBack }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<'passport' | 'story'>('passport');
+  // New local state: Controls the language of the generated image, defaulting to EN
+  const [exportLang, setExportLang] = useState<Language>('EN'); 
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(window.location.href).catch(() => {});
@@ -43,8 +45,9 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
       </div>
 
       <div className="max-w-lg mx-auto px-4 pt-5 pb-12">
-        {/* Tab switcher */}
-        <div className="flex rounded-2xl bg-white/5 border border-white/10 p-1 mb-6">
+        
+        {/* Asset Type Switcher */}
+        <div className="flex rounded-2xl bg-white/5 border border-white/10 p-1 mb-3">
           <button
             onClick={() => setActiveTab('passport')}
             className={`flex-1 py-2.5 rounded-xl text-sm font-bold transition-all ${
@@ -63,16 +66,37 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
           </button>
         </div>
 
+        {/* Language Version Switcher */}
+        <div className="flex rounded-2xl bg-white/5 border border-white/10 p-1 mb-6">
+          <button
+            onClick={() => setExportLang('EN')}
+            className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${
+              exportLang === 'EN' ? 'bg-[#4A7A5A] text-white' : 'text-white/40'
+            }`}
+          >
+            English Version
+          </button>
+          <button
+            onClick={() => setExportLang('ES')}
+            className={`flex-1 py-2 rounded-xl text-sm font-bold transition-all ${
+              exportLang === 'ES' ? 'bg-[#4A7A5A] text-white' : 'text-white/40'
+            }`}
+          >
+            Versión en Español
+          </button>
+        </div>
+
+        {/* Dynamic Render based on selections */}
         {activeTab === 'passport' ? (
           <WildlifePassport
             loggedSpecies={loggedSpecies}
-            language={language}
+            language={exportLang} 
             guideName={guideName}
           />
         ) : (
           <SocialStory
             loggedSpecies={loggedSpecies}
-            language={language}
+            language={exportLang} 
             guideName={guideName}
             totalLogged={loggedSpecies.length}
           />
