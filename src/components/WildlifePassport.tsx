@@ -85,7 +85,6 @@ function HeroEntry({
   species,
   language,
   color,
-  index,
 }: {
   species: Species;
   language: Language;
@@ -93,21 +92,16 @@ function HeroEntry({
   index: number;
 }) {
   const desc = language === 'EN' ? species.descEN : species.descES;
-  const imageLeft = index % 2 === 0;
 
   return (
     <div className="mb-12">
-      <div className={`flex gap-5 items-start ${imageLeft ? 'flex-row' : 'flex-row-reverse'}`}>
-        <div className="relative flex-shrink-0 w-1/2">
-          <PassportImage src={species.image} alt={species.nameEN} />
-          <NameBadge species={species} language={language} color={color} />
-        </div>
-        <div className="flex-1 pt-2">
-          {desc && (
-            <p className="text-[#c8d8c0] text-sm leading-relaxed">{desc}</p>
-          )}
-        </div>
+      <div className="relative mb-6">
+        <PassportImage src={species.image} alt={language === 'EN' ? species.nameEN : species.nameES} />
+        <NameBadge species={species} language={language} color={color} />
       </div>
+      {desc && (
+        <p className="text-[#c8d8c0] text-sm leading-relaxed text-center px-4">{desc}</p>
+      )}
     </div>
   );
 }
