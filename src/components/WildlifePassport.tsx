@@ -214,7 +214,8 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
       </div>
 
       <div className="px-6 pb-8">
-        {Object.entries(grouped).map(([section, animals]) => {
+        {orderedSections.map((section) => {
+          const animals = grouped[section];
           const color = getSectionColor(section);
           const tier1 = animals.filter((s) => s.tier === 1);
           const tier2 = animals.filter((s) => s.tier === 2);
@@ -231,7 +232,9 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
               {tier2.length > 0 && (
                 <div className="columns-1 md:columns-2 gap-4 mb-4">
                   {tier2.map((s) => (
-                    <Tier2Entry key={s.id} species={s} language={language} color={color} />
+                    <div key={s.id} className="break-inside-avoid mb-4">
+                      <Tier2Entry species={s} language={language} color={color} />
+                    </div>
                   ))}
                 </div>
               )}
@@ -239,7 +242,9 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
               {tier3.length > 0 && (
                 <div className="columns-1 md:columns-2 gap-4 mb-4">
                   {tier3.map((s) => (
-                    <Tier3Entry key={s.id} species={s} language={language} color={color} />
+                    <div key={s.id} className="break-inside-avoid mb-4">
+                      <Tier3Entry species={s} language={language} color={color} />
+                    </div>
                   ))}
                 </div>
               )}
