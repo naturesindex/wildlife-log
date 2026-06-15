@@ -54,27 +54,27 @@ export function SocialStory({
   const featured = sorted.slice(0, 6);
   const otherCount = totalLogged - featured.length;
 
-  return (
+ return (
     <div
       className="relative bg-[#162b1d] rounded-2xl overflow-hidden"
       style={{ aspectRatio: '9/16' }}
     >
-      {/* Photo masonry — full width, 2-column */}
-      <div className="absolute inset-0 pb-52 overflow-hidden">
-        <div className="w-full h-full columns-2 gap-2 p-4">
+      {/* Photo masonry — strictly 2 columns, perfectly centered vertically */}
+      <div className="absolute inset-0 pb-[200px] flex flex-col justify-center overflow-hidden">
+        <div className="w-full columns-2 gap-2 p-4">
           {featured.map((s) => (
             <StoryPhoto key={s.id} species={s} language={language} />
           ))}
           {featured.length === 0 && (
-            <div className="flex items-center justify-center h-full">
+            <div className="flex items-center justify-center h-full w-full">
               <p className="text-white/30 text-sm">No species logged</p>
             </div>
           )}
         </div>
       </div>
 
-      {/* Frosted-glass footer — clean centered text stack */}
-      <div className="absolute bottom-0 left-0 right-0 z-20 backdrop-blur-lg bg-[#0b170f]/75 border-t border-white/10 px-6 py-6 text-center flex flex-col items-center">
+      {/* Frosted-glass footer — pinned to the bottom 200px */}
+      <div className="absolute bottom-0 left-0 right-0 h-[200px] z-20 backdrop-blur-lg bg-[#0b170f]/75 border-t border-white/10 px-6 flex flex-col justify-center items-center text-center">
         <h2
           className="font-serif text-white font-black leading-tight mb-1.5"
           style={{ fontSize: 'clamp(1.5rem, 6vw, 2rem)' }}
@@ -104,4 +104,3 @@ export function SocialStory({
       </div>
     </div>
   );
-}
