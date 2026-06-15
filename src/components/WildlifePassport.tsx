@@ -176,7 +176,7 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
     <div className="bg-[#162b1d] rounded-2xl overflow-hidden">
       <div className="p-6">
         <p className="text-[#8FCB8C] text-sm font-semibold tracking-wide mb-4">
-          Corcovado National Park — {PASSPORT_DATE}
+          {language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado'} — {PASSPORT_DATE}
         </p>
 
         <div className="flex items-start justify-between gap-4 mb-6">
@@ -184,16 +184,29 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
             className="font-serif text-white font-black leading-none"
             style={{ fontSize: 'clamp(2.5rem, 10vw, 3.5rem)' }}
           >
-            Wildlife
-            <br />
-            Passport
+            {language === 'EN' ? (
+              <>Wildlife<br />Passport</>
+            ) : (
+              <>Pasaporte<br />de Fauna</>
+            )}
           </h1>
           <div className="flex-shrink-0 border-2 border-[#4A7A5A] rounded-xl p-3 text-center min-w-[100px]">
-            <p className="text-[#6A9A7A] text-xs font-semibold leading-snug">
-              [ YOUR LOGO HERE ]
+            <p className="text-[#6A9A7A] text-xs font-semibold leading-snug flex flex-col">
+              <span>[ YOUR LOGO ]</span>
+              <span>HERE</span>
             </p>
           </div>
         </div>
+
+        <div className="border-t border-white/10 pt-4">
+          <p className="text-[#8A9A88] text-sm">
+            {language === 'EN' ? 'Guide:' : 'Guía:'}{' '}
+            <span className="text-white font-bold">
+              {guideName || '___________'}
+            </span>
+          </p>
+        </div>
+      </div>
 
         <div className="border-t border-white/10 pt-4">
           <p className="text-[#8A9A88] text-sm">
