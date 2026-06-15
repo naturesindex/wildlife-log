@@ -17,26 +17,23 @@ function StoryPhoto({
   language: Language;
 }) {
   const primaryName = language === 'EN' ? species.nameEN : species.nameES;
-  const secondaryName = language === 'EN' ? species.nameES : species.nameEN;
 
   return (
     <div className="break-inside-avoid mb-2 relative">
       <img
         src={species.image}
-        alt={species.nameEN}
+        alt={primaryName}
         className="w-full rounded-2xl object-cover"
         onError={(e) => {
           (e.target as HTMLImageElement).src =
             'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=500';
         }}
       />
-      {/* All badges use unified hero orange */}
       <div
         className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 px-3 py-1.5 rounded-full text-center shadow-lg whitespace-nowrap"
         style={{ backgroundColor: HERO_ORANGE }}
       >
         <p className="text-white font-bold text-xs leading-tight">{primaryName}</p>
-        <p className="text-white/70 text-[10px] leading-tight">{secondaryName}</p>
       </div>
     </div>
   );
