@@ -59,7 +59,6 @@ function NameBadge({
   color: string;
 }) {
   const primary = language === 'EN' ? species.nameEN : species.nameES;
-  const secondary = language === 'EN' ? species.nameES : species.nameEN;
 
   return (
     <div
@@ -67,7 +66,6 @@ function NameBadge({
       style={{ backgroundColor: color }}
     >
       <p className="text-white font-bold text-sm leading-tight">{primary}</p>
-      <p className="text-white/75 text-xs leading-tight">{secondary}</p>
     </div>
   );
 }
