@@ -112,3 +112,4 @@ export function SocialStory({
       </div>
     </div>
   );
+}
