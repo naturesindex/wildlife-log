@@ -1,5 +1,6 @@
 import { ArrowLeft, Copy, Download, CheckCircle } from 'lucide-react';
 import { useState } from 'react';
+import html2canvas from 'html2canvas';
 import { Species, Language } from '../types';
 import { WildlifePassport } from './WildlifePassport';
 import { SocialStory } from './SocialStory';
@@ -23,6 +24,31 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // The camera target
+  const exportRef = useRef<HTMLDivElement>(null);
+
+  // The function that takes the picture
+  const handleDownload = async () => {
+    if (!exportRef.current) return;
+    
+    try {
+      const canvas = await html2canvas(exportRef.current, {
+        scale: 2, // Doubles the resolution for crisp text
+        useCORS: true, // This is CRITICAL so Cloudinary images don't block the download
+        backgroundColor: '#FDFBF7', // Matches your app's background
+      });
+      
+      const image = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = image;
+      // Names the file automatically based on what they are looking at
+      link.download = activeTab === 'passport' ? 'wildlife-passport.png' : 'social-story.png';
+      link.click();
+    } catch (error) {
+      console.error('Error downloading image:', error);
+    }
+  };
+  
   return (
     <div
       className="min-h-screen"
@@ -86,6 +112,8 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
           </button>
         </div>
 
+        {/* The Camera Target Wrapper */}
+      <div ref={exportRef} className="rounded-3xl overflow-hidden">
         {/* Dynamic Render based on selections */}
         {activeTab === 'passport' ? (
           <WildlifePassport
@@ -101,6 +129,7 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
             totalLogged={loggedSpecies.length}
           />
         )}
+      </div>
 
         {/* Action buttons */}
         <div className="flex gap-3 mt-5">
@@ -121,6 +150,7 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
             )}
           </button>
           <button
+            onClick={handleDownload}
             className="flex-1 flex items-center justify-center gap-2 text-white font-semibold text-sm py-3.5 rounded-2xl transition-all active:scale-95"
             style={{ backgroundColor: '#C86A27' }}
           >
