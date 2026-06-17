@@ -15,7 +15,6 @@ export const SECTION_ORDER: PassportSection[] = [
   'Forest Floor',
   'Sea & Shore',
   'Fascinating Flora',
-  'Other Notable',
 ];
 
 export const BIO_CATEGORIES = [
@@ -24,4 +23,5 @@ export const BIO_CATEGORIES = [
   'Reptiles & Amphibians',
   'Flora',
   'Marine Life',
+  'Insects & Invertebrates',
 ] as const;
