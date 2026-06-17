@@ -93,45 +93,39 @@ export function SocialStory({
         )}
       </div>
 
-      {/* Frosted-glass footer - Using Flexbox to force vertical centering */}
-    <div className="absolute bottom-0 left-0 right-0 h-[220px] z-20 backdrop-blur-lg bg-[#0b170f]/75 border-t border-white/10 px-6 flex flex-col items-center justify-center gap-1">
-      
-      {/* Title - Split into two lines to force exact centering */}
-      <div className="flex flex-col items-center justify-center text-center leading-tight mb-1">
-        <h2 className="font-serif text-white font-black text-2xl m-0">
-          {language === 'EN' ? 'What I Saw Today in' : 'Lo Que Vi Hoy en el'}
-        </h2>
-        <h2 className="font-serif text-white font-black text-2xl m-0">
-          {language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado'}
-        </h2>
-      </div>
+    {/* Frosted-glass footer - Fixed height and standard block layout */}
+      <div className="absolute bottom-0 left-0 right-0 h-[220px] z-20 backdrop-blur-lg bg-[#0b170f]/75 border-t border-white/10 px-6 pt-6">
+        
+        {/* Title: Using a simple block with padding to keep it centered */}
+        <div className="text-center mb-2">
+          <h2 className="font-serif text-white font-black text-2xl leading-tight">
+            What I Saw Today in<br />Corcovado National Park
+          </h2>
+        </div>
 
-      {/* With Text */}
-      <p className="text-white/60 text-sm font-light italic m-0">
-        {withText}
-      </p>
+        {/* With Text */}
+        <p className="text-white/60 text-sm font-light italic text-center mb-2">
+          {withText}
+        </p>
 
-      {/* Guide Name - Fixed height container prevents shifting */}
-      <div className="h-6 flex items-center justify-center">
+        {/* Guide Name */}
         {guideName && (
-          <p className="text-white/40 text-xs m-0">
-            {guideText} {guideName}
-          </p>
+          <div className="text-center mb-4">
+            <p className="text-white/40 text-xs">
+              {guideText} {guideName}
+            </p>
+          </div>
         )}
-      </div>
 
-      {/* Other Species Badge */}
-      <div className="h-10 flex items-center justify-center mt-1">
+        {/* Other Species Badge */}
         {otherCount > 0 && (
-          <div
-            className="rounded-full px-5 py-2"
-            style={{ backgroundColor: HERO_ORANGE }}
-          >
-            <p className="text-white font-bold text-sm leading-none m-0">{otherSpeciesText}</p>
+          <div className="text-center">
+            <div
+              className="inline-block rounded-full px-5 py-2"
+              style={{ backgroundColor: HERO_ORANGE }}
+            >
+              <p className="text-white font-bold text-sm m-0">{otherSpeciesText}</p>
+            </div>
           </div>
         )}
       </div>
-    </div>
-    </div>
-  );
-}
