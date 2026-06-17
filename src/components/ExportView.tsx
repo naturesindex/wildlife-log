@@ -4,6 +4,7 @@ import { Species, Language } from '../types';
 import { WildlifePassport } from './WildlifePassport';
 import { SocialStory } from './SocialStory';
 
+
 interface ExportViewProps {
   loggedSpecies: Species[];
   language: Language;
