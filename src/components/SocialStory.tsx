@@ -19,9 +19,10 @@ function StoryPhoto({
   const primaryName = language === 'EN' ? species.nameEN : species.nameES;
 
   return (
-   <div className="relative mb-4">
+ <div className="relative mb-6">
+      {/* 1. Added ?v=1 to the src to bypass the broken cache */}
       <img
-        src={species.image}
+        src={`${species.image}?v=1`}
         alt={primaryName}
         className="w-full rounded-2xl" 
         crossOrigin="anonymous"
@@ -30,16 +31,19 @@ function StoryPhoto({
             'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=500';
         }}
       />
-      <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 w-[90%] px-2 py-1.5 rounded-xl text-center shadow-lg flex items-center justify-center min-h-[28px]"
-        style={{ backgroundColor: HERO_ORANGE }}
-      >
-        <p className="text-white font-bold text-xs leading-tight break-words">{primaryName}</p>
+      
+      {/* 2. Swapped -translate for flexbox centering so the camera reads it properly */}
+      <div className="absolute -bottom-3 left-0 w-full flex justify-center z-10">
+        <div
+          className="w-[90%] px-2 py-1.5 rounded-xl text-center shadow-lg flex items-center justify-center min-h-[28px]"
+          style={{ backgroundColor: HERO_ORANGE }}
+        >
+          <p className="text-white font-bold text-xs leading-tight break-words">{primaryName}</p>
+        </div>
       </div>
     </div>
   );
 }
-
 export function SocialStory({
   loggedSpecies,
   language,
