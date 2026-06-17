@@ -36,18 +36,24 @@ function translateSection(section: string, language: Language): string {
   return translations[section] || section;
 }
 
-function NameBadge({ species, language, color }: { species: Species; language: Language; color: string }) {
+function NameBadge({
+  species,
+  language,
+  color,
+}: {
+  species: Species;
+  language: Language;
+  color: string;
+}) {
   const primary = language === 'EN' ? species.nameEN : species.nameES;
-  
+
   return (
-    // Fixed height (h-8) and tight tuck (-mt-4) keeps it attached
-    <div className="absolute -bottom-4 left-0 w-full flex justify-center z-20">
-      <div 
-        className="w-[85%] h-8 px-2 flex items-center justify-center rounded-lg shadow-md" 
-        style={{ backgroundColor: color }}
-      >
-        <p className="text-white font-bold text-[11px] leading-none m-0 truncate">{primary}</p>
-      </div>
+    <div
+      // Removed whitespace-nowrap, added w-[90%] to force wrapping, changed to rounded-xl
+      className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 w-[90%] px-3 py-1.5 rounded-xl text-center shadow-xl flex items-center justify-center min-h-[32px]"
+      style={{ backgroundColor: color }}
+    >
+      <p className="text-white font-bold text-xs leading-tight break-words">{primary}</p>
     </div>
   );
 }
@@ -56,54 +62,67 @@ function SectionHeader({ title, color }: { title: string; color: string }) {
   return (
     <div className="flex items-center gap-3 mb-8 mt-10">
       <div className="w-1.5 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-      {/* Forced centering with h-8 and flex items-center */}
-      <h2 className="text-white font-black text-xl tracking-widest uppercase flex items-center h-8 leading-none m-0">
-        {title}
-      </h2>
+      <h2 className="text-white font-black text-xl tracking-widest uppercase">{title}</h2>
     </div>
   );
 }
 
-function NameBadge({ species, language, color }: { species: Species; language: Language; color: string }) {
-  const primary = language === 'EN' ? species.nameEN : species.nameES;
-  return (
-    <div className="absolute -bottom-4 left-0 w-full flex justify-center z-20">
-      <div className="w-[85%] py-2 rounded-xl shadow-lg flex items-center justify-center" style={{ backgroundColor: color }}>
-        <p className="text-white font-bold text-[11px] leading-none m-0">{primary}</p>
-      </div>
-    </div>
-  );
-}
-
-function HeroEntry({ species, language, color }: { species: Species; language: Language; color: string }) {
+// Hero Entry is exclusively for Tier 1 species (includes description)
+function HeroEntry({
+  species,
+  language,
+  color,
+}: {
+  species: Species;
+  language: Language;
+  color: string;
+}) {
   const desc = language === 'EN' ? species.descEN : species.descES;
+
   return (
     <div className="mb-12">
-      <div className="relative w-full mb-6">
+      {/* Added mb-8 so taller text badges don't crowd the description below */}
+      <div className="relative mb-8">
         <img
-          src={`${species.image}?v=1`}
+          src={species.image}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
-          crossOrigin="anonymous"
-          onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
+          }}
         />
         <NameBadge species={species} language={language} color={color} />
       </div>
-      {desc && <p className="text-[#c8d8c0] text-sm leading-relaxed text-center px-4 mt-6">{desc}</p>}
+      {desc && (
+        <p className="text-[#c8d8c0] text-sm leading-relaxed text-center px-4">{desc}</p>
+      )}
     </div>
   );
 }
 
-function GridEntry({ species, language, color }: { species: Species; language: Language; color: string }) {
+// Grid Entry is for Tier 2/3 (Photo and Name only, no description)
+function GridEntry({
+  species,
+  language,
+  color,
+}: {
+  species: Species;
+  language: Language;
+  color: string;
+}) {
   return (
+    // Increased mb-6 to mb-8 to account for taller wrapping badges sticking into the gap
     <div className="break-inside-avoid mb-8">
-      <div className="relative w-full">
+      <div className="relative">
         <img
-          src={`${species.image}?v=1`}
+          src={species.image}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
-          crossOrigin="anonymous"
-          onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; }}
+          onError={(e) => {
+            (e.target as HTMLImageElement).src =
+              'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
+          }}
         />
         <NameBadge species={species} language={language} color={color} />
       </div>
