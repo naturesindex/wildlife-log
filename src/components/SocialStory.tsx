@@ -19,8 +19,6 @@ function StoryPhoto({
   const primaryName = language === 'EN' ? species.nameEN : species.nameES;
 
   return (
-    // Added a small bottom margin (mb-4) so if a long name wraps to two lines, 
-    // the taller badge doesn't poke into the photo below it.
     <div className="relative mb-4">
       <img
         src={species.image}
@@ -32,7 +30,6 @@ function StoryPhoto({
         }}
       />
       <div
-        // Applied the w-[90%] and rounded-xl fix for long names
         className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 w-[90%] px-2 py-1.5 rounded-xl text-center shadow-lg flex items-center justify-center min-h-[28px]"
         style={{ backgroundColor: HERO_ORANGE }}
       >
@@ -58,11 +55,9 @@ export function SocialStory({
   const featured = sorted.slice(0, 4);
   const otherCount = totalLogged - featured.length;
 
-  // --- JS Split Logic for True Masonry ---
   const leftColumn = featured.filter((_, index) => index % 2 === 0);
   const rightColumn = featured.filter((_, index) => index % 2 !== 0);
 
-  // --- Dynamic Translations ---
   const titleText = language === 'EN' ? 'What I Saw Today' : 'Lo Que Vi Hoy';
   const withText = language === 'EN' ? 'With [Your Company Name]' : 'Con [Your Company Name]';
   const guideText = language === 'EN' ? 'Guide:' : 'Guía:';
@@ -74,21 +69,23 @@ export function SocialStory({
       className="relative bg-[#162b1d] rounded-2xl overflow-hidden"
       style={{ aspectRatio: '9/16' }}
     >
-      <div className="absolute inset-0 pb-[200px] p-4 overflow-hidden">
+      {/* Added flex, flex-col, and justify-center to float the grid perfectly in the middle */}
+      <div className="absolute inset-0 pb-[200px] p-4 flex flex-col justify-center overflow-hidden">
         {featured.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-white/30 text-sm">{noSpeciesText}</p>
           </div>
         ) : (
-          <div className="flex gap-4 content-start">
+          // Added items-center to align the two columns vertically with each other
+          <div className="flex gap-4 items-center">
             {/* Left Column */}
             <div className="flex-1 flex flex-col gap-4">
               {leftColumn.map((s) => (
                 <StoryPhoto key={s.id} species={s} language={language} />
               ))}
             </div>
-            {/* Right Column - offset with pt-6 for masonry stagger */}
-            <div className="flex-1 flex flex-col gap-4 pt-6"> 
+            {/* Right Column - Removed the pt-6 stagger */}
+            <div className="flex-1 flex flex-col gap-4"> 
               {rightColumn.map((s) => (
                 <StoryPhoto key={s.id} species={s} language={language} />
               ))}
