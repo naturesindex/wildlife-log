@@ -77,7 +77,14 @@ export function Header({
           <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-600 whitespace-nowrap">
             {CURRENT_DATE}
           </span>
-          <LoggedBadge count={loggedCount} />
+         <div className="flex flex-col items-center justify-center w-16 h-16 rounded-full bg-white shadow-md border-2 border-[#C86A27]/10">
+  <span className="text-black font-black text-lg leading-none">
+    {loggedCount}
+  </span>
+  <span className="text-black/60 text-[8px] uppercase font-bold tracking-wider leading-none mt-0.5">
+    LOGGED
+  </span>
+</div>
         </div>
       </div>
 
@@ -89,7 +96,14 @@ export function Header({
           <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-500 whitespace-nowrap">
             {CURRENT_DATE}
           </span>
-          <LoggedBadge count={loggedCount} />
+         <div className="flex flex-col items-center justify-center w-16 h-16 rounded-full bg-white shadow-md border-2 border-[#C86A27]/10">
+  <span className="text-black font-black text-lg leading-none">
+    {loggedCount}
+  </span>
+  <span className="text-black/60 text-[8px] uppercase font-bold tracking-wider leading-none mt-0.5">
+    LOGGED
+  </span>
+</div>
         </div>
 
         {/* Title */}
