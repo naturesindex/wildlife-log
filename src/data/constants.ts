@@ -6,7 +6,6 @@ export const SECTION_COLORS: Record<PassportSection, string> = {
   'Sea & Shore': '#3A7CA5',
   'Forest Floor': '#B04A3C',
   'Fascinating Flora': '#8C5170',
-  'Other Notable': '#636B66',
 };
 
 export const SECTION_ORDER: PassportSection[] = [
