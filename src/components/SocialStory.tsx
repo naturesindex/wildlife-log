@@ -37,6 +37,7 @@ function StoryPhoto({
         <p className="text-white font-bold text-sm leading-none m-0">{primaryName}</p>
       </div>
     </div>
+   </div>
   );
 }
 export function SocialStory({
