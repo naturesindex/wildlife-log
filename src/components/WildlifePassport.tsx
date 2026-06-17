@@ -48,13 +48,12 @@ function NameBadge({
   const primary = language === 'EN' ? species.nameEN : species.nameES;
 
   return (
-    // Swapped transform math for Flexbox centering
     <div className="absolute -bottom-4 left-0 w-full flex justify-center z-10">
       <div
-        className="w-[90%] px-3 py-1.5 rounded-xl text-center shadow-xl flex items-center justify-center min-h-[32px]"
+        className="w-[90%] px-3 py-2 rounded-xl text-center shadow-xl min-h-[32px]"
         style={{ backgroundColor: color }}
       >
-        <p className="text-white font-bold text-xs leading-tight break-words">{primary}</p>
+        <p className="text-white font-bold text-xs leading-none">{primary}</p>
       </div>
     </div>
   );
@@ -63,9 +62,12 @@ function NameBadge({
 function SectionHeader({ title, color }: { title: string; color: string }) {
   return (
     <div className="flex items-center gap-3 mb-8 mt-10">
+      {/* Set the bar to a fixed height and use flex-shrink-0 to lock it */}
       <div className="w-1.5 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-      {/* Added leading-none to force perfect vertical centering with the colored bar */}
-      <h2 className="text-white font-black text-xl tracking-widest uppercase leading-none">{title}</h2>
+      {/* Use grid or flex with items-center to force the title to look at the center of the bar */}
+      <h2 className="text-white font-black text-xl tracking-widest uppercase flex items-center h-8 leading-none">
+        {title}
+      </h2>
     </div>
   );
 }
