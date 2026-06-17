@@ -6,12 +6,6 @@ interface PassportProps {
   guideName: string;
 }
 
-const PASSPORT_DATE = new Date().toLocaleDateString('en-US', {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-});
-
 // We keep a single unified color map based on the English section keys
 const SECTION_COLORS: Record<string, string> = {
   "Today's Highlights": '#C86A27',
@@ -55,10 +49,11 @@ function NameBadge({
 
   return (
     <div
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 px-4 py-2 rounded-full text-center shadow-xl whitespace-nowrap"
+      // Removed whitespace-nowrap, added w-[90%] to force wrapping, changed to rounded-xl
+      className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 w-[90%] px-3 py-1.5 rounded-xl text-center shadow-xl flex items-center justify-center min-h-[32px]"
       style={{ backgroundColor: color }}
     >
-      <p className="text-white font-bold text-sm leading-tight">{primary}</p>
+      <p className="text-white font-bold text-xs leading-tight break-words">{primary}</p>
     </div>
   );
 }
@@ -86,7 +81,8 @@ function HeroEntry({
 
   return (
     <div className="mb-12">
-      <div className="relative mb-6">
+      {/* Added mb-8 so taller text badges don't crowd the description below */}
+      <div className="relative mb-8">
         <img
           src={species.image}
           alt={language === 'EN' ? species.nameEN : species.nameES}
@@ -116,7 +112,8 @@ function GridEntry({
   color: string;
 }) {
   return (
-    <div className="break-inside-avoid mb-6">
+    // Increased mb-6 to mb-8 to account for taller wrapping badges sticking into the gap
+    <div className="break-inside-avoid mb-8">
       <div className="relative">
         <img
           src={species.image}
@@ -134,6 +131,14 @@ function GridEntry({
 }
 
 export function WildlifePassport({ loggedSpecies, language, guideName }: PassportProps) {
+  // Generate the date dynamically based on the current language tab
+  const dateLocale = language === 'EN' ? 'en-US' : 'es-ES';
+  const passportDate = new Date().toLocaleDateString(dateLocale, {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+
   // 1. Extract all Tier 1 species for the Highlights section
   const tier1Species = loggedSpecies.filter((s) => s.tier === 1);
   
@@ -165,8 +170,8 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
           <p className="text-[#8FCB8C] text-sm font-bold tracking-wide">
             {language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado'}
           </p>
-          <p className="text-[#6A9A7A] text-xs font-medium mt-1">
-            {PASSPORT_DATE}
+          <p className="text-[#6A9A7A] text-xs font-medium mt-1 capitalize">
+            {passportDate}
           </p>
         </div>
 
@@ -182,7 +187,6 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
             )}
           </h1>
           
-          {/* New Squarer Logo Box */}
           <div className="flex-shrink-0 border-2 border-[#4A7A5A] rounded-xl w-20 h-20 flex flex-col items-center justify-center bg-black/20">
             <p className="text-[#6A9A7A] text-[10px] font-black leading-tight text-center">
               [ YOUR LOGO ]<br />HERE
