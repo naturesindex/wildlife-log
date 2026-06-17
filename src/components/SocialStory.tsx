@@ -19,11 +19,12 @@ function StoryPhoto({
   const primaryName = language === 'EN' ? species.nameEN : species.nameES;
 
   return (
-    <div className="relative mb-4">
+   <div className="relative mb-4">
       <img
         src={species.image}
         alt={primaryName}
         className="w-full rounded-2xl" 
+        crossOrigin="anonymous"
         onError={(e) => {
           (e.target as HTMLImageElement).src =
             'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=500';
