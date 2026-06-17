@@ -9,33 +9,21 @@ interface SocialStoryProps {
 
 const HERO_ORANGE = '#C86A27';
 
-function StoryPhoto({
-  species,
-  language,
-}: {
-  species: Species;
-  language: Language;
-}) {
+function StoryPhoto({ species, language }: { species: Species; language: Language; }) {
   const primaryName = language === 'EN' ? species.nameEN : species.nameES;
-
   return (
-    <div className="mb-8 flex flex-col items-center w-full">
+    <div className="w-full relative mb-6">
       <img
         src={`${species.image}?v=1`}
         alt={primaryName}
         className="w-full rounded-2xl"
         crossOrigin="anonymous"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src =
-            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=500';
-        }}
+        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=500'; }}
       />
-      
-      <div 
-        className="-mt-4 z-10 w-[90%] px-4 py-4 rounded-xl shadow-lg flex items-center justify-center" 
-        style={{ backgroundColor: HERO_ORANGE }}
-      >
-        <p className="text-white font-bold text-sm leading-none m-0 text-center">{primaryName}</p>
+      <div className="absolute -bottom-4 left-0 w-full flex justify-center z-20">
+        <div className="w-[75%] py-1.5 px-3 rounded-lg shadow-md flex items-center justify-center" style={{ backgroundColor: HERO_ORANGE }}>
+          <p className="text-white font-bold text-[10px] leading-none m-0 text-center truncate">{primaryName}</p>
+        </div>
       </div>
     </div>
   );
