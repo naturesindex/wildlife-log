@@ -34,11 +34,11 @@ function StoryPhoto({
       
       {/* 2. Swapped -translate for flexbox centering so the camera reads it properly */}
       <div className="absolute -bottom-3 left-0 w-full flex justify-center z-10">
-        <div
-          className="w-[90%] px-2 py-1.5 rounded-xl text-center shadow-lg flex items-center justify-center min-h-[28px]"
+       <div
+          className="w-[90%] px-3 py-2 rounded-xl text-center shadow-lg min-h-[28px]"
           style={{ backgroundColor: HERO_ORANGE }}
         >
-          <p className="text-white font-bold text-xs leading-tight break-words">{primaryName}</p>
+          <p className="text-white font-bold text-xs leading-none">{primaryName}</p>
         </div>
       </div>
     </div>
