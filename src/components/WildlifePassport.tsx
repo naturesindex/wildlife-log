@@ -64,47 +64,49 @@ function SectionHeader({ title, color }: { title: string; color: string }) {
   );
 }
 
+function NameBadge({ species, language, color }: { species: Species; language: Language; color: string }) {
+  const primary = language === 'EN' ? species.nameEN : species.nameES;
+  return (
+    <div className="absolute -bottom-4 left-0 w-full flex justify-center z-20">
+      <div className="w-[85%] py-2 rounded-xl shadow-lg flex items-center justify-center" style={{ backgroundColor: color }}>
+        <p className="text-white font-bold text-[11px] leading-none m-0">{primary}</p>
+      </div>
+    </div>
+  );
+}
+
 function HeroEntry({ species, language, color }: { species: Species; language: Language; color: string }) {
   const desc = language === 'EN' ? species.descEN : species.descES;
-
   return (
-    <div className="mb-12 flex flex-col items-center">
-      {/* Removed 'relative' wrapper */}
-      <div className="w-full mb-4">
+    <div className="mb-12">
+      <div className="relative w-full mb-6">
         <img
           src={`${species.image}?v=1`}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
           crossOrigin="anonymous"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
-          }}
+          onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; }}
         />
+        <NameBadge species={species} language={language} color={color} />
       </div>
-      <NameBadge species={species} language={language} color={color} />
-      {desc && (
-        <p className="text-[#c8d8c0] text-sm leading-relaxed text-center px-4 mt-4">{desc}</p>
-      )}
+      {desc && <p className="text-[#c8d8c0] text-sm leading-relaxed text-center px-4 mt-6">{desc}</p>}
     </div>
   );
 }
 
 function GridEntry({ species, language, color }: { species: Species; language: Language; color: string }) {
   return (
-    <div className="break-inside-avoid mb-8 flex flex-col items-center">
-      {/* Removed 'relative' wrapper */}
-      <div className="w-full">
+    <div className="break-inside-avoid mb-8">
+      <div className="relative w-full">
         <img
           src={`${species.image}?v=1`}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
           crossOrigin="anonymous"
-          onError={(e) => {
-            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
-          }}
+          onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800'; }}
         />
+        <NameBadge species={species} language={language} color={color} />
       </div>
-      <NameBadge species={species} language={language} color={color} />
     </div>
   );
 }
