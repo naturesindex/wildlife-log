@@ -81,12 +81,13 @@ function HeroEntry({
 
   return (
     <div className="mb-12">
-      {/* Added mb-8 so taller text badges don't crowd the description below */}
+     {/* Added mb-8 so taller text badges don't crowd the description below */}
       <div className="relative mb-8">
         <img
           src={species.image}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
+          crossOrigin="anonymous"
           onError={(e) => {
             (e.target as HTMLImageElement).src =
               'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
@@ -119,6 +120,7 @@ function GridEntry({
           src={species.image}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
+          crossOrigin="anonymous"
           onError={(e) => {
             (e.target as HTMLImageElement).src =
               'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
