@@ -40,13 +40,13 @@ function NameBadge({ species, language, color }: { species: Species; language: L
   const primary = language === 'EN' ? species.nameEN : species.nameES;
   
   return (
-    // REMOVED 'absolute', 'bottom-0', 'left-0'. Using 'flex' for natural flow
-    <div className="w-full mt-2 flex justify-center">
+    // Fixed height (h-8) and tight tuck (-mt-4) keeps it attached
+    <div className="absolute -bottom-4 left-0 w-full flex justify-center z-20">
       <div 
-        className="w-[90%] px-3 py-3 rounded-xl text-center shadow-lg" 
+        className="w-[85%] h-8 px-2 flex items-center justify-center rounded-lg shadow-md" 
         style={{ backgroundColor: color }}
       >
-        <p className="text-white font-bold text-xs leading-none m-0">{primary}</p>
+        <p className="text-white font-bold text-[11px] leading-none m-0 truncate">{primary}</p>
       </div>
     </div>
   );
