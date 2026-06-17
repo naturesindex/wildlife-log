@@ -31,10 +31,9 @@ function StoryPhoto({
         }}
       />
       
-      {/* Bulletproof centering: Using Grid ensures the text cannot be pushed to the bottom */}
       <div 
-        className="-mt-4 z-10 w-[90%] h-12 rounded-xl shadow-lg flex items-center justify-center" 
-  style={{ backgroundColor: HERO_ORANGE }}
+        className="-mt-4 z-10 w-[90%] px-4 py-4 rounded-xl shadow-lg flex items-center justify-center" 
+        style={{ backgroundColor: HERO_ORANGE }}
       >
         <p className="text-white font-bold text-sm leading-none m-0 text-center">{primaryName}</p>
       </div>
@@ -60,7 +59,8 @@ export function SocialStory({
   const leftColumn = featured.filter((_, index) => index % 2 === 0);
   const rightColumn = featured.filter((_, index) => index % 2 !== 0);
 
-  const titleText = language === 'EN' ? 'What I Saw Today in Corcovado National Park' : 'Lo Que Vi Hoy en el Parque Nacional Corcovado';
+  const titleTextLine1 = language === 'EN' ? 'What I Saw Today in' : 'Lo Que Vi Hoy en el';
+  const titleTextLine2 = language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado';
   const withText = language === 'EN' ? 'With [Your Company Name]' : 'Con [Your Company Name]';
   const guideText = language === 'EN' ? 'Guide:' : 'Guía:';
   const otherSpeciesText = language === 'EN' ? `+ ${otherCount} other species!` : `+ ¡${otherCount} otras especies!`;
@@ -71,8 +71,7 @@ export function SocialStory({
       className="relative bg-[#162b1d] rounded-2xl overflow-hidden"
       style={{ aspectRatio: '9/16' }}
     >
-      {/* Main Content Area */}
-      <div className="absolute inset-0 pb-[200px] p-4 flex flex-col justify-center overflow-hidden">
+      <div className="absolute inset-0 pb-[220px] p-4 flex flex-col justify-center overflow-hidden">
         {featured.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-white/30 text-sm">{noSpeciesText}</p>
@@ -93,23 +92,18 @@ export function SocialStory({
         )}
       </div>
 
-    {/* Frosted-glass footer - Fixed height and standard block layout */}
-      {/* Frosted-glass footer - Fixed height and standard block layout */}
+      {/* Footer - Fixed height with standard block flow for reliable rendering */}
       <div className="absolute bottom-0 left-0 right-0 h-[220px] z-20 backdrop-blur-lg bg-[#0b170f]/75 border-t border-white/10 px-6 pt-6">
-        
-        {/* Title: Using a simple block with padding to keep it centered */}
         <div className="text-center mb-2">
           <h2 className="font-serif text-white font-black text-2xl leading-tight">
-            What I Saw Today in<br />Corcovado National Park
+            {titleTextLine1}<br />{titleTextLine2}
           </h2>
         </div>
 
-        {/* With Text */}
         <p className="text-white/60 text-sm font-light italic text-center mb-2">
           {withText}
         </p>
 
-        {/* Guide Name */}
         {guideName && (
           <div className="text-center mb-4">
             <p className="text-white/40 text-xs">
@@ -118,15 +112,14 @@ export function SocialStory({
           </div>
         )}
 
-        {/* Other Species Badge */}
         {otherCount > 0 && (
           <div className="text-center">
-            <div
-              className="inline-block rounded-full px-5 py-2"
-              style={{ backgroundColor: HERO_ORANGE }}
-            >
+            <div className="inline-block rounded-full px-5 py-2" style={{ backgroundColor: HERO_ORANGE }}>
               <p className="text-white font-bold text-sm m-0">{otherSpeciesText}</p>
             </div>
           </div>
         )}
       </div>
+    </div>
+  );
+}
