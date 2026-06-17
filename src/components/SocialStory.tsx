@@ -19,8 +19,8 @@ function StoryPhoto({
   const primaryName = language === 'EN' ? species.nameEN : species.nameES;
 
   return (
- <div className="relative mb-6">
-      {/* 1. Added ?v=1 to the src to bypass the broken cache */}
+ {/* Removed 'relative' and 'mb-6' from the outer wrapper */}
+    <div className="mb-8 flex flex-col items-center">
       <img
         src={`${species.image}?v=1`}
         alt={primaryName}
@@ -32,14 +32,9 @@ function StoryPhoto({
         }}
       />
       
-      {/* 2. Swapped -translate for flexbox centering so the camera reads it properly */}
-      <div className="absolute -bottom-3 left-0 w-full flex justify-center z-10">
-       <div
-          className="w-[90%] px-3 py-2 rounded-xl text-center shadow-lg min-h-[28px]"
-          style={{ backgroundColor: HERO_ORANGE }}
-        >
-          <p className="text-white font-bold text-xs leading-none">{primaryName}</p>
-        </div>
+      {/* NO 'absolute' here. Just a simple block that stacks below the image */}
+      <div className="-mt-4 z-10 w-[90%] px-3 py-4 rounded-xl text-center shadow-lg" style={{ backgroundColor: HERO_ORANGE }}>
+        <p className="text-white font-bold text-sm leading-none m-0">{primaryName}</p>
       </div>
     </div>
   );
