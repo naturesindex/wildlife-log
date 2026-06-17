@@ -48,12 +48,14 @@ function NameBadge({
   const primary = language === 'EN' ? species.nameEN : species.nameES;
 
   return (
-    <div
-      // Removed whitespace-nowrap, added w-[90%] to force wrapping, changed to rounded-xl
-      className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 w-[90%] px-3 py-1.5 rounded-xl text-center shadow-xl flex items-center justify-center min-h-[32px]"
-      style={{ backgroundColor: color }}
-    >
-      <p className="text-white font-bold text-xs leading-tight break-words">{primary}</p>
+    // Swapped transform math for Flexbox centering
+    <div className="absolute -bottom-4 left-0 w-full flex justify-center z-10">
+      <div
+        className="w-[90%] px-3 py-1.5 rounded-xl text-center shadow-xl flex items-center justify-center min-h-[32px]"
+        style={{ backgroundColor: color }}
+      >
+        <p className="text-white font-bold text-xs leading-tight break-words">{primary}</p>
+      </div>
     </div>
   );
 }
@@ -62,7 +64,8 @@ function SectionHeader({ title, color }: { title: string; color: string }) {
   return (
     <div className="flex items-center gap-3 mb-8 mt-10">
       <div className="w-1.5 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-      <h2 className="text-white font-black text-xl tracking-widest uppercase">{title}</h2>
+      {/* Added leading-none to force perfect vertical centering with the colored bar */}
+      <h2 className="text-white font-black text-xl tracking-widest uppercase leading-none">{title}</h2>
     </div>
   );
 }
@@ -83,8 +86,9 @@ function HeroEntry({
     <div className="mb-12">
      {/* Added mb-8 so taller text badges don't crowd the description below */}
       <div className="relative mb-8">
+        {/* Added ?v=1 cache buster to the image src */}
         <img
-          src={species.image}
+          src={`${species.image}?v=1`}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
           crossOrigin="anonymous"
@@ -116,8 +120,9 @@ function GridEntry({
     // Increased mb-6 to mb-8 to account for taller wrapping badges sticking into the gap
     <div className="break-inside-avoid mb-8">
       <div className="relative">
+        {/* Added ?v=1 cache buster to the image src */}
         <img
-          src={species.image}
+          src={`${species.image}?v=1`}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
           crossOrigin="anonymous"
