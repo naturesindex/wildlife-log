@@ -20,7 +20,7 @@ function StoryPhoto({
 
   return (
  {/* Removed 'relative' and 'mb-6' from the outer wrapper */}
-    <div className="mb-8 flex flex-col items-center">
+    <div className="mb-8 flex flex-col items-center w-full">
       <img
         src={`${species.image}?v=1`}
         alt={primaryName}
@@ -32,13 +32,14 @@ function StoryPhoto({
         }}
       />
       
-      {/* NO 'absolute' here. Just a simple block that stacks below the image */}
-      <div className="-mt-4 z-10 w-[90%] px-3 py-4 rounded-xl text-center shadow-lg" style={{ backgroundColor: HERO_ORANGE }}>
-        <p className="text-white font-bold text-sm leading-none m-0">{primaryName}</p>
+      {/* Grid center approach - This forces perfect vertical alignment */}
+      <div 
+        className="-mt-4 z-10 w-[90%] px-4 py-4 rounded-xl text-center shadow-lg grid place-items-center" 
+        style={{ backgroundColor: HERO_ORANGE }}
+      >
+        <p className="text-white font-bold text-sm leading-normal m-0">{primaryName}</p>
       </div>
     </div>
-   </div>
-  );
 }
 export function SocialStory({
   loggedSpecies,
