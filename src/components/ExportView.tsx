@@ -1,5 +1,5 @@
 import { ArrowLeft, Copy, Download, CheckCircle } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import html2canvas from 'html2canvas';
 import { Species, Language } from '../types';
 import { WildlifePassport } from './WildlifePassport';
