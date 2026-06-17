@@ -1,10 +1,10 @@
 import { ArrowLeft, Copy, Download, CheckCircle } from 'lucide-react';
 import { useState, useRef } from 'react';
-// 1. NEW IMPORT: Ditching html2canvas for html-to-image
 import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
 import { WildlifePassport } from './WildlifePassport';
 import { SocialStory } from './SocialStory';
+
 
 interface ExportViewProps {
   loggedSpecies: Species[];
@@ -31,11 +31,10 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
     if (!exportRef.current) return;
     
     try {
-      // 2. NEW LOGIC: Use toPng to get a perfect native browser snapshot
       const dataUrl = await toPng(exportRef.current, {
-        cacheBust: true, // Helps prevent image loading errors
+        cacheBust: true,
         backgroundColor: '#162b1d', 
-        pixelRatio: 3, // Gives you that crisp, high-res download (like scale: 3)
+        pixelRatio: 3, 
       });
       
       const link = document.createElement('a');
@@ -115,7 +114,6 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
 
         {/* The Camera Target Wrapper */}
       <div ref={exportRef} className="rounded-3xl overflow-hidden bg-[#162b1d]">
-        {/* Dynamic Render based on selections */}
         {activeTab === 'passport' ? (
           <WildlifePassport
             loggedSpecies={loggedSpecies}
