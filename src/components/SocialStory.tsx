@@ -58,7 +58,7 @@ export function SocialStory({
   const leftColumn = featured.filter((_, index) => index % 2 === 0);
   const rightColumn = featured.filter((_, index) => index % 2 !== 0);
 
-  const titleText = language === 'EN' ? 'What I Saw Today' : 'Lo Que Vi Hoy';
+const titleText = language === 'EN' ? 'What I Saw Today in Corcovado National Park' : 'Lo Que Vi Hoy en el Parque Nacional Corcovado';
   const withText = language === 'EN' ? 'With [Your Company Name]' : 'Con [Your Company Name]';
   const guideText = language === 'EN' ? 'Guide:' : 'Guía:';
   const otherSpeciesText = language === 'EN' ? `+ ${otherCount} other species!` : `+ ¡${otherCount} otras especies!`;
