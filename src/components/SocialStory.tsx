@@ -56,10 +56,12 @@ export function SocialStory({
 
   return (
     <div
-      className="relative bg-[#162b1d] rounded-2xl overflow-hidden"
+      // 1. ADDED: 'flex flex-col' so the top and bottom stack naturally
+      className="relative bg-[#162b1d] rounded-2xl overflow-hidden flex flex-col"
       style={{ aspectRatio: '9/16' }}
     >
-      <div className="absolute inset-0 pb-[220px] p-4 flex flex-col justify-center overflow-hidden">
+      {/* 2. REMOVED: 'absolute inset-0 pb-[220px]'. ADDED: 'flex-1' so it fills available space */}
+      <div className="flex-1 p-4 flex flex-col justify-center overflow-hidden">
         {featured.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-white/30 text-sm block m-0">{noSpeciesText}</p>
@@ -80,7 +82,8 @@ export function SocialStory({
         )}
       </div>
 
-      <div className="absolute bottom-0 left-0 right-0 h-[220px] z-20 bg-[#0b170f]/95 border-t border-white/10 px-6 pt-6 block">
+      {/* 3. REMOVED: 'absolute bottom-0 left-0 right-0 z-20'. ADDED: 'w-full shrink-0' */}
+      <div className="w-full shrink-0 h-[220px] bg-[#0b170f]/95 border-t border-white/10 px-6 pt-6 block">
         <div className="text-center mb-2 block">
           <h2 className="font-serif text-white font-black text-2xl leading-[28px] m-0 block">
             {titleTextLine1}<br />{titleTextLine2}
@@ -109,4 +112,3 @@ export function SocialStory({
       </div>
     </div>
   );
-}
