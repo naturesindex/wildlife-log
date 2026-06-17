@@ -94,6 +94,7 @@ export function SocialStory({
       </div>
 
     {/* Frosted-glass footer - Fixed height and standard block layout */}
+      {/* Frosted-glass footer - Fixed height and standard block layout */}
       <div className="absolute bottom-0 left-0 right-0 h-[220px] z-20 backdrop-blur-lg bg-[#0b170f]/75 border-t border-white/10 px-6 pt-6">
         
         {/* Title: Using a simple block with padding to keep it centered */}
