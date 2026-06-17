@@ -1,6 +1,7 @@
 import { ArrowLeft, Copy, Download, CheckCircle } from 'lucide-react';
 import { useState, useRef } from 'react';
-import html2canvas from 'html2canvas';
+// 1. NEW IMPORT: Ditching html2canvas for html-to-image
+import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
 import { WildlifePassport } from './WildlifePassport';
 import { SocialStory } from './SocialStory';
@@ -11,7 +12,6 @@ interface ExportViewProps {
   guideName: string;
   onBack: () => void;
 }
-
 
 export function ExportView({ loggedSpecies, language, guideName, onBack }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
@@ -31,19 +31,15 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
     if (!exportRef.current) return;
     
     try {
-      const canvas = await html2canvas(exportRef.current, {
-        scale: 3, 
-        useCORS: true, 
-        allowTaint: true,
+      // 2. NEW LOGIC: Use toPng to get a perfect native browser snapshot
+      const dataUrl = await toPng(exportRef.current, {
+        cacheBust: true, // Helps prevent image loading errors
         backgroundColor: '#162b1d', 
-        // Force dimensions to prevent viewport scaling issues
-        windowWidth: exportRef.current.scrollWidth,
-        windowHeight: exportRef.current.scrollHeight,
+        pixelRatio: 3, // Gives you that crisp, high-res download (like scale: 3)
       });
       
-      const image = canvas.toDataURL('image/png');
       const link = document.createElement('a');
-      link.href = image;
+      link.href = dataUrl;
       link.download = activeTab === 'passport' ? 'wildlife-passport.png' : 'social-story.png';
       link.click();
 
