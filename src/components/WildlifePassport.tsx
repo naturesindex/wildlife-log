@@ -36,24 +36,17 @@ function translateSection(section: string, language: Language): string {
   return translations[section] || section;
 }
 
-function NameBadge({
-  species,
-  language,
-  color,
-}: {
-  species: Species;
-  language: Language;
-  color: string;
-}) {
+function NameBadge({ species, language, color }: { species: Species; language: Language; color: string }) {
   const primary = language === 'EN' ? species.nameEN : species.nameES;
-
+  
   return (
-    <div className="absolute -bottom-4 left-0 w-full flex justify-center z-10">
-      <div
-        className="w-[90%] px-3 py-2 rounded-xl text-center shadow-xl min-h-[32px]"
+    // REMOVED 'absolute', 'bottom-0', 'left-0'. Using 'flex' for natural flow
+    <div className="w-full mt-2 flex justify-center">
+      <div 
+        className="w-[90%] px-3 py-3 rounded-xl text-center shadow-lg" 
         style={{ backgroundColor: color }}
       >
-        <p className="text-white font-bold text-xs leading-none">{primary}</p>
+        <p className="text-white font-bold text-xs leading-none m-0">{primary}</p>
       </div>
     </div>
   );
@@ -62,79 +55,56 @@ function NameBadge({
 function SectionHeader({ title, color }: { title: string; color: string }) {
   return (
     <div className="flex items-center gap-3 mb-8 mt-10">
-      {/* Set the bar to a fixed height and use flex-shrink-0 to lock it */}
       <div className="w-1.5 h-8 rounded-full flex-shrink-0" style={{ backgroundColor: color }} />
-      {/* Use grid or flex with items-center to force the title to look at the center of the bar */}
-      <h2 className="text-white font-black text-xl tracking-widest uppercase flex items-center h-8 leading-none">
+      {/* Forced centering with h-8 and flex items-center */}
+      <h2 className="text-white font-black text-xl tracking-widest uppercase flex items-center h-8 leading-none m-0">
         {title}
       </h2>
     </div>
   );
 }
 
-// Hero Entry is exclusively for Tier 1 species (includes description)
-function HeroEntry({
-  species,
-  language,
-  color,
-}: {
-  species: Species;
-  language: Language;
-  color: string;
-}) {
+function HeroEntry({ species, language, color }: { species: Species; language: Language; color: string }) {
   const desc = language === 'EN' ? species.descEN : species.descES;
 
   return (
-    <div className="mb-12">
-     {/* Added mb-8 so taller text badges don't crowd the description below */}
-      <div className="relative mb-8">
-        {/* Added ?v=1 cache buster to the image src */}
+    <div className="mb-12 flex flex-col items-center">
+      {/* Removed 'relative' wrapper */}
+      <div className="w-full mb-4">
         <img
           src={`${species.image}?v=1`}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
           crossOrigin="anonymous"
           onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
+            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
           }}
         />
-        <NameBadge species={species} language={language} color={color} />
       </div>
+      <NameBadge species={species} language={language} color={color} />
       {desc && (
-        <p className="text-[#c8d8c0] text-sm leading-relaxed text-center px-4">{desc}</p>
+        <p className="text-[#c8d8c0] text-sm leading-relaxed text-center px-4 mt-4">{desc}</p>
       )}
     </div>
   );
 }
 
-// Grid Entry is for Tier 2/3 (Photo and Name only, no description)
-function GridEntry({
-  species,
-  language,
-  color,
-}: {
-  species: Species;
-  language: Language;
-  color: string;
-}) {
+function GridEntry({ species, language, color }: { species: Species; language: Language; color: string }) {
   return (
-    // Increased mb-6 to mb-8 to account for taller wrapping badges sticking into the gap
-    <div className="break-inside-avoid mb-8">
-      <div className="relative">
-        {/* Added ?v=1 cache buster to the image src */}
+    <div className="break-inside-avoid mb-8 flex flex-col items-center">
+      {/* Removed 'relative' wrapper */}
+      <div className="w-full">
         <img
           src={`${species.image}?v=1`}
           alt={language === 'EN' ? species.nameEN : species.nameES}
           className="w-full rounded-2xl"
           crossOrigin="anonymous"
           onError={(e) => {
-            (e.target as HTMLImageElement).src =
-              'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
+            (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=800';
           }}
         />
-        <NameBadge species={species} language={language} color={color} />
       </div>
+      <NameBadge species={species} language={language} color={color} />
     </div>
   );
 }
