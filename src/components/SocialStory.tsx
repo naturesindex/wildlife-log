@@ -19,12 +19,12 @@ function StoryPhoto({
   const primaryName = language === 'EN' ? species.nameEN : species.nameES;
 
   return (
-    // Removed the bottom margin since the flex gap handles it now
-    <div className="relative">
+    // Added a small bottom margin (mb-4) so if a long name wraps to two lines, 
+    // the taller badge doesn't poke into the photo below it.
+    <div className="relative mb-4">
       <img
         src={species.image}
         alt={primaryName}
-        // Removed aspect ratio and object-cover to allow natural photo height
         className="w-full rounded-2xl" 
         onError={(e) => {
           (e.target as HTMLImageElement).src =
@@ -32,10 +32,11 @@ function StoryPhoto({
         }}
       />
       <div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 px-3 py-1.5 rounded-full text-center shadow-lg whitespace-nowrap"
+        // Applied the w-[90%] and rounded-xl fix for long names
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 translate-y-1/2 z-10 w-[90%] px-2 py-1.5 rounded-xl text-center shadow-lg flex items-center justify-center min-h-[28px]"
         style={{ backgroundColor: HERO_ORANGE }}
       >
-        <p className="text-white font-bold text-xs leading-tight">{primaryName}</p>
+        <p className="text-white font-bold text-xs leading-tight break-words">{primaryName}</p>
       </div>
     </div>
   );
@@ -53,11 +54,11 @@ export function SocialStory({
     ...loggedSpecies.filter((s) => s.tier === 3),
   ];
   
-  const featured = sorted.slice(0, 6);
+  // The "Elite Four" layout lock
+  const featured = sorted.slice(0, 4);
   const otherCount = totalLogged - featured.length;
 
   // --- JS Split Logic for True Masonry ---
-  // We split the images into two distinct arrays so CSS doesn't get confused
   const leftColumn = featured.filter((_, index) => index % 2 === 0);
   const rightColumn = featured.filter((_, index) => index % 2 !== 0);
 
@@ -73,24 +74,21 @@ export function SocialStory({
       className="relative bg-[#162b1d] rounded-2xl overflow-hidden"
       style={{ aspectRatio: '9/16' }}
     >
-      {/* Container for images with padding at the bottom for the footer */}
       <div className="absolute inset-0 pb-[200px] p-4 overflow-hidden">
         {featured.length === 0 ? (
           <div className="flex items-center justify-center h-full">
             <p className="text-white/30 text-sm">{noSpeciesText}</p>
           </div>
         ) : (
-          // The Two-Column Flexbox Setup
           <div className="flex gap-4 content-start">
             {/* Left Column */}
-            <div className="flex-1 flex flex-col gap-6">
+            <div className="flex-1 flex flex-col gap-4">
               {leftColumn.map((s) => (
                 <StoryPhoto key={s.id} species={s} language={language} />
               ))}
             </div>
-            {/* Right Column */}
-            <div className="flex-1 flex flex-col gap-6 pt-6"> 
-              {/* Note: 'pt-6' gives the right column a slight offset for that authentic Pinterest look */}
+            {/* Right Column - offset with pt-6 for masonry stagger */}
+            <div className="flex-1 flex flex-col gap-4 pt-6"> 
               {rightColumn.map((s) => (
                 <StoryPhoto key={s.id} species={s} language={language} />
               ))}
