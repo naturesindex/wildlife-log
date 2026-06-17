@@ -12,6 +12,7 @@ interface ExportViewProps {
   onBack: () => void;
 }
 
+
 export function ExportView({ loggedSpecies, language, guideName, onBack }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
