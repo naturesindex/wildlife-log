@@ -106,23 +106,3 @@ const titleText = language === 'EN' ? 'What I Saw Today in Corcovado National Pa
         <p className="text-white/60 text-sm font-light italic mb-1">
           {withText}
         </p>
-
-        {guideName && (
-          <p className="text-white/40 text-xs mb-4">
-            {guideText} {guideName}
-          </p>
-        )}
-        {!guideName && <div className="mb-4" />}
-
-        {otherCount > 0 && (
-          <div
-            className="inline-block rounded-full px-5 py-2"
-            style={{ backgroundColor: HERO_ORANGE }}
-          >
-            <p className="text-white font-bold text-sm">{otherSpeciesText}</p>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
