@@ -88,22 +88,46 @@ function GuideNameModal({
 }
 
 export default function App() {
-  const [species, setSpecies] = useState<Species[]>(
-    () => (initialSpecies as Species[]).map(normalize)
-  );
+  // 1. Initialize species from localStorage OR default data
+  const [species, setSpecies] = useState<Species[]>(() => {
+    const saved = localStorage.getItem('corcovado_species_state');
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (e) {
+        console.error('Failed to parse saved species state', e);
+      }
+    }
+    return (initialSpecies as Species[]).map(normalize);
+  });
+
   const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<ActiveFilter>(null);
   const [isScrolled, setIsScrolled] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [showExport, setShowExport] = useState(false);
-  const [guideName, setGuideName] = useState('');
+  
+  // 2. Initialize guideName from localStorage
+  const [guideName, setGuideName] = useState(() => {
+    return localStorage.getItem('corcovado_guide_name') || '';
+  });
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 140);
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+  
+  // 3. Save species to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('corcovado_species_state', JSON.stringify(species));
+  }, [species]);
+
+  // 4. Save guideName to localStorage whenever it changes
+  useEffect(() => {
+    localStorage.setItem('corcovado_guide_name', guideName);
+  }, [guideName]);
 
   const toggleLog = useCallback((id: string) => {
     setSpecies((prev) =>
