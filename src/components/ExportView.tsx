@@ -14,6 +14,7 @@ interface ExportViewProps {
 
 export function ExportView({ loggedSpecies, language, guideName, onBack }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
   const [activeTab, setActiveTab] = useState<'passport' | 'story'>('passport');
   // New local state: Controls the language of the generated image, defaulting to EN
   const [exportLang, setExportLang] = useState<Language>('EN'); 
@@ -27,23 +28,26 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
   // The camera target
   const exportRef = useRef<HTMLDivElement>(null);
 
-  // The function that takes the picture
+ // The function that takes the picture
   const handleDownload = async () => {
     if (!exportRef.current) return;
     
     try {
       const canvas = await html2canvas(exportRef.current, {
-        scale: 2, // Doubles the resolution for crisp text
-        useCORS: true, // This is CRITICAL so Cloudinary images don't block the download
-        backgroundColor: '#FDFBF7', // Matches your app's background
+        scale: 3, // Bumped to 3 for even higher resolution text
+        useCORS: true, 
+        backgroundColor: '#162b1d', // Set to the dark green background
       });
       
       const image = canvas.toDataURL('image/png');
       const link = document.createElement('a');
       link.href = image;
-      // Names the file automatically based on what they are looking at
       link.download = activeTab === 'passport' ? 'wildlife-passport.png' : 'social-story.png';
       link.click();
+
+      // Trigger the success state
+      setDownloaded(true);
+      setTimeout(() => setDownloaded(false), 2000);
     } catch (error) {
       console.error('Error downloading image:', error);
     }
@@ -152,10 +156,19 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
           <button
             onClick={handleDownload}
             className="flex-1 flex items-center justify-center gap-2 text-white font-semibold text-sm py-3.5 rounded-2xl transition-all active:scale-95"
-            style={{ backgroundColor: '#C86A27' }}
+            style={{ backgroundColor: downloaded ? '#4ade80' : '#C86A27' }} // Turns green on success
           >
-            <Download className="w-4 h-4" />
-            Download
+            {downloaded ? (
+              <>
+                <CheckCircle className="w-4 h-4 text-white" />
+                <span>Downloaded!</span>
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4" />
+                <span>Download</span>
+              </>
+            )}
           </button>
         </div>
       </div>
