@@ -21,6 +21,6 @@ export const BIO_CATEGORIES = [
   'Birds',
   'Reptiles & Amphibians',
   'Flora',
-  'Marine Life',
   'Insects & Invertebrates',
+  'Marine Life',
 ] as const;
