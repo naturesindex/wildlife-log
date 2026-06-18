@@ -140,27 +140,11 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
         )}
       </div>
 
-        {/* Action buttons */}
-        <div className="flex gap-3 mt-5">
-          <button
-            onClick={handleCopyLink}
-            className="flex-1 flex items-center justify-center gap-2 bg-white/10 border border-white/15 text-white/80 font-semibold text-sm py-3.5 rounded-2xl transition-all hover:bg-white/15 active:scale-95"
-          >
-            {copied ? (
-              <>
-                <CheckCircle className="w-4 h-4 text-green-400" />
-                <span className="text-green-400">Copied!</span>
-              </>
-            ) : (
-              <>
-                <Copy className="w-4 h-4" />
-                Copy Link
-              </>
-            )}
-          </button>
+       {/* Action buttons */}
+        <div className="flex gap-3 mt-5 justify-center">
           <button
             onClick={handleDownload}
-            className="flex-1 flex items-center justify-center gap-2 text-white font-semibold text-sm py-3.5 rounded-2xl transition-all active:scale-95"
+            className="flex items-center justify-center gap-2 text-white font-semibold text-sm py-3.5 px-12 rounded-2xl transition-all active:scale-95"
             style={{ backgroundColor: downloaded ? '#4ade80' : '#C86A27' }}
           >
             {downloaded ? (
