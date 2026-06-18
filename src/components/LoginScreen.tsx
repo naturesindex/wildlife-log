@@ -16,13 +16,21 @@ export function LoginScreen({ onLogin, language, setLanguage }: LoginProps) {
   const [loading, setLoading] = useState(false);
 
   // Fetch companies when the screen loads
-  useEffect(() => {
-    async function loadCompanies() {
-      const { data } = await supabase.from('companies').select('id, name');
-      if (data) setCompanies(data);
+// Add this inside your component, before the return statement
+useEffect(() => {
+  async function loadCompanies() {
+    const { data, error } = await supabase
+      .from('companies')
+      .select('id, name');
+      
+    if (error) {
+      console.error("Error fetching companies:", error);
+    } else {
+      setCompanies(data || []);
     }
-    loadCompanies();
-  }, []);
+  }
+  loadCompanies();
+}, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
