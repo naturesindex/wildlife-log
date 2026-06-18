@@ -208,9 +208,8 @@ const handleResetTour = () => {
       <div className="flex justify-end px-4 pt-4 mb-2 max-w-lg mx-auto">
         <button
   onClick={() => setShowResetConfirm(true)}
-  ="flex items-center gap-2 text-stone-700 hover:text-red-500 text-sm font-semibold transition-colors bg-stone-100 px-3 py-1.5 rounded-full"
->
-  <RotateCcw ="w-4 h-4" />
+ <button className="flex items-center gap-2 text-stone-700 hover:text-red-500 text-sm font-semibold transition-colors bg-stone-100 px-3 py-1.5 rounded-full">
+ <RotateCcw className="w-4 h-4"/>
   {language === 'EN' ? 'Start New Tour' : 'Comenzar Nuevo Tour'}
 </button>
       </div>
