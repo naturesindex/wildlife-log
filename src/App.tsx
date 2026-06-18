@@ -116,13 +116,13 @@ export default function App() {
 
   // 2b. RESET STATE LOGIC ADDED
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-  const handleResetTour = () => {
-    localStorage.removeItem('corcovado_species_state');
-    localStorage.removeItem('corcovado_guide_name');
-    setSpecies(initialSpecies.map(s => ({ ...s, isLogged: false, isFavorite: false })));
-    setGuideName('');
-    setShowResetConfirm(false);
-  };
+const handleResetTour = () => {
+  localStorage.removeItem('corcovado_species_state');
+  localStorage.removeItem('corcovado_guide_name');
+  setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
+  setGuideName('');
+  setShowResetConfirm(false);
+};
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 140);
@@ -196,7 +196,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FDFBF7]">
+    <div ="min-h-screen bg-[#FDFBF7]">
       <Header
         language={language}
         onLanguageToggle={() => setLanguage((l) => (l === 'EN' ? 'ES' : 'EN'))}
@@ -205,17 +205,17 @@ export default function App() {
       />
 
       {/* START NEW TOUR BUTTON */}
-      <div className="flex justify-end px-4 pt-4 mb-2 max-w-lg mx-auto">
+      <div ="flex justify-end px-4 pt-4 mb-2 max-w-lg mx-auto">
         <button
-          onClick={() => setShowResetConfirm(true)}
-          className="flex items-center gap-2 text-white/50 hover:text-red-400 text-sm font-medium transition-colors bg-[#162b1d]/5 px-3 py-1.5 rounded-full"
-        >
-          <RotateCcw className="w-4 h-4" />
-          Start New Tour
-        </button>
+  onClick={() => setShowResetConfirm(true)}
+  ="flex items-center gap-2 text-stone-700 hover:text-red-500 text-sm font-semibold transition-colors bg-stone-100 px-3 py-1.5 rounded-full"
+>
+  <RotateCcw ="w-4 h-4" />
+  {language === 'EN' ? 'Start New Tour' : 'Comenzar Nuevo Tour'}
+</button>
       </div>
 
-      <div className="max-w-lg mx-auto">
+      <div ="max-w-lg mx-auto">
         <SearchBar value={searchQuery} onChange={setSearchQuery} />
         <CategoryTabs activeFilter={activeFilter} onChange={setActiveFilter} />
         <SpeciesGrid
@@ -227,7 +227,7 @@ export default function App() {
       </div>
 
       {/* Sticky Generate Passport button */}
-      <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6 pt-4 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/90 to-transparent">
+      <div ="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6 pt-4 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/90 to-transparent">
         <div className="max-w-lg mx-auto">
           <button
             onClick={handleGenerateClick}
@@ -243,24 +243,18 @@ export default function App() {
       {showResetConfirm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm">
           <div className="bg-[#162b1d] border border-white/10 rounded-3xl p-6 w-full max-w-sm shadow-2xl">
-            <h3 className="text-xl font-bold text-white mb-2">Start New Tour?</h3>
-            <p className="text-white/70 mb-6 text-sm leading-relaxed">
-              This will erase all your currently logged species and start a fresh passport. Are you sure you want to proceed?
-            </p>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowResetConfirm(false)}
-                className="flex-1 py-3 px-4 rounded-xl font-semibold text-white/70 bg-white/5 border border-white/10 hover:bg-white/10 active:scale-95 transition-all"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleResetTour}
-                className="flex-1 py-3 px-4 rounded-xl font-semibold text-white bg-red-500 hover:bg-red-600 active:scale-95 transition-all"
-              >
-                Erase & Start
-              </button>
-            </div>
+            <h3 className="text-xl font-bold text-white mb-2">
+  {language === 'EN' ? 'Start New Tour?' : '¿Comenzar Nuevo Tour?'}
+</h3>
+<p className="text-white/70 mb-6 text-sm leading-relaxed">
+  {language === 'EN' 
+    ? 'This will erase all your currently logged species and start a fresh passport. Are you sure you want to proceed?' 
+    : 'Esto borrará todas las especies registradas y comenzará un pasaporte nuevo. ¿Estás seguro de que deseas continuar?'}
+</p>
+<div className="flex gap-3">
+  <button ...>{language === 'EN' ? 'Cancel' : 'Cancelar'}</button>
+  <button ...>{language === 'EN' ? 'Erase & Start' : 'Borrar y Empezar'}</button>
+</div>
           </div>
         </div>
       )}
