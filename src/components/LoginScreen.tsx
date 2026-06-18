@@ -24,14 +24,15 @@ useEffect(() => {
       .select('id, name');
       
     if (error) {
-      console.error("Error fetching companies:", error);
+      console.error("Supabase Error:", error);
     } else {
+      console.log("Data returned from Supabase:", data); // <-- ADD THIS
       setCompanies(data || []);
     }
   }
   loadCompanies();
 }, []);
-
+  
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
