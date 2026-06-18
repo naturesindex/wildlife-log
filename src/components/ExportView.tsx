@@ -31,10 +31,20 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
     if (!exportRef.current) return;
     
     try {
-      const dataUrl = await toPng(exportRef.current, {
+     const dataUrl = await toPng(exportRef.current, {
         cacheBust: true,
         backgroundColor: '#162b1d', 
-        pixelRatio: 3, 
+        // 1. Set pixelRatio to 4 or 5 for much higher sharpness
+        pixelRatio: 4, 
+        // 2. Ensure it's not cutting off anything by specifying the width
+        width: exportRef.current.offsetWidth * 4,
+        height: exportRef.current.offsetHeight * 4,
+        style: {
+          transform: 'scale(4)',
+          transformOrigin: 'top left',
+          width: exportRef.current.offsetWidth + 'px',
+          height: exportRef.current.offsetHeight + 'px',
+        }
       });
       
       const link = document.createElement('a');
