@@ -49,7 +49,7 @@ export function SocialStory({
 
   const titleTextLine1 = language === 'EN' ? 'What I Saw Today in' : 'Lo Que Vi Hoy en el';
   const titleTextLine2 = language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado';
-  const withText = language === 'EN' ? 'With [Your Company Name]' : 'Con [Your Company Name]';
+  const withText = language === 'EN' ? 'With [Your Company Name]' : 'Con [Tu Empresa]';
   const guideText = language === 'EN' ? 'Guide:' : 'Guía:';
   const otherSpeciesText = language === 'EN' ? `+ ${otherCount} other species!` : `+ ¡${otherCount} otras especies!`;
   const noSpeciesText = language === 'EN' ? 'No species logged' : 'Aún no se han registrado especies';
