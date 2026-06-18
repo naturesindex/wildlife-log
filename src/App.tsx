@@ -1,3 +1,4 @@
+import { supabase } from './supabase';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Species, BioCategory } from './types';
 import { initialSpecies } from './data/species';
@@ -89,7 +90,10 @@ function GuideNameModal({
 }
 
 export default function App() {
-  // 1. Initialize species from localStorage OR default data
+  // 1. New State to track the active Supabase Tour Session (NEW)
+  const [tourId, setTourId] = useState<string | null>(null);
+
+  // 1b. Initialize species from localStorage OR default data
   const [species, setSpecies] = useState<Species[]>(() => {
     const saved = localStorage.getItem('corcovado_species_state');
     if (saved) {
@@ -116,13 +120,13 @@ export default function App() {
 
   // 2b. RESET STATE LOGIC ADDED
   const [showResetConfirm, setShowResetConfirm] = useState(false);
-const handleResetTour = () => {
-  localStorage.removeItem('corcovado_species_state');
-  localStorage.removeItem('corcovado_guide_name');
-  setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
-  setGuideName('');
-  setShowResetConfirm(false);
-};
+  const handleResetTour = () => {
+    localStorage.removeItem('corcovado_species_state');
+    localStorage.removeItem('corcovado_guide_name');
+    setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
+    setGuideName('');
+    setShowResetConfirm(false);
+  };
 
   useEffect(() => {
     const onScroll = () => setIsScrolled(window.scrollY > 140);
@@ -140,11 +144,36 @@ const handleResetTour = () => {
     localStorage.setItem('corcovado_guide_name', guideName);
   }, [guideName]);
 
-  const toggleLog = useCallback((id: string) => {
+  // --- UPGRADED TOGGLE LOG FUNCTION ---
+  const toggleLog = async (id: string) => {
+    const targetSpecies = species.find((s) => s.id === id);
+    if (!targetSpecies) return;
+    
+    const isCurrentlyLogged = targetSpecies.isLogged;
+
+    // Instantly update the UI so it feels fast
     setSpecies((prev) =>
       prev.map((s) => (s.id === id ? { ...s, isLogged: !s.isLogged } : s))
     );
-  }, []);
+
+    // If a tour is active, sync this click to the cloud!
+    if (tourId) {
+      if (!isCurrentlyLogged) {
+        const { error } = await supabase.from('tour_logs').insert({
+          tour_id: tourId,
+          species_id: id,
+        });
+        if (error) console.error("Error logging species:", error);
+      } else {
+        const { error } = await supabase
+          .from('tour_logs')
+          .delete()
+          .match({ tour_id: tourId, species_id: id });
+        if (error) console.error("Error removing species:", error);
+      }
+    }
+  };
+  // --- END UPGRADED TOGGLE LOG FUNCTION ---
 
   const toggleFavorite = useCallback((id: string) => {
     setSpecies((prev) =>
