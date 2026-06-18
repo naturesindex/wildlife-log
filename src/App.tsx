@@ -196,7 +196,7 @@ const handleResetTour = () => {
   }
 
   return (
-    <div ="min-h-screen bg-[#FDFBF7]">
+    <div className="min-h-screen bg-[#FDFBF7]">
       <Header
         language={language}
         onLanguageToggle={() => setLanguage((l) => (l === 'EN' ? 'ES' : 'EN'))}
