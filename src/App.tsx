@@ -1,3 +1,4 @@
+import { LoginScreen } from './components/LoginScreen';
 import { supabase } from './supabase';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { Species, BioCategory } from './types';
@@ -90,8 +91,11 @@ function GuideNameModal({
 }
 
 export default function App() {
-  // 1. New State to track the active Supabase Tour Session (NEW)
+  // 1. Database & Session States
   const [tourId, setTourId] = useState<string | null>(null);
+  const [guideId, setGuideId] = useState(() => {
+    return localStorage.getItem('corcovado_guide_id') || '';
+  });
 
   // 1b. Initialize species from localStorage OR default data
   const [species, setSpecies] = useState<Species[]>(() => {
@@ -113,11 +117,36 @@ export default function App() {
   const [showModal, setShowModal] = useState(false);
   const [showExport, setShowExport] = useState(false);
   
-  // 2. Initialize guideName from localStorage
   const [guideName, setGuideName] = useState(() => {
     return localStorage.getItem('corcovado_guide_name') || '';
   });
 
+  // Persist Guide ID to phone memory
+  useEffect(() => {
+    localStorage.setItem('corcovado_guide_id', guideId);
+  }, [guideId]);
+
+  // --- NEW: Start Tour Logic ---
+  const startNewTour = async () => {
+    const { data, error } = await supabase
+      .from('tours')
+      .insert({ guide_id: guideId, status: 'active' })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error starting tour:", error);
+      alert(language === 'EN' ? "Failed to start tour." : "Error al iniciar el tour.");
+      return;
+    }
+
+    if (data) {
+      setTourId(data.id); // This officially starts the hike!
+      // Clear out yesterday's checked animals
+      setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
+    }
+  };
+  // --- END NEW ---
   // 2b. RESET STATE LOGIC ADDED
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const handleResetTour = () => {
@@ -213,6 +242,57 @@ export default function App() {
     setShowExport(true);
   };
 
+  // --- NEW: APP FLOW ROUTING ---
+  
+  // Phase 1: Not logged in? Show Login Screen.
+  if (!guideId) {
+    return (
+      <LoginScreen 
+        onLogin={(id, name) => {
+          setGuideId(id);
+          setGuideName(name);
+        }} 
+        language={language} 
+        setLanguage={setLanguage} 
+      />
+    );
+  }
+
+  // Phase 2: Logged in, but haven't started a hike? Show Lobby.
+  if (!tourId) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ background: '#0b170f' }}>
+        {/* Language Toggle */}
+        <div className="absolute top-6 right-6 flex bg-[#162b1d] rounded-full p-1 shadow-lg">
+          <button onClick={() => setLanguage('EN')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'EN' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>EN</button>
+          <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
+        </div>
+
+        <h1 className="text-3xl font-black text-white mb-2 text-center">
+          {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
+        </h1>
+        <p className="text-[#8C5170] mb-12 text-center font-bold">
+          {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
+        </p>
+
+        <button 
+          onClick={startNewTour}
+          className="bg-[#C86A27] text-white font-black text-2xl px-12 py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95"
+        >
+          {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
+        </button>
+
+        <button 
+          onClick={() => { setGuideId(''); setGuideName(''); }} 
+          className="mt-16 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
+        >
+          {language === 'EN' ? 'Log out of Guide Portal' : 'Cerrar Sesión'}
+        </button>
+      </div>
+    );
+  }
+  // --- END NEW ---
+  
   if (showExport) {
     return (
       <ExportView
