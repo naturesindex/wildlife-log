@@ -187,9 +187,17 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
             )}
           </h1>
           
-          <div className="flex-shrink-0 border-2 border-[#4A7A5A] rounded-xl w-20 h-20 flex flex-col items-center justify-center bg-black/20">
+         <div className="flex-shrink-0 border-2 border-[#4A7A5A] rounded-xl w-20 h-20 flex flex-col items-center justify-center bg-black/20">
             <p className="text-[#6A9A7A] text-[10px] font-black leading-tight text-center">
-              [ YOUR LOGO ]<br />HERE
+              {language === 'EN' ? (
+                <>
+                  [ YOUR LOGO ]<br />HERE
+                </>
+              ) : (
+                <>
+                  [ TU LOGO ]<br />AQUÍ
+                </>
+              )}
             </p>
           </div>
         </div>
