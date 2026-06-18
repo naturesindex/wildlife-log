@@ -7,6 +7,7 @@ interface LoginProps {
   setLanguage: (lang: 'EN' | 'ES') => void;
 }
 
+
 export function LoginScreen({ onLogin, language, setLanguage }: LoginProps) {
   const [companies, setCompanies] = useState<any[]>([]);
   const [selectedCompanyId, setSelectedCompanyId] = useState('');
