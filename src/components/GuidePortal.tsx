@@ -31,7 +31,7 @@ function normalize(raw: Species): Species {
   };
 }
 
-export default function App() {
+export function GuidePortal() {
   // 1. Database & Session States
   const [tourId, setTourId] = useState<string | null>(() => {
     return localStorage.getItem('corcovado_tour_id') || null;
