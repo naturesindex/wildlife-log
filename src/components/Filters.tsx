@@ -1,21 +1,22 @@
 import { Search, X, Star } from 'lucide-react';
-import { BioCategory } from '../types';
+import { BioCategory, Language } from '../types';
 import { BIO_CATEGORIES } from '../data/constants';
 
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
+  language: Language;
 }
 
-export function SearchBar({ value, onChange }: SearchBarProps) {
+export function SearchBar({ value, onChange, language }: SearchBarProps) {
   return (
     <div className="relative mx-4 mb-4">
       <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-      <input
+     <input
         type="text"
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        placeholder="Search species..."
+        placeholder={language === 'EN' ? "Search species..." : "Buscar especies..."}
         className="w-full bg-white rounded-2xl border-2 border-stone-200 pl-10 pr-10 py-3 text-stone-800 placeholder:text-stone-400 text-sm font-medium outline-none focus:border-stone-400 transition-colors shadow-sm"
       />
       {value && (
@@ -32,12 +33,23 @@ export function SearchBar({ value, onChange }: SearchBarProps) {
 
 type ActiveFilter = BioCategory | 'Favorites' | null;
 
-interface CategoryTabsProps {
+iinterface CategoryTabsProps {
   activeFilter: ActiveFilter;
   onChange: (filter: ActiveFilter) => void;
+  language: Language;
 }
 
-export function CategoryTabs({ activeFilter, onChange }: CategoryTabsProps) {
+const CATEGORY_ES: Record<string, string> = {
+  'Mammals': 'Mamíferos',
+  'Birds': 'Aves',
+  'Reptiles & Amphibians': 'Reptiles y Anfibios',
+  'Insects & Spiders': 'Insectos y Arañas',
+  'Marine Life': 'Vida Marina',
+  'Plants & Trees': 'Plantas y Árboles',
+  'Other Notables': 'Otros Notables'
+};
+
+export function CategoryTabs({ activeFilter, onChange, language }: CategoryTabsProps) {
   return (
     <div className="flex gap-2 px-4 pb-4 overflow-x-auto scrollbar-hide">
       {/* Favorites */}
@@ -57,7 +69,7 @@ export function CategoryTabs({ activeFilter, onChange }: CategoryTabsProps) {
         />
       </button>
 
-      {/* Biological categories */}
+   {/* Biological categories */}
       {BIO_CATEGORIES.map((cat) => {
         const isActive = activeFilter === cat;
         return (
@@ -70,7 +82,7 @@ export function CategoryTabs({ activeFilter, onChange }: CategoryTabsProps) {
                 : 'bg-white text-stone-600 border-stone-200'
             }`}
           >
-            {cat}
+            {language === 'EN' ? cat : (CATEGORY_ES[cat] || cat)}
           </button>
         );
       })}
