@@ -1,13 +1,13 @@
-import { LoginScreen } from './components/LoginScreen';
-import { supabase } from './supabase';
+import { LoginScreen } from './LoginScreen';
+import { supabase } from '../supabase';
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { Species, BioCategory } from './types';
-import { initialSpecies } from './data/species';
-import { Header } from './components/Header';
-import { SearchBar, CategoryTabs } from './components/Filters';
-import { SpeciesGrid } from './components/SpeciesGrid';
-import { ExportView } from './components/ExportView';
-import { RotateCcw } from 'lucide-react'; // 1. IMPORT ADDED
+import { Species, BioCategory } from '../types';
+import { initialSpecies } from '../data/species';
+import { Header } from './Header';
+import { SearchBar, CategoryTabs } from './Filters';
+import { SpeciesGrid } from './SpeciesGrid';
+import { ExportView } from './ExportView';
+import { RotateCcw } from 'lucide-react';
 
 type ActiveFilter = BioCategory | 'Favorites' | null;
 
