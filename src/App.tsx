@@ -31,64 +31,11 @@ function normalize(raw: Species): Species {
   };
 }
 
-function GuideNameModal({
-  onConfirm,
-  onCancel,
-}: {
-  onConfirm: (name: string) => void;
-  onCancel: () => void;
-}) {
-  const [name, setName] = useState('');
-
-  return (
-    <div className="fixed inset-0 z-[100] flex items-center justify-center p-6">
-      {/* Backdrop */}
-      <div
-        className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-        onClick={onCancel}
-      />
-
-      {/* Modal box */}
-      <div className="relative bg-white rounded-3xl shadow-2xl p-8 w-full max-w-sm">
-        <h2 className="font-serif text-stone-900 font-black text-2xl mb-2">
-          Almost ready!
-        </h2>
-        <p className="text-stone-500 text-sm mb-6">
-          Enter your name for the passport and social story.
-        </p>
-
-        <label className="block text-xs font-bold text-stone-500 uppercase tracking-wider mb-2">
-          Guide's Name
-        </label>
-        <input
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          onKeyDown={(e) => e.key === 'Enter' && onConfirm(name)}
-          placeholder="e.g. Maria Rodríguez"
-          autoFocus
-          className="w-full bg-stone-50 border-2 border-stone-200 rounded-2xl px-4 py-3 text-stone-900 font-medium placeholder:text-stone-300 outline-none focus:border-stone-400 transition-colors mb-5 text-base"
-        />
-
-        <div className="flex gap-3">
-          <button
-            onClick={onCancel}
-            className="flex-1 py-3 rounded-2xl border-2 border-stone-200 text-stone-500 font-bold text-sm transition-all hover:border-stone-300"
-          >
-            Cancel
-          </button>
-          <button
-            onClick={() => onConfirm(name)}
-            className="flex-1 py-3 rounded-2xl text-white font-bold text-sm transition-all active:scale-95"
-            style={{ backgroundColor: '#C86A27' }}
-          >
-            Generate
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+export default function App() {
+  // 1. Database & Session States
+  const [tourId, setTourId] = useState<string | null>(() => {
+    return localStorage.getItem('corcovado_tour_id') || null;
+  });
 
 export default function App() {
   // 1. Database & Session States
