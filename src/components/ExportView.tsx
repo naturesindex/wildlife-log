@@ -17,7 +17,9 @@ export function ExportView({ loggedSpecies, language, guideName, tourId, onBack,
 
   const handleCopyLink = () => {
     // This creates the custom link using their tourId
-    const link = tourId ? `${window.location.origin}/tour/${tourId}` : window.location.href;
+    // This dynamically grabs "corcovado" (or whatever park they are in) from the URL and formats the guest link!
+const currentLocation = window.location.pathname.split('/')[1] || 'corcovado';
+const link = tourId ? `${window.location.origin}/${currentLocation}/tour/${tourId}` : window.location.href;
     navigator.clipboard.writeText(link).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
