@@ -268,20 +268,27 @@ export default function App() {
           <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
         </div>
 
-        <h1 className="text-3xl font-black text-white mb-2 text-center">
-          {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
-        </h1>
-        <p className="text-emerald-400 text-xl font-semibold drop-shadow-md">
-          {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
-        </p>
+       <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto p-4 gap-6">
+  
+  {/* Header Section */}
+  <div className="text-center">
+    <h1 className="text-3xl font-black text-white mb-2">
+      {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
+    </h1>
+    <p className="text-emerald-400 text-xl font-semibold drop-shadow-md">
+      {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
+    </p>
+  </div>
 
-        <button 
-          onClick={startNewTour}
-          className="bg-[#C86A27] text-white font-black text-2xl px-12 py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95"
-        >
-          {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
-        </button>
-
+  {/* Button Section */}
+  <button 
+    onClick={startNewTour}
+    className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95"
+  >
+    {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
+  </button>
+  
+</div>
         <button 
           onClick={() => { setGuideId(''); setGuideName(''); }} 
           className="mt-16 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
