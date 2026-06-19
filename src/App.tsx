@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import { GuidePortal } from './components/GuidePortal';
 import { GuestPortal } from './components/GuestPortal';
-
+import { HomePage } from './components/HomePage';
 
 export default function App() {
   return (
@@ -13,8 +12,11 @@ export default function App() {
         {/* Route 2: The Guest Portal (e.g., /corcovado/tour/12345) */}
         <Route path="/:location/tour/:tourId" element={<GuestPortal />} />
 
-        {/* Temporary Redirect: If someone just goes to natures-index.com, send them to Corcovado for now */}
-        <Route path="*" element={<Navigate to="/corcovado/guide" replace />} />
+       {/* The Main Landing Page (Nature's Index Home) */}
+        <Route path="/" element={<HomePage />} />
+        
+        {/* Fallback Redirect for unknown URLs */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </BrowserRouter>
   );
