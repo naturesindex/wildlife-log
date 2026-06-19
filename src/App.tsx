@@ -33,15 +33,11 @@ function normalize(raw: Species): Species {
 
 export default function App() {
   // 1. Database & Session States
-  const [tourId, setTourId] = useState<string | null>(() => {
-    return localStorage.getItem('corcovado_tour_id') || null;
-  });
-
-export default function App() {
-  // 1. Database & Session States
   const [tourId, setTourId] = useState<string | null>(null);
   const [guideId, setGuideId] = useState(() => {
     return localStorage.getItem('corcovado_guide_id') || '';
+  });
+return localStorage.getItem('corcovado_tour_id') || null;
   });
 
   // 1b. Initialize species from localStorage OR default data
