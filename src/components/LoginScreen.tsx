@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { supabase } from '../supabase';
 
 interface LoginProps {
@@ -7,57 +7,46 @@ interface LoginProps {
   setLanguage: (lang: 'EN' | 'ES') => void;
 }
 
-
 export function LoginScreen({ onLogin, language, setLanguage }: LoginProps) {
-  const [companies, setCompanies] = useState<any[]>([]);
-  const [selectedCompanyId, setSelectedCompanyId] = useState('');
+  // 1. Updated State: Now using companyHandle instead of a dropdown ID
+  const [companyHandle, setCompanyHandle] = useState('');
   const [guideName, setGuideName] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Fetch companies when the screen loads
-// Add this inside your component, before the return statement
-useEffect(() => {
-  async function loadCompanies() {
-    const { data, error } = await supabase
-      .from('companies')
-      .select('id, name');
-      
-    if (error) {
-      console.error("Supabase Error:", error);
-    } else {
-      console.log("Data returned from Supabase:", data); // <-- ADD THIS
-      setCompanies(data || []);
-    }
-  }
-  loadCompanies();
-}, []);
-  
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
     setLoading(true);
 
-    // 1. Verify Company Password
-    const { data: companyData } = await supabase
+    // 2. Updated Logic: Find company by the handle they typed
+    const { data: companyData, error: companyError } = await supabase
       .from('companies')
-      .select('password')
-      .eq('id', selectedCompanyId)
+      .select('id, password')
+      .eq('handle', companyHandle.toLowerCase().trim())
       .single();
 
-    if (!companyData || companyData.password !== password) {
+    // Check if the handle was wrong
+    if (companyError || !companyData) {
+      setError(language === 'EN' ? 'Company ID not found' : 'ID de empresa no encontrado');
+      setLoading(false);
+      return;
+    }
+
+    // Check if the password was wrong
+    if (companyData.password !== password) {
       setError(language === 'EN' ? 'Incorrect Company Password' : 'Clave de empresa incorrecta');
       setLoading(false);
       return;
     }
 
-    // 2. Check if Guide exists, if not, create them!
+    // 3. Check if Guide exists, if not, create them (using the companyData.id we just looked up)
     let currentGuideId = '';
     const { data: existingGuide } = await supabase
       .from('guides')
       .select('id')
-      .match({ company_id: selectedCompanyId, name: guideName })
+      .match({ company_id: companyData.id, name: guideName })
       .single();
 
     if (existingGuide) {
@@ -65,7 +54,7 @@ useEffect(() => {
     } else {
       const { data: newGuide } = await supabase
         .from('guides')
-        .insert({ company_id: selectedCompanyId, name: guideName })
+        .insert({ company_id: companyData.id, name: guideName })
         .select()
         .single();
       if (newGuide) currentGuideId = newGuide.id;
@@ -77,47 +66,44 @@ useEffect(() => {
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ background: '#0b170f' }}>
+      
       {/* Language Toggle */}
       <div className="absolute top-6 right-6 flex bg-[#162b1d] rounded-full p-1">
         <button onClick={() => setLanguage('EN')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'EN' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>EN</button>
         <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
       </div>
 
- {/* This is the card container - keep the background and padding here */}
-<div className="w-full max-w-md bg-[#162b1d] p-8 rounded-3xl shadow-xl">
-  
-  {/* Now your new branding and title go inside the card */}
-  <div className="text-center mb-8">
-    <h2 className="text-[#C86A27] text-sm md:text-base font-bold uppercase tracking-widest mb-2">
-      Nature's Index
-    </h2>
-    <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-      Guide Portal
-    </h1>
-  </div>
-
-  {/* Your inputs, buttons, and other login fields will go here below */}
-  
-</div>
+      {/* CARD CONTAINER BEGINS (Properly wraps the form now) */}
+      <div className="w-full max-w-md bg-[#162b1d] p-8 rounded-3xl shadow-xl">
+        
+        {/* Updated Header UI */}
+        <div className="text-center mb-8">
+          <h2 className="text-[#C86A27] text-sm md:text-base font-bold uppercase tracking-widest mb-2">
+            Nature's Index
+          </h2>
+          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+            Guide Portal
+          </h1>
+        </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
+          
+          {/* New Typed Input for Company Handle */}
           <div>
             <label className="text-white/70 text-sm font-bold mb-2 block">
-              {language === 'EN' ? 'Tour Company' : 'Empresa de Tour'}
+              {language === 'EN' ? 'Company ID' : 'ID de la Empresa'}
             </label>
-            <select 
+            <input 
               required
-              value={selectedCompanyId} 
-              onChange={(e) => setSelectedCompanyId(e.target.value)}
-              className="w-full bg-[#0b170f] text-white rounded-xl p-4 outline-none border border-white/10 focus:border-[#C86A27]"
-            >
-              <option value="" disabled>{language === 'EN' ? 'Select your company...' : 'Seleccione su empresa...'}</option>
-              {companies.map(c => (
-                <option key={c.id} value={c.id}>{c.name}</option>
-              ))}
-            </select>
+              type="text" 
+              value={companyHandle}
+              onChange={(e) => setCompanyHandle(e.target.value)}
+              placeholder="e.g. demo"
+              className="w-full bg-[#0b170f] text-white rounded-xl p-4 outline-none border border-white/10 focus:border-[#C86A27] transition-colors"
+            />
           </div>
 
+          {/* Guide Name Input */}
           <div>
             <label className="text-white/70 text-sm font-bold mb-2 block">
               {language === 'EN' ? 'Your Name (Guide)' : 'Su Nombre (Guía)'}
@@ -128,10 +114,11 @@ useEffect(() => {
               value={guideName}
               onChange={(e) => setGuideName(e.target.value)}
               placeholder="e.g. Juan Silva"
-              className="w-full bg-[#0b170f] text-white rounded-xl p-4 outline-none border border-white/10 focus:border-[#C86A27]"
+              className="w-full bg-[#0b170f] text-white rounded-xl p-4 outline-none border border-white/10 focus:border-[#C86A27] transition-colors"
             />
           </div>
 
+          {/* Password Input */}
           <div>
             <label className="text-white/70 text-sm font-bold mb-2 block">
               {language === 'EN' ? 'Company Password' : 'Clave de Empresa'}
@@ -141,12 +128,14 @@ useEffect(() => {
               type="password" 
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full bg-[#0b170f] text-white rounded-xl p-4 outline-none border border-white/10 focus:border-[#C86A27]"
+              className="w-full bg-[#0b170f] text-white rounded-xl p-4 outline-none border border-white/10 focus:border-[#C86A27] transition-colors"
             />
           </div>
 
+          {/* Error Message Display */}
           {error && <p className="text-red-400 text-sm text-center font-bold">{error}</p>}
 
+          {/* Login Button */}
           <button 
             type="submit" 
             disabled={loading}
@@ -154,8 +143,11 @@ useEffect(() => {
           >
             {loading ? '...' : (language === 'EN' ? 'Access Portal' : 'Acceder al Portal')}
           </button>
+
         </form>
-      </div>
+      </div> 
+      {/* CARD CONTAINER ENDS */}
+
     </div>
   );
 }
