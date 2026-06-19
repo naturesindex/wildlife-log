@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { GuidePortal } from './components/GuidePortal';
 import { GuestPortal } from './components/GuestPortal';
 import { HomePage } from './components/HomePage';
 
