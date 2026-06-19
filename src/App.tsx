@@ -271,7 +271,7 @@ export default function App() {
         <h1 className="text-3xl font-black text-white mb-2 text-center">
           {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
         </h1>
-        <p className="text-[#8C5170] mb-12 text-center font-bold">
+        <p className="text-emerald-400 text-xl font-semibold drop-shadow-md">
           {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
         </p>
 
