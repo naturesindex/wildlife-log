@@ -1,4 +1,4 @@
-import { ArrowLeft, Copy, Download, CheckCircle } from 'lucide-react';
+import { ArrowLeft, Copy, Download, CheckCircle, Lock } from 'lucide-react';
 import { useState, useRef } from 'react';
 import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
@@ -10,17 +10,20 @@ interface ExportViewProps {
   loggedSpecies: Species[];
   language: Language;
   guideName: string;
+  tourId: string | null;
   onBack: () => void;
 }
 
-export function ExportView({ loggedSpecies, language, guideName, onBack }: ExportViewProps) {
+export function ExportView({ loggedSpecies, language, guideName, tourId, onBack }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
   const [downloaded, setDownloaded] = useState(false);
   const [activeTab, setActiveTab] = useState<'passport' | 'story'>('passport');
   const [exportLang, setExportLang] = useState<Language>('EN'); 
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href).catch(() => {});
+    // This creates the custom link using their tourId!
+    const link = tourId ? `${window.location.origin}/tour/${tourId}` : window.location.href;
+    navigator.clipboard.writeText(link).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -122,14 +125,44 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
           </button>
         </div>
 
-        {/* The Camera Target Wrapper */}
-      <div ref={exportRef} className="rounded-3xl overflow-hidden bg-[#162b1d]">
+{/* The Camera Target Wrapper */}
+      <div ref={exportRef} className="relative rounded-3xl overflow-hidden bg-[#162b1d]">
         {activeTab === 'passport' ? (
-          <WildlifePassport
-            loggedSpecies={loggedSpecies}
-            language={exportLang} 
-            guideName={guideName}
-          />
+          <>
+            <div className="blur-md opacity-50 select-none pointer-events-none transition-all duration-500">
+              <WildlifePassport
+                loggedSpecies={loggedSpecies}
+                language={exportLang} 
+                guideName={guideName}
+              />
+            </div>
+            
+            {/* Paywall Overlay */}
+            <div className="absolute inset-0 flex flex-col items-center justify-center p-6 text-center z-10 bg-black/10">
+              <div className="bg-[#162b1d]/90 backdrop-blur-md p-6 rounded-3xl border border-white/10 shadow-2xl w-full max-w-xs">
+                <div className="w-14 h-14 bg-stone-900 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/5 shadow-inner">
+                  <Lock className="w-7 h-7 text-[#C86A27]" />
+                </div>
+                <h3 className="text-white font-serif font-black text-xl mb-2">
+                  {language === 'EN' ? 'Premium Passport' : 'Pasaporte Premium'}
+                </h3>
+                <p className="text-white/70 text-sm mb-6 leading-relaxed">
+                  {language === 'EN' 
+                    ? 'Send the link to your guests so they can purchase their high-resolution wildlife passport!' 
+                    : '¡Envía el enlace a tus invitados para que puedan comprar su pasaporte de alta resolución!'}
+                </p>
+                <button
+                  onClick={handleCopyLink}
+                  className="w-full bg-[#C86A27] hover:bg-[#b05a1f] text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2"
+                >
+                  {copied ? <CheckCircle className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
+                  {copied 
+                    ? (language === 'EN' ? 'Link Copied!' : '¡Enlace copiado!') 
+                    : (language === 'EN' ? 'Copy Guest Link' : 'Copiar enlace')}
+                </button>
+              </div>
+            </div>
+          </>
         ) : (
           <SocialStory
             loggedSpecies={loggedSpecies}
@@ -140,25 +173,45 @@ export function ExportView({ loggedSpecies, language, guideName, onBack }: Expor
         )}
       </div>
 
-       {/* Action buttons */}
+      {/* Action buttons */}
         <div className="flex gap-3 mt-5 justify-center">
-          <button
-            onClick={handleDownload}
-            className="flex items-center justify-center gap-2 text-white font-semibold text-sm py-3.5 px-12 rounded-2xl transition-all active:scale-95"
-            style={{ backgroundColor: downloaded ? '#4ade80' : '#C86A27' }}
-          >
-            {downloaded ? (
-              <>
-                <CheckCircle className="w-4 h-4 text-white" />
-                <span>Downloaded!</span>
-              </>
-            ) : (
-              <>
-                <Download className="w-4 h-4" />
-                <span>Download</span>
-              </>
-            )}
-          </button>
+          {activeTab === 'story' ? (
+            <button
+              onClick={handleDownload}
+              className="flex items-center justify-center gap-2 text-white font-semibold text-sm py-3.5 px-12 rounded-2xl transition-all active:scale-95"
+              style={{ backgroundColor: downloaded ? '#4ade80' : '#C86A27' }}
+            >
+              {downloaded ? (
+                <>
+                  <CheckCircle className="w-4 h-4 text-white" />
+                  <span>Downloaded!</span>
+                </>
+              ) : (
+                <>
+                  <Download className="w-4 h-4" />
+                  <span>Download Story</span>
+                </>
+              )}
+            </button>
+          ) : (
+            <button
+              onClick={handleCopyLink}
+              className="flex items-center justify-center gap-2 text-white font-semibold text-sm py-3.5 px-8 rounded-2xl transition-all active:scale-95"
+              style={{ backgroundColor: copied ? '#4ade80' : '#4A7256' }}
+            >
+              {copied ? (
+                <>
+                  <CheckCircle className="w-4 h-4 text-white" />
+                  <span>{language === 'EN' ? 'Link Copied!' : '¡Enlace Copiado!'}</span>
+                </>
+              ) : (
+                <>
+                  <Copy className="w-4 h-4" />
+                  <span>{language === 'EN' ? 'Copy Link for Guests' : 'Copiar Enlace para Invitados'}</span>
+                </>
+              )}
+            </button>
+          )}
         </div>
       </div>
     </div>
