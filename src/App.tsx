@@ -55,17 +55,21 @@ export default function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<ActiveFilter>(null);
   const [isScrolled, setIsScrolled] = useState(false);
-  const [showModal, setShowModal] = useState(false);
   const [showExport, setShowExport] = useState(false);
   
   const [guideName, setGuideName] = useState(() => {
     return localStorage.getItem('corcovado_guide_name') || '';
   });
 
-  // Persist Guide ID to phone memory
+  // Persist Guide ID and Tour ID to phone memory
   useEffect(() => {
     localStorage.setItem('corcovado_guide_id', guideId);
   }, [guideId]);
+
+  useEffect(() => {
+    if (tourId) localStorage.setItem('corcovado_tour_id', tourId);
+    else localStorage.removeItem('corcovado_tour_id');
+  }, [tourId]);
 
   // --- NEW: Start Tour Logic ---
   const startNewTour = async () => {
