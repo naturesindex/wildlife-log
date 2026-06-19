@@ -33,7 +33,7 @@ export function SearchBar({ value, onChange, language }: SearchBarProps) {
 
 type ActiveFilter = BioCategory | 'Favorites' | null;
 
-iinterface CategoryTabsProps {
+interface CategoryTabsProps {
   activeFilter: ActiveFilter;
   onChange: (filter: ActiveFilter) => void;
   language: Language;
