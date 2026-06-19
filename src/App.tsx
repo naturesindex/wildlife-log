@@ -259,7 +259,7 @@ const handleGenerateClick = async () => {
   }
   // --- END NEW ---
   
-  if (showExport) {
+if (showExport) {
     return (
       <ExportView
         loggedSpecies={loggedSpecies}
@@ -267,6 +267,7 @@ const handleGenerateClick = async () => {
         guideName={guideName}
         tourId={tourId}
         onBack={() => setShowExport(false)}
+        onLanguageToggle={() => setLanguage((l) => (l === 'EN' ? 'ES' : 'EN'))}
       />
     );
   }
