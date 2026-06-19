@@ -2,6 +2,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { GuestPortal } from './components/GuestPortal';
 import { HomePage } from './components/HomePage';
 
+
 export default function App() {
   return (
     <BrowserRouter>
