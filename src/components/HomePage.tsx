@@ -14,3 +14,4 @@ export function HomePage() {
       </a>
     </div>
   );
+}
