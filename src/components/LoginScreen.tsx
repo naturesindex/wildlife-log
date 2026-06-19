@@ -83,16 +83,21 @@ useEffect(() => {
         <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
       </div>
 
-  <div className="text-center mb-8">
-  {/* Nature's Index Branding - Smaller, using your Hero Orange */}
-  <h2 className="text-[#C86A27] text-sm md:text-base font-bold uppercase tracking-widest mb-2">
-    Nature's Index
-  </h2>
+ {/* This is the card container - keep the background and padding here */}
+<div className="w-full max-w-md bg-[#162b1d] p-8 rounded-3xl shadow-xl">
   
-  {/* Main Portal Title - Large and White */}
-  <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-    Guide Portal
-  </h1>
+  {/* Now your new branding and title go inside the card */}
+  <div className="text-center mb-8">
+    <h2 className="text-[#C86A27] text-sm md:text-base font-bold uppercase tracking-widest mb-2">
+      Nature's Index
+    </h2>
+    <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+      Guide Portal
+    </h1>
+  </div>
+
+  {/* Your inputs, buttons, and other login fields will go here below */}
+  
 </div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
