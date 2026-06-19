@@ -96,10 +96,19 @@ export default function App() {
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const handleResetTour = () => {
     localStorage.removeItem('corcovado_species_state');
-    localStorage.removeItem('corcovado_guide_name');
     setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
-    setGuideName('');
+    setTourId(null);
     setShowResetConfirm(false);
+  };
+
+  const handleLogout = () => {
+    if (window.confirm(language === 'EN' ? "Wait! Have you saved your passport? Are you sure you want to log out?" : "¡Espera! ¿Has guardado tu pasaporte? ¿Estás seguro de que quieres cerrar sesión?")) {
+      setGuideId('');
+      setGuideName('');
+      setTourId(null);
+      localStorage.removeItem('corcovado_guide_name');
+      localStorage.removeItem('corcovado_species_state');
+    }
   };
 
   useEffect(() => {
@@ -179,13 +188,7 @@ export default function App() {
     return result;
   }, [species, activeFilter, searchQuery]);
 
-  const handleGenerateClick = () => setShowModal(true);
-
-  const handleModalConfirm = (name: string) => {
-    setGuideName(name);
-    setShowModal(false);
-    setShowExport(true);
-  };
+const handleGenerateClick = () => setShowExport(true);
 
   // --- NEW: APP FLOW ROUTING ---
   
@@ -265,8 +268,14 @@ export default function App() {
         isScrolled={isScrolled}
       />
 
-     {/* START NEW TOUR BUTTON */}
-      <div className="flex justify-end px-4 pt-4 mb-2 max-w-lg mx-auto">
+   {/* TOP BUTTONS */}
+      <div className="flex justify-between items-center px-4 pt-4 mb-2 max-w-lg mx-auto">
+        <button
+          onClick={handleLogout}
+          className="text-stone-400 hover:text-stone-600 text-sm font-semibold transition-colors underline"
+        >
+          {language === 'EN' ? 'Log Out' : 'Cerrar Sesión'}
+        </button>
         <button
           onClick={() => setShowResetConfirm(true)}
           className="flex items-center gap-2 text-stone-700 hover:text-red-500 text-sm font-semibold transition-colors bg-stone-100 px-3 py-1.5 rounded-full"
@@ -277,8 +286,8 @@ export default function App() {
       </div>
 
       <div className="max-w-lg mx-auto">
-        <SearchBar value={searchQuery} onChange={setSearchQuery} />
-        <CategoryTabs activeFilter={activeFilter} onChange={setActiveFilter} />
+        <SearchBar value={searchQuery} onChange={setSearchQuery} language={language} />
+        <CategoryTabs activeFilter={activeFilter} onChange={setActiveFilter} language={language} />
         <SpeciesGrid
           species={filteredSpecies}
           language={language}
@@ -330,13 +339,6 @@ export default function App() {
         </div>
       )}
 
-      {/* Guide name modal */}
-      {showModal && (
-        <GuideNameModal
-          onConfirm={handleModalConfirm}
-          onCancel={() => setShowModal(false)}
-        />
-      )}
-    </div>
+   </div>
   );
 }
