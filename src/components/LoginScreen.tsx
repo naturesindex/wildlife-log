@@ -83,11 +83,17 @@ useEffect(() => {
         <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
       </div>
 
-      <div className="w-full max-w-md bg-[#162b1d] p-8 rounded-3xl shadow-xl">
-        <h1 className="text-3xl font-black text-white mb-2 text-center">Nature's Index</h1>
-        <p className="text-[#8C5170] text-center mb-8 font-semibold">
-          {language === 'EN' ? 'Guide Portal' : 'Portal de Guías'}
-        </p>
+  <div className="text-center mb-8">
+  {/* Nature's Index Branding - Smaller, using your Hero Orange */}
+  <h2 className="text-[#C86A27] text-sm md:text-base font-bold uppercase tracking-widest mb-2">
+    Nature's Index
+  </h2>
+  
+  {/* Main Portal Title - Large and White */}
+  <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+    Guide Portal
+  </h1>
+</div>
 
         <form onSubmit={handleLogin} className="flex flex-col gap-5">
           <div>
