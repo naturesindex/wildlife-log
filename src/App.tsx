@@ -37,8 +37,6 @@ export default function App() {
   const [guideId, setGuideId] = useState(() => {
     return localStorage.getItem('corcovado_guide_id') || '';
   });
-return localStorage.getItem('corcovado_tour_id') || null;
-  });
 
   // 1b. Initialize species from localStorage OR default data
   const [species, setSpecies] = useState<Species[]>(() => {
