@@ -190,7 +190,16 @@ export default function App() {
     return result;
   }, [species, activeFilter, searchQuery]);
 
-const handleGenerateClick = () => setShowExport(true);
+const handleGenerateClick = async () => {
+    if (tourId) {
+      const { error } = await supabase
+        .from('tours')
+        .update({ status: 'completed' })
+        .eq('id', tourId);
+      if (error) console.error("Error completing tour:", error);
+    }
+    setShowExport(true);
+  };
 
   // --- NEW: APP FLOW ROUTING ---
   
@@ -256,6 +265,7 @@ const handleGenerateClick = () => setShowExport(true);
         loggedSpecies={loggedSpecies}
         language={language}
         guideName={guideName}
+        tourId={tourId}
         onBack={() => setShowExport(false)}
       />
     );
@@ -298,7 +308,7 @@ const handleGenerateClick = () => setShowExport(true);
         />
       </div>
 
-      {/* Sticky Generate Passport button */}
+    {/* Sticky Generate Passport button */}
       <div className="fixed bottom-0 left-0 right-0 z-40 px-4 pb-6 pt-4 bg-gradient-to-t from-[#FDFBF7] via-[#FDFBF7]/90 to-transparent">
         <div className="max-w-lg mx-auto">
           <button
@@ -306,7 +316,7 @@ const handleGenerateClick = () => setShowExport(true);
             className="w-full text-white font-black text-base py-4 rounded-3xl shadow-lg shadow-[#C86A27]/25 transition-all active:scale-95"
             style={{ backgroundColor: '#C86A27' }}
           >
-            {language === 'EN' ? 'Generate Passport' : 'Generar Pasaporte'}
+            {language === 'EN' ? 'End Tour & Get Link' : 'Finalizar Tour y Obtener Enlace'}
           </button>
         </div>
       </div>
