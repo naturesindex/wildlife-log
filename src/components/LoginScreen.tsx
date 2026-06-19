@@ -81,8 +81,8 @@ export function LoginScreen({ onLogin, language, setLanguage }: LoginProps) {
           <h2 className="text-[#C86A27] text-sm md:text-base font-bold uppercase tracking-widest mb-2">
             Nature's Index
           </h2>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
-            Guide Portal
+        <h1 className="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+            {language === 'EN' ? 'Guide Portal' : 'Portal del Guía'}
           </h1>
         </div>
 
