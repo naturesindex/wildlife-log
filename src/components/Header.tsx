@@ -7,11 +7,13 @@ interface HeaderProps {
   isScrolled: boolean;
 }
 
-const CURRENT_DATE = new Date().toLocaleDateString('en-US', {
-  month: 'long',
-  day: 'numeric',
-  year: 'numeric',
-});
+function getFormattedDate(language: Language) {
+  return new Date().toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', {
+    month: 'long',
+    day: 'numeric',
+    year: 'numeric',
+  });
+}
 
 function LanguageToggle({
   language,
@@ -73,16 +75,16 @@ export function Header({
       >
         <div className="relative flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
           <LanguageToggle language={language} onToggle={onLanguageToggle} />
-          {/* Date perfectly centered via absolute positioning */}
-          <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-600 whitespace-nowrap">
-            {CURRENT_DATE}
+{/* Date perfectly centered via absolute positioning */}
+        <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-600 whitespace-nowrap capitalize">
+            {getFormattedDate(language)}
           </span>
          <div className="flex flex-col items-center justify-center w-16 h-16 rounded-full bg-white shadow-md border-2 border-[#C86A27]/10">
   <span className="text-black font-black text-lg leading-none">
     {loggedCount}
   </span>
   <span className="text-black/60 text-[8px] uppercase font-bold tracking-wider leading-none mt-0.5">
-    LOGGED
+    {language === 'EN' ? 'LOGGED' : 'REGISTR.'}
   </span>
 </div>
         </div>
@@ -90,18 +92,18 @@ export function Header({
 
       {/* Full expanded header — always in normal flow */}
       <div className="px-4 pt-6 pb-2 max-w-lg mx-auto">
-        {/* Top row */}
+{/* Top row */}
         <div className="relative flex items-center justify-between mb-5">
           <LanguageToggle language={language} onToggle={onLanguageToggle} />
-          <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-500 whitespace-nowrap">
-            {CURRENT_DATE}
+          <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-500 whitespace-nowrap capitalize">
+            {getFormattedDate(language)}
           </span>
          <div className="flex flex-col items-center justify-center w-16 h-16 rounded-full bg-white shadow-md border-2 border-[#C86A27]/10">
   <span className="text-black font-black text-lg leading-none">
     {loggedCount}
   </span>
   <span className="text-black/60 text-[8px] uppercase font-bold tracking-wider leading-none mt-0.5">
-    LOGGED
+    {language === 'EN' ? 'LOGGED' : 'REGISTR.'}
   </span>
 </div>
         </div>
@@ -112,7 +114,7 @@ export function Header({
             className="font-serif font-black text-stone-900 tracking-tight leading-none"
             style={{ fontSize: 'clamp(3.5rem, 14vw, 5rem)' }}
           >
-            Wildlife Log
+            {language === 'EN' ? 'Wildlife Log' : 'Registro'}
           </h1>
         </div>
       </div>
