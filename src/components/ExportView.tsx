@@ -1,7 +1,6 @@
-import { ArrowLeft, Copy, CheckCircle, Lock } from 'lucide-react';
+import { CheckCircle, Copy, ArrowLeft, Trophy } from 'lucide-react';
 import { useState } from 'react';
 import { Species, Language } from '../types';
-import { WildlifePassport } from './WildlifePassport';
 
 interface ExportViewProps {
   loggedSpecies: Species[];
@@ -12,99 +11,81 @@ interface ExportViewProps {
   onLanguageToggle: () => void;
 }
 
-export function ExportView({ loggedSpecies, language, guideName, tourId, onBack, onLanguageToggle }: ExportViewProps) {
+export function ExportView({ loggedSpecies, language, tourId, onBack }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
 
+  // Fallback to the current window URL if test mode doesn't have a tourId
+  const guestLink = tourId ? `${window.location.origin}/tour/${tourId}` : window.location.href;
+
   const handleCopyLink = () => {
-    // This creates the custom link using their tourId
-    // This dynamically grabs "corcovado" (or whatever park they are in) from the URL and formats the guest link!
-const currentLocation = window.location.pathname.split('/')[1] || 'corcovado';
-const link = tourId ? `${window.location.origin}/${currentLocation}/tour/${tourId}` : window.location.href;
-    navigator.clipboard.writeText(link).catch(() => {});
+    navigator.clipboard.writeText(guestLink).catch(() => {});
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
 
+  // Find how many "Tier 1" (Highlights) they saw!
+  const tier1Count = loggedSpecies.filter(s => s.tier === 1).length;
+
   return (
-    <div className="min-h-screen bg-[#162b1d]">
-      {/* Top nav */}
-      <div className="sticky top-0 z-40 backdrop-blur-md bg-[#162b1d]/80 border-b border-white/10 px-4 py-3">
-        <div className="flex items-center justify-between max-w-lg mx-auto">
-          <button
-            onClick={onBack}
-            className="flex items-center gap-2 text-white/70 hover:text-white font-semibold text-sm transition-colors"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            {language === 'EN' ? 'Back to Guide' : 'Volver a la Guía'}
-          </button>
-
-          {/* Standard Language Toggle */}
-          <button
-            onClick={onLanguageToggle}
-            className="flex items-center rounded-full bg-white/10 p-1 gap-0.5 select-none shrink-0 border border-white/5"
-          >
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${language === 'EN' ? 'bg-[#C86A27] text-white' : 'text-white/40'}`}>EN</span>
-            <span className={`px-2.5 py-1 rounded-full text-xs font-bold transition-all ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/40'}`}>ES</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="max-w-lg mx-auto px-4 pt-6 pb-12">
-        {/* Simple Instructions for the Guide */}
-        <div className="text-center mb-6">
-           <h2 className="text-2xl font-black text-white mb-2 font-serif">
-             {language === 'EN' ? 'Tour Completed!' : '¡Tour Completado!'}
-           </h2>
-           <p className="text-white/70 text-sm leading-relaxed">
-             {language === 'EN'
-               ? 'Copy the link below and send it to your guests. They can download their free Social Story and purchase this premium Wildlife Passport.'
-               : 'Copia el enlace a continuación y envíalo a tus invitados. Podrán descargar su Historia Social gratis y comprar este Pasaporte Premium.'}
-           </p>
-        </div>
-
-        {/* The Faded Blur Container */}
-        <div className="relative rounded-3xl overflow-hidden bg-[#162b1d] shadow-2xl ring-1 ring-white/10">
-          
-          {/* 1. Clear Passport Underneath */}
-          <div className="select-none pointer-events-none">
-            <WildlifePassport
-              loggedSpecies={loggedSpecies}
-              language={language}
-              guideName={guideName}
-            />
-          </div>
-
-          {/* 2. Gradient Blur Overlay */}
-          <div
-            className="absolute inset-0 backdrop-blur-md bg-[#0b170f]/50 z-10"
-            style={{
-              // This CSS trick keeps the top 8% crystal clear, then smoothly fades into the heavy blur by 25%
-              maskImage: 'linear-gradient(to bottom, transparent 8%, black 25%)',
-              WebkitMaskImage: 'linear-gradient(to bottom, transparent 8%, black 25%)'
-            }}
-          />
-
-          {/* 3. Locked Paywall Card - Positioned at the top! */}
-          <div className="absolute top-28 left-0 right-0 flex flex-col items-center p-6 text-center z-20">
-            <div className="bg-[#162b1d]/95 backdrop-blur-xl p-6 rounded-3xl border border-white/10 shadow-2xl w-full max-w-xs">
-              <div className="w-14 h-14 bg-stone-900 rounded-full flex items-center justify-center mx-auto mb-4 border border-white/5 shadow-inner">
-                <Lock className="w-7 h-7 text-[#C86A27]" />
-              </div>
-              <h3 className="text-white font-serif font-black text-xl mb-2">
-                {language === 'EN' ? 'Premium Passport' : 'Pasaporte Premium'}
-              </h3>
-              <button
-                onClick={handleCopyLink}
-                className="w-full bg-[#C86A27] hover:bg-[#b05a1f] text-white font-bold py-3.5 px-4 rounded-xl shadow-lg transition-all active:scale-95 flex items-center justify-center gap-2 mt-4"
-              >
-                {copied ? <CheckCircle className="w-5 h-5" /> : <Copy className="w-5 h-5" />}
-                {copied
-                  ? (language === 'EN' ? 'Link Copied!' : '¡Enlace copiado!')
-                  : (language === 'EN' ? 'Copy Guest Link' : 'Copiar enlace')}
-              </button>
-            </div>
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 font-sans" style={{ background: '#0b170f' }}>
+      <div className="w-full max-w-md bg-[#162b1d] p-8 rounded-3xl shadow-2xl border border-white/10 text-center">
+        
+        {/* Success Icon */}
+        <div className="flex justify-center mb-6">
+          <div className="bg-emerald-500/20 p-4 rounded-full">
+            <CheckCircle className="w-12 h-12 text-emerald-400" />
           </div>
         </div>
+
+        <h1 className="text-3xl font-black text-white mb-2">
+          {language === 'EN' ? 'Tour Completed!' : '¡Tour Completado!'}
+        </h1>
+        <p className="text-white/70 mb-8 text-sm leading-relaxed">
+          {language === 'EN' 
+            ? 'Great job out there. Share this link with your guests so they can access their digital passport.'
+            : 'Buen trabajo. Comparte este enlace con tus invitados para que accedan a su pasaporte digital.'}
+        </p>
+
+        {/* Motivational Stats Box */}
+        <div className="bg-black/30 rounded-2xl p-4 mb-8 flex items-center justify-around border border-white/5 shadow-inner">
+          <div className="text-center w-1/2">
+            <p className="text-4xl font-black text-[#C86A27] mb-1">{loggedSpecies.length}</p>
+            <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold">
+              {language === 'EN' ? 'Total Species' : 'Especies Totales'}
+            </p>
+          </div>
+          <div className="w-px h-12 bg-white/10"></div>
+          <div className="text-center w-1/2">
+            <p className="text-4xl font-black text-emerald-400 flex items-center justify-center gap-1 mb-1">
+              {tier1Count} <Trophy className="w-6 h-6 mb-1 text-emerald-500" />
+            </p>
+            <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold">
+              {language === 'EN' ? 'Rare Finds' : 'Hallazgos Raros'}
+            </p>
+          </div>
+        </div>
+
+        {/* The Link Button */}
+        <button 
+          onClick={handleCopyLink}
+          className={`w-full py-5 rounded-2xl font-black text-lg transition-all shadow-lg flex items-center justify-center gap-3 mb-6
+            ${copied ? 'bg-emerald-500 text-white shadow-emerald-500/20' : 'bg-[#C86A27] text-white hover:bg-[#b05a1f] active:scale-95 shadow-[#C86A27]/20'}`}
+        >
+          {copied ? <CheckCircle className="w-6 h-6" /> : <Copy className="w-6 h-6" />}
+          {copied 
+            ? (language === 'EN' ? 'Guest Link Copied!' : '¡Enlace Copiado!')
+            : (language === 'EN' ? 'Copy Guest Link' : 'Copiar Enlace')}
+        </button>
+
+        {/* Back Button */}
+        <button 
+          onClick={onBack}
+          className="text-white/40 hover:text-white transition-colors flex items-center justify-center gap-2 w-full font-semibold text-sm"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          {language === 'EN' ? 'Back to Portal Lobby' : 'Volver al Inicio'}
+        </button>
+        
       </div>
     </div>
   );
