@@ -102,7 +102,7 @@ export function GuidePortal() {
   };
 
   const handleDeleteTour = async (idToDelete: string) => {
-    if (!window.confirm(language === 'EN' ? "Are you sure you want to delete this test tour?" : "¿Seguro que quieres eliminar este tour de prueba?")) return;
+    if (!window.confirm(language === 'EN' ? "Are you sure you want to delete this tour?" : "¿Seguro que quieres eliminar este tour?")) return;
     
     // Delete logs first just in case Supabase isn't set to cascade delete
     await supabase.from('tour_logs').delete().eq('tour_id', idToDelete);
