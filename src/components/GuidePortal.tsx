@@ -142,8 +142,9 @@ export function GuidePortal() {
       return;
     }
 
-    if (data) {
+  if (data) {
       setTourId(data.id); // This officially starts the hike!
+      setSessionActive(true); // <--- THIS WAS MISSING! Wakes the app up!
       // Clear out yesterday's checked animals
       setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
     }
