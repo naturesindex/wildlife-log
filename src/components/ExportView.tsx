@@ -15,8 +15,8 @@ interface ExportViewProps {
 export function ExportView({ loggedSpecies, language, tourId, onBack, onEndSession, setLanguage }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
 
-  // Fallback to the current window URL if test mode doesn't have a tourId
-  const guestLink = tourId ? `${window.location.origin}/tour/${tourId}` : window.location.href;
+// Ensure we include the correct path for the Natures Index router
+  const guestLink = tourId ? `${window.location.origin}/corcovado/tour/${tourId}` : window.location.href;
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(guestLink).catch(() => {});
