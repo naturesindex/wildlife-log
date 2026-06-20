@@ -4,6 +4,7 @@ import { supabase } from '../supabase';
 import { initialSpecies } from '../data/species';
 import { Species } from '../types';
 import { SocialStory } from './SocialStory'; // Reusing your fixed graphic component
+import { WildlifePassport } from './WildlifePassport';
 import { Download, Sparkles, Lock } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
@@ -16,6 +17,8 @@ export function GuestPortal() {
   const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
   
   const snapshotRef = useRef<HTMLDivElement>(null);
+  const checkoutRef = useRef<HTMLDivElement>(null);
+  const scrollToCheckout = () => checkoutRef.current?.scrollIntoView({ behavior: 'smooth' });
 
   useEffect(() => {
     fetchTourDetails();
@@ -129,7 +132,7 @@ export function GuestPortal() {
         </div>
       </div>
 
-      {/* 3. THE PAYWALL / SALES PITCH */}
+     {/* 3. THE PAYWALL / SALES PITCH */}
       <div className="max-w-md mx-auto px-6 mt-12">
         <div className="text-center mb-6">
           <h2 className="text-3xl font-black text-[#162b1d] mb-3">
@@ -137,38 +140,36 @@ export function GuestPortal() {
           </h2>
           <p className="text-stone-600 font-medium">
             {language === 'EN' 
-              ? 'Get a beautiful 20+ page interactive guide featuring high-res photos, rich facts, and the exact species you saw today.' 
-              : 'Obtén una hermosa guía interactiva de más de 20 páginas con fotos en alta resolución, datos fascinantes y las especies exactas que viste hoy.'}
+              ? `Get a beautiful, personalized digital logbook featuring all ${loggedSpecies.length} species you encountered today.` 
+              : `Obtén una hermosa bitácora digital personalizada con las ${loggedSpecies.length} especies que encontraste hoy.`}
           </p>
         </div>
 
-        {/* Blurred Preview Card */}
-        <div className="relative rounded-3xl overflow-hidden shadow-xl border border-stone-200 bg-white p-4">
-          <div className="blur-sm opacity-60 pointer-events-none select-none">
-             {/* Mocked blurry background content to look like the passport */}
-             <div className="h-40 bg-emerald-800 rounded-2xl mb-4"></div>
-             <div className="flex gap-4 mb-4">
-               <div className="w-1/2 h-32 bg-stone-300 rounded-xl"></div>
-               <div className="w-1/2 h-32 bg-stone-300 rounded-xl"></div>
-             </div>
-             <div className="h-8 bg-stone-200 rounded-lg w-3/4 mb-2"></div>
-             <div className="h-4 bg-stone-200 rounded-lg w-full mb-2"></div>
-             <div className="h-4 bg-stone-200 rounded-lg w-5/6"></div>
+        {/* The REAL Blurred Preview Card */}
+        <div 
+          onClick={scrollToCheckout}
+          className="relative rounded-3xl overflow-hidden shadow-xl border border-stone-200 bg-white cursor-pointer group hover:shadow-2xl transition-all"
+        >
+          {/* Real component, heavily blurred and faded */}
+          <div className="relative h-[450px] overflow-hidden blur-[6px] opacity-60 select-none pointer-events-none transform scale-95 origin-top mt-4">
+             <WildlifePassport loggedSpecies={loggedSpecies} language={language} guideName={guideName} />
+             {/* Fade to white at the bottom */}
+             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white z-10"></div>
           </div>
           
           {/* Overlay Lock */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/40 backdrop-blur-[2px]">
-            <div className="bg-[#162b1d] text-white p-4 rounded-full shadow-2xl mb-4">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/10 backdrop-blur-[1px] group-hover:bg-white/20 transition-colors">
+            <div className="bg-[#162b1d] text-white p-4 rounded-full shadow-2xl mb-4 transform group-hover:scale-110 transition-transform">
               <Lock className="w-8 h-8" />
             </div>
-            <span className="font-bold text-[#162b1d] text-lg tracking-wide uppercase">
-               {language === 'EN' ? 'Premium Content' : 'Contenido Premium'}
+            <span className="font-bold text-[#162b1d] text-lg tracking-wide uppercase bg-white/80 px-4 py-1 rounded-full">
+               {language === 'EN' ? 'Click to Unlock' : 'Clic para Desbloquear'}
             </span>
           </div>
         </div>
 
         {/* 4. PERSONALIZATION & CHECKOUT */}
-        <div className="bg-white rounded-3xl p-6 shadow-xl border border-stone-100 mt-8">
+        <div ref={checkoutRef} className="bg-white rounded-3xl p-6 shadow-xl border border-stone-100 mt-8 scroll-mt-6">
           <label className="block text-sm font-bold text-stone-700 mb-2 uppercase tracking-wider">
              {language === 'EN' ? 'Who is this passport for?' : '¿Para quién es este pasaporte?'}
           </label>
