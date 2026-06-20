@@ -263,9 +263,23 @@ const handleGenerateClick = async () => {
     );
   }
 
-  // Phase 2: Logged in, but haven't started a hike? Show Lobby.
- // Phase 2: Logged in, but haven't started a hike? Show Lobby.
+// Phase 2: Logged in, but haven't started a hike? Show Lobby.
   if (!tourId) {
+    // --- STATS CALCULATIONS ---
+    const currentMonth = new Date().getMonth();
+    const currentYear = new Date().getFullYear();
+    const thisMonthTours = recentTours.filter(t => {
+      const d = new Date(t.created_at);
+      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+    });
+    
+    // Dynamically get the current month name based on EN/ES
+    const monthName = new Date().toLocaleString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long' });
+    
+    // *Placeholder pricing: estimating $10 per logged tour for the visual stat for now
+    const allTimeEarnings = recentTours.length * 10;
+    const thisMonthEarnings = thisMonthTours.length * 10;
+
     return (
       <div className="min-h-screen flex flex-col items-center py-12 px-6" style={{ background: '#0b170f' }}>
         {/* Language Toggle */}
@@ -277,13 +291,36 @@ const handleGenerateClick = async () => {
         <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto p-4 gap-6 mt-8">
           
           {/* Header Section */}
-          <div className="text-center">
+          <div className="text-center mb-2">
             <h1 className="text-3xl font-black text-white mb-2">
               {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
             </h1>
-            <p className="text-emerald-400 text-xl font-semibold drop-shadow-md">
+            <p className="text-emerald-400 text-lg font-semibold drop-shadow-md">
               {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
             </p>
+          </div>
+
+          {/* STATS DASHBOARD */}
+          <div className="w-full grid grid-cols-2 gap-3 mb-2">
+            {/* This Month Stat */}
+            <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
+              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
+              <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
+                {language === 'EN' ? `${monthName} Tours` : `Tours de ${monthName}`}
+              </p>
+              <p className="text-3xl font-black text-white">{thisMonthTours.length}</p>
+              <p className="text-emerald-400 text-xs font-bold mt-1">~${thisMonthEarnings}</p>
+            </div>
+
+            {/* All Time Stat */}
+            <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
+              <div className="absolute top-0 left-0 w-full h-1 bg-[#C86A27]"></div>
+              <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
+                {language === 'EN' ? 'All-Time Tours' : 'Tours Totales'}
+              </p>
+              <p className="text-3xl font-black text-white">{recentTours.length}</p>
+              <p className="text-[#C86A27] text-xs font-bold mt-1">~${allTimeEarnings}</p>
+            </div>
           </div>
 
           {/* Start Tour Button */}
