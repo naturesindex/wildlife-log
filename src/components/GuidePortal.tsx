@@ -272,40 +272,45 @@ const handleGenerateClick = async () => {
     );
   }
 
-// Phase 2: Logged in, but haven't started a hike? Show Lobby.
-  if (!tourId) {
-    // --- STATS CALCULATIONS ---
-    const currentMonth = new Date().getMonth();
-    const currentYear = new Date().getFullYear();
-    const thisMonthTours = recentTours.filter(t => {
-      const d = new Date(t.created_at);
-      return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
-    });
-    
-    // Dynamically get the current month name based on EN/ES
-    const monthName = new Date().toLocaleString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long' });
-    
-    // *Placeholder pricing: estimating $10 per logged tour for the visual stat for now
-    const allTimeEarnings = recentTours.length * 10;
-    const thisMonthEarnings = thisMonthTours.length * 10;
+// Phase 2: Logged in, but either NO tourId OR session not active? Show Lobby.
+if (!tourId || !sessionActive) {
+  // --- STATS CALCULATIONS ---
+  const currentMonth = new Date().getMonth();
+  const currentYear = new Date().getFullYear();
+  const thisMonthTours = recentTours.filter(t => {
+    const d = new Date(t.created_at);
+    return d.getMonth() === currentMonth && d.getFullYear() === currentYear;
+  });
+  
+  const monthName = new Date().toLocaleString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long' });
+  const allTimeEarnings = recentTours.length * 10;
+  const thisMonthEarnings = thisMonthTours.length * 10;
 
-    if (!sessionActive) {
-    return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#0b170f]">
-        <h1 className="text-3xl font-black text-white mb-2">Welcome, {guideName}!</h1>
-        <p className="text-white/70 mb-8">Ready to start a new tour?</p>
-        <button 
-          onClick={() => {
-            setSpecies((initialSpecies as Species[]).map(normalize));
-            setSessionActive(true);
-          }}
-          className="bg-[#C86A27] text-white px-8 py-4 rounded-2xl font-black text-lg hover:bg-[#b05a1f] transition-all"
-        >
-          Start New Tour
-        </button>
+  return (
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#0b170f]">
+      <h1 className="text-3xl font-black text-white mb-2">Welcome, {guideName}!</h1>
+      <p className="text-white/70 mb-8">Ready to start a new tour?</p>
+      
+      {/* Example Stats Display */}
+      <div className="mb-8 text-white">
+        <p>Tours this month ({monthName}): {thisMonthTours.length}</p>
+        <p>Total Estimated Earnings: ${allTimeEarnings}</p>
       </div>
-    );
-  }
+
+      <button 
+        onClick={() => {
+          setSpecies((initialSpecies as Species[]).map(normalize));
+          setSessionActive(true);
+          // Note: You'll want to add logic here to create a new tour 
+          // in Supabase and setTourId(newId) when you're ready!
+        }}
+        className="bg-[#C86A27] text-white px-8 py-4 rounded-2xl font-black text-lg hover:bg-[#b05a1f] transition-all"
+      >
+        Start New Tour
+      </button>
+    </div>
+  );
+}
     
     return (
       <div className="min-h-screen flex flex-col items-center py-12 px-6" style={{ background: '#0b170f' }}>
@@ -415,12 +420,12 @@ if (showExport) {
   tourId={tourId}
   onBack={() => setShowExport(false)}
   setLanguage={setLanguage}
-  onEndSession={() => {
-    // 1. Close the Export View
-    setShowExport(false);
-    // 2. Set the lobby/active state to false
-    setSessionActive(false);
-  }}
+ onEndSession={() => {
+  setShowExport(false);
+  setTourId(null); // This triggers the Lobby view!
+  localStorage.removeItem('corcovado_tour_id');
+  setSpecies((initialSpecies as Species[]).map(normalize)); // Reset logs
+}}
 />
     );
   }
