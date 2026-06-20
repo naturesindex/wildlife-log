@@ -2,6 +2,7 @@ import { CheckCircle, Copy, ArrowLeft, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { Species, Language } from '../types';
 
+
 interface ExportViewProps {
   loggedSpecies: Species[];
   language: Language;
