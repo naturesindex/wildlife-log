@@ -149,12 +149,11 @@ export function GuidePortal() {
     }
   };
   // --- END NEW ---
-  // 2b. RESET STATE LOGIC ADDED
+// 2b. RESET STATE LOGIC ADDED
   const [showResetConfirm, setShowResetConfirm] = useState(false);
   const handleResetTour = () => {
-    localStorage.removeItem('corcovado_species_state');
+    // Only reset logs so favorites are kept, and don't wipe tourId so we stay on the log!
     setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
-    setTourId(null);
     setShowResetConfirm(false);
   };
 
@@ -287,128 +286,102 @@ if (!tourId || !sessionActive) {
   const thisMonthEarnings = thisMonthTours.length * 10;
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#0b170f]">
-      <h1 className="text-3xl font-black text-white mb-2">Welcome, {guideName}!</h1>
-      <p className="text-white/70 mb-8">Ready to start a new tour?</p>
-      
-      {/* Example Stats Display */}
-      <div className="mb-8 text-white">
-        <p>Tours this month ({monthName}): {thisMonthTours.length}</p>
-        <p>Total Estimated Earnings: ${allTimeEarnings}</p>
+    <div className="min-h-screen flex flex-col items-center py-12 px-6" style={{ background: '#0b170f' }}>
+      {/* Language Toggle */}
+      <div className="absolute top-6 right-6 flex bg-[#162b1d] rounded-full p-1 shadow-lg">
+        <button onClick={() => setLanguage('EN')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'EN' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>EN</button>
+        <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
       </div>
 
-      <button 
-        onClick={() => {
-          setSpecies((initialSpecies as Species[]).map(normalize));
-          setSessionActive(true);
-          // Note: You'll want to add logic here to create a new tour 
-          // in Supabase and setTourId(newId) when you're ready!
-        }}
-        className="bg-[#C86A27] text-white px-8 py-4 rounded-2xl font-black text-lg hover:bg-[#b05a1f] transition-all"
-      >
-        Start New Tour
-      </button>
+      <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto p-4 gap-6 mt-8">
+        
+        {/* Header Section */}
+        <div className="text-center mb-2">
+          <h1 className="text-3xl font-black text-white mb-2">
+            {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
+          </h1>
+          <p className="text-emerald-400 text-lg font-semibold drop-shadow-md">
+            {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
+          </p>
+        </div>
+
+        {/* STATS DASHBOARD */}
+        <div className="w-full grid grid-cols-2 gap-3 mb-2">
+          {/* This Month Stat */}
+          <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
+            <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
+            <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
+              {language === 'EN' ? `${monthName} Tours` : `Tours de ${monthName}`}
+            </p>
+            <p className="text-3xl font-black text-white">{thisMonthTours.length}</p>
+            <p className="text-emerald-400 text-xs font-bold mt-1">~${thisMonthEarnings}</p>
+          </div>
+
+          {/* All Time Stat */}
+          <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
+            <div className="absolute top-0 left-0 w-full h-1 bg-[#C86A27]"></div>
+            <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
+              {language === 'EN' ? 'All-Time Tours' : 'Tours Totales'}
+            </p>
+            <p className="text-3xl font-black text-white">{recentTours.length}</p>
+            <p className="text-[#C86A27] text-xs font-bold mt-1">~${allTimeEarnings}</p>
+          </div>
+        </div>
+
+        {/* Start Tour Button */}
+        <button 
+          onClick={startNewTour}
+          className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95 mb-4"
+        >
+          {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
+        </button>
+
+        {/* RECENT TOURS SECTION */}
+        <div className="w-full">
+          <h3 className="text-white/70 font-bold uppercase tracking-widest text-xs mb-4">
+            {language === 'EN' ? 'Recent Tours' : 'Tours Recientes'}
+          </h3>
+          
+          {loadingTours ? (
+            <p className="text-white/50 text-sm">{language === 'EN' ? 'Loading...' : 'Cargando...'}</p>
+          ) : recentTours.length === 0 ? (
+            <p className="text-white/50 text-sm italic">{language === 'EN' ? 'No completed tours yet.' : 'Aún no hay tours completados.'}</p>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {recentTours.map((tour) => (
+                <div key={tour.id} className="bg-[#162b1d] border border-white/5 rounded-2xl p-4 flex items-center justify-between">
+                  <div>
+                    <p className="text-white font-semibold text-sm">
+                      {new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
+                    </p>
+                    <p className="text-emerald-400/80 text-xs mt-0.5">
+                      {tour.tour_logs.length} {language === 'EN' ? 'species logged' : 'especies registradas'}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button onClick={() => handleCopyTourLink(tour.id)} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white" title={language === 'EN' ? 'Copy Link' : 'Copiar Enlace'}>
+                      <Copy className="w-4 h-4" />
+                    </button>
+                    <button onClick={() => handleDeleteTour(tour.id)} className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-colors text-white/50 hover:text-red-400" title={language === 'EN' ? 'Delete Tour' : 'Eliminar Tour'}>
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        <button 
+          onClick={() => { setGuideId(''); setGuideName(''); }} 
+          className="mt-8 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
+        >
+          {language === 'EN' ? 'Log out of Guide Portal' : 'Cerrar Sesión'}
+        </button>
+      </div>
     </div>
   );
 }
-    
-    return (
-      <div className="min-h-screen flex flex-col items-center py-12 px-6" style={{ background: '#0b170f' }}>
-        {/* Language Toggle */}
-        <div className="absolute top-6 right-6 flex bg-[#162b1d] rounded-full p-1 shadow-lg">
-          <button onClick={() => setLanguage('EN')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'EN' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>EN</button>
-          <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
-        </div>
-
-        <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto p-4 gap-6 mt-8">
-          
-          {/* Header Section */}
-          <div className="text-center mb-2">
-            <h1 className="text-3xl font-black text-white mb-2">
-              {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
-            </h1>
-            <p className="text-emerald-400 text-lg font-semibold drop-shadow-md">
-              {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
-            </p>
-          </div>
-
-          {/* STATS DASHBOARD */}
-          <div className="w-full grid grid-cols-2 gap-3 mb-2">
-            {/* This Month Stat */}
-            <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
-              <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
-              <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
-                {language === 'EN' ? `${monthName} Tours` : `Tours de ${monthName}`}
-              </p>
-              <p className="text-3xl font-black text-white">{thisMonthTours.length}</p>
-              <p className="text-emerald-400 text-xs font-bold mt-1">~${thisMonthEarnings}</p>
-            </div>
-
-            {/* All Time Stat */}
-            <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
-              <div className="absolute top-0 left-0 w-full h-1 bg-[#C86A27]"></div>
-              <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
-                {language === 'EN' ? 'All-Time Tours' : 'Tours Totales'}
-              </p>
-              <p className="text-3xl font-black text-white">{recentTours.length}</p>
-              <p className="text-[#C86A27] text-xs font-bold mt-1">~${allTimeEarnings}</p>
-            </div>
-          </div>
-
-          {/* Start Tour Button */}
-          <button 
-            onClick={startNewTour}
-            className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95 mb-4"
-          >
-            {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
-          </button>
-
-          {/* RECENT TOURS SECTION */}
-          <div className="w-full">
-            <h3 className="text-white/70 font-bold uppercase tracking-widest text-xs mb-4">
-              {language === 'EN' ? 'Recent Tours' : 'Tours Recientes'}
-            </h3>
-            
-            {loadingTours ? (
-              <p className="text-white/50 text-sm">{language === 'EN' ? 'Loading...' : 'Cargando...'}</p>
-            ) : recentTours.length === 0 ? (
-              <p className="text-white/50 text-sm italic">{language === 'EN' ? 'No completed tours yet.' : 'Aún no hay tours completados.'}</p>
-            ) : (
-              <div className="flex flex-col gap-3">
-                {recentTours.map((tour) => (
-                  <div key={tour.id} className="bg-[#162b1d] border border-white/5 rounded-2xl p-4 flex items-center justify-between">
-                    <div>
-                      <p className="text-white font-semibold text-sm">
-                        {new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
-                      </p>
-                      <p className="text-emerald-400/80 text-xs mt-0.5">
-                        {tour.tour_logs.length} {language === 'EN' ? 'species logged' : 'especies registradas'}
-                      </p>
-                    </div>
-                    <div className="flex gap-2">
-                      <button onClick={() => handleCopyTourLink(tour.id)} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white" title={language === 'EN' ? 'Copy Link' : 'Copiar Enlace'}>
-                        <Copy className="w-4 h-4" />
-                      </button>
-                      <button onClick={() => handleDeleteTour(tour.id)} className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-colors text-white/50 hover:text-red-400" title={language === 'EN' ? 'Delete Tour' : 'Eliminar Tour'}>
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-
-          <button 
-            onClick={() => { setGuideId(''); setGuideName(''); }} 
-            className="mt-8 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
-          >
-            {language === 'EN' ? 'Log out of Guide Portal' : 'Cerrar Sesión'}
-          </button>
-        </div>
-      </div>
-    );
-  }
   // --- END NEW ---
   
 if (showExport) {
@@ -421,11 +394,12 @@ if (showExport) {
   onBack={() => setShowExport(false)}
   setLanguage={setLanguage}
  onEndSession={() => {
-  setShowExport(false);
-  setTourId(null); // This triggers the Lobby view!
-  localStorage.removeItem('corcovado_tour_id');
-  setSpecies((initialSpecies as Species[]).map(normalize)); // Reset logs
-}}
+    setShowExport(false);
+    setTourId(null); // This triggers the Lobby view!
+    localStorage.removeItem('corcovado_tour_id');
+    // Keep favorites safely intact, only reset the checks!
+    setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
+  }}
 />
     );
   }
