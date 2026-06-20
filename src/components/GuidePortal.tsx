@@ -7,7 +7,7 @@ import { Header } from './Header';
 import { SearchBar, CategoryTabs } from './Filters';
 import { SpeciesGrid } from './SpeciesGrid';
 import { ExportView } from './ExportView';
-import { RotateCcw } from 'lucide-react';
+import { RotateCcw, Copy, Trash2 } from 'lucide-react';
 
 type ActiveFilter = BioCategory | 'Favorites' | null;
 
@@ -72,7 +72,53 @@ export function GuidePortal() {
     if (tourId) localStorage.setItem('corcovado_tour_id', tourId);
     else localStorage.removeItem('corcovado_tour_id');
   }, [tourId]);
+// --- NEW: RECENT TOURS LOGIC ---
+  const [recentTours, setRecentTours] = useState<any[]>([]);
+  const [loadingTours, setLoadingTours] = useState(false);
 
+  useEffect(() => {
+    // Only fetch if we are in the Lobby (logged in, but no active tour)
+    if (guideId && !tourId) {
+      fetchRecentTours();
+    }
+  }, [guideId, tourId]);
+
+  const fetchRecentTours = async () => {
+    setLoadingTours(true);
+    // Fetch completed tours and their attached logs
+    const { data, error } = await supabase
+      .from('tours')
+      .select('id, created_at, tour_logs(id)')
+      .eq('guide_id', guideId)
+      .eq('status', 'completed')
+      .order('created_at', { ascending: false });
+
+    if (data) {
+      // Filter out tours that have 0 logs (the empty misclicks)
+      const validTours = data.filter((t: any) => t.tour_logs && t.tour_logs.length > 0);
+      setRecentTours(validTours);
+    }
+    setLoadingTours(false);
+  };
+
+  const handleDeleteTour = async (idToDelete: string) => {
+    if (!window.confirm(language === 'EN' ? "Are you sure you want to delete this test tour?" : "¿Seguro que quieres eliminar este tour de prueba?")) return;
+    
+    // Delete logs first just in case Supabase isn't set to cascade delete
+    await supabase.from('tour_logs').delete().eq('tour_id', idToDelete);
+    await supabase.from('tours').delete().eq('id', idToDelete);
+    
+    // Remove it from the screen
+    setRecentTours(prev => prev.filter(t => t.id !== idToDelete));
+  };
+
+  const handleCopyTourLink = (idToCopy: string) => {
+    // You can customize this URL structure later!
+    const guestLink = `${window.location.origin}/tour/${idToCopy}`;
+    navigator.clipboard.writeText(guestLink);
+    alert(language === 'EN' ? "Guest Link Copied!" : "¡Enlace Copiado!");
+  };
+  // --- END RECENT TOURS LOGIC ---
   // --- NEW: Start Tour Logic ---
   const startNewTour = async () => {
     const { data, error } = await supabase
@@ -218,42 +264,79 @@ const handleGenerateClick = async () => {
   }
 
   // Phase 2: Logged in, but haven't started a hike? Show Lobby.
+ // Phase 2: Logged in, but haven't started a hike? Show Lobby.
   if (!tourId) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ background: '#0b170f' }}>
+      <div className="min-h-screen flex flex-col items-center py-12 px-6" style={{ background: '#0b170f' }}>
         {/* Language Toggle */}
         <div className="absolute top-6 right-6 flex bg-[#162b1d] rounded-full p-1 shadow-lg">
           <button onClick={() => setLanguage('EN')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'EN' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>EN</button>
           <button onClick={() => setLanguage('ES')} className={`px-4 py-1.5 rounded-full text-sm font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
         </div>
 
-       <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto p-4 gap-6">
-  
-  {/* Header Section */}
-  <div className="text-center">
-    <h1 className="text-3xl font-black text-white mb-2">
-      {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
-    </h1>
-    <p className="text-emerald-400 text-xl font-semibold drop-shadow-md">
-      {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
-    </p>
-  </div>
+        <div className="flex flex-col items-center justify-center w-full max-w-sm mx-auto p-4 gap-6 mt-8">
+          
+          {/* Header Section */}
+          <div className="text-center">
+            <h1 className="text-3xl font-black text-white mb-2">
+              {language === 'EN' ? 'Welcome' : 'Bienvenido'}, {guideName}
+            </h1>
+            <p className="text-emerald-400 text-xl font-semibold drop-shadow-md">
+              {language === 'EN' ? 'Ready to hit the trail?' : '¿Listo para el sendero?'}
+            </p>
+          </div>
 
-  {/* Button Section */}
-  <button 
-    onClick={startNewTour}
-    className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95"
-  >
-    {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
-  </button>
-  
-</div>
-        <button 
-          onClick={() => { setGuideId(''); setGuideName(''); }} 
-          className="mt-16 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
-        >
-          {language === 'EN' ? 'Log out of Guide Portal' : 'Cerrar Sesión'}
-        </button>
+          {/* Start Tour Button */}
+          <button 
+            onClick={startNewTour}
+            className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95 mb-4"
+          >
+            {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
+          </button>
+
+          {/* RECENT TOURS SECTION */}
+          <div className="w-full">
+            <h3 className="text-white/70 font-bold uppercase tracking-widest text-xs mb-4">
+              {language === 'EN' ? 'Recent Tours' : 'Tours Recientes'}
+            </h3>
+            
+            {loadingTours ? (
+              <p className="text-white/50 text-sm">{language === 'EN' ? 'Loading...' : 'Cargando...'}</p>
+            ) : recentTours.length === 0 ? (
+              <p className="text-white/50 text-sm italic">{language === 'EN' ? 'No completed tours yet.' : 'Aún no hay tours completados.'}</p>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {recentTours.map((tour) => (
+                  <div key={tour.id} className="bg-[#162b1d] border border-white/5 rounded-2xl p-4 flex items-center justify-between">
+                    <div>
+                      <p className="text-white font-semibold text-sm">
+                        {new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      </p>
+                      <p className="text-emerald-400/80 text-xs mt-0.5">
+                        {tour.tour_logs.length} {language === 'EN' ? 'species logged' : 'especies registradas'}
+                      </p>
+                    </div>
+                    <div className="flex gap-2">
+                      <button onClick={() => handleCopyTourLink(tour.id)} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white" title={language === 'EN' ? 'Copy Link' : 'Copiar Enlace'}>
+                        <Copy className="w-4 h-4" />
+                      </button>
+                      <button onClick={() => handleDeleteTour(tour.id)} className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-colors text-white/50 hover:text-red-400" title={language === 'EN' ? 'Delete Tour' : 'Eliminar Tour'}>
+                        <Trash2 className="w-4 h-4" />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          <button 
+            onClick={() => { setGuideId(''); setGuideName(''); }} 
+            className="mt-8 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
+          >
+            {language === 'EN' ? 'Log out of Guide Portal' : 'Cerrar Sesión'}
+          </button>
+        </div>
       </div>
     );
   }
