@@ -316,7 +316,7 @@ if (!tourId || !sessionActive) {
           <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-3 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
             <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
             <p className="text-white/50 text-[9px] font-bold uppercase tracking-wider mb-1 text-center">
-              {language === 'EN' ? 'Tours' : 'Tours'}
+              {language === 'EN' ? 'Tours' : 'Recorridos'}
             </p>
             <p className="text-xl font-black text-white">{recentTours.length}</p>
           </div>
@@ -334,7 +334,7 @@ if (!tourId || !sessionActive) {
           <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-3 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
             <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
             <p className="text-white/50 text-[9px] font-bold uppercase tracking-wider mb-1 text-center leading-tight">
-              {language === 'EN' ? 'Avg/Tour' : 'Prom/Tour'}
+              {language === 'EN' ? 'Avg. Species/Tour' : 'Prom. Especies/Tour'}
             </p>
             <p className="text-xl font-black text-white">{avgSpeciesPerTour}</p>
           </div>
