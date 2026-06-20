@@ -274,7 +274,7 @@ const handleGenerateClick = async () => {
 
 // Phase 2: Logged in, but either NO tourId OR session not active? Show Lobby.
 if (!tourId || !sessionActive) {
-  // --- STATS CALCULATIONS ---
+// --- STATS CALCULATIONS ---
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
   const thisMonthTours = recentTours.filter(t => {
@@ -285,6 +285,10 @@ if (!tourId || !sessionActive) {
   const monthName = new Date().toLocaleString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long' });
   const allTimeEarnings = recentTours.length * 10;
   const thisMonthEarnings = thisMonthTours.length * 10;
+  
+  // Calculate average species
+  const totalSpeciesLogged = recentTours.reduce((sum, t) => sum + (t.tour_logs?.length || 0), 0);
+  const avgSpeciesPerTour = recentTours.length > 0 ? (totalSpeciesLogged / recentTours.length).toFixed(1) : "0";
 
   return (
     <div className="min-h-screen flex flex-col items-center py-12 px-6" style={{ background: '#0b170f' }}>
@@ -307,25 +311,26 @@ if (!tourId || !sessionActive) {
         </div>
 
         {/* STATS DASHBOARD */}
-        <div className="w-full grid grid-cols-2 gap-3 mb-2">
-          {/* This Month Stat */}
-          <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
+        <div className="w-full grid grid-cols-3 gap-2 mb-2">
+          {/* Tours Block */}
+          <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-3 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
             <div className="absolute top-0 left-0 w-full h-1 bg-emerald-500"></div>
-            <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
-              {language === 'EN' ? `${monthName} Tours` : `Tours de ${monthName}`}
-            </p>
-            <p className="text-3xl font-black text-white">{thisMonthTours.length}</p>
-            <p className="text-emerald-400 text-xs font-bold mt-1">~${thisMonthEarnings}</p>
+            <p className="text-white/50 text-[9px] font-bold uppercase tracking-wider mb-1 text-center">Tours</p>
+            <p className="text-xl font-black text-white">{recentTours.length}</p>
           </div>
 
-          {/* All Time Stat */}
-          <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-4 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
+          {/* Earnings Block */}
+          <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-3 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
             <div className="absolute top-0 left-0 w-full h-1 bg-[#C86A27]"></div>
-            <p className="text-white/50 text-[10px] font-bold uppercase tracking-wider mb-1 text-center">
-              {language === 'EN' ? 'All-Time Tours' : 'Tours Totales'}
-            </p>
-            <p className="text-3xl font-black text-white">{recentTours.length}</p>
-            <p className="text-[#C86A27] text-xs font-bold mt-1">~${allTimeEarnings}</p>
+            <p className="text-white/50 text-[9px] font-bold uppercase tracking-wider mb-1 text-center">Earnings</p>
+            <p className="text-xl font-black text-white">${allTimeEarnings}</p>
+          </div>
+
+          {/* Avg Species Block */}
+          <div className="bg-[#162b1d] border border-white/10 rounded-2xl p-3 flex flex-col items-center justify-center relative overflow-hidden shadow-lg">
+            <div className="absolute top-0 left-0 w-full h-1 bg-blue-500"></div>
+            <p className="text-white/50 text-[9px] font-bold uppercase tracking-wider mb-1 text-center">Avg/Tour</p>
+            <p className="text-xl font-black text-white">{avgSpeciesPerTour}</p>
           </div>
         </div>
 
