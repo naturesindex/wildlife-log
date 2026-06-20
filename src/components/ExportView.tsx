@@ -1,4 +1,4 @@
-import { CheckCircle, Copy, ArrowLeft, Trophy } from 'lucide-react';
+import { CheckCircle, Copy, ArrowLeft, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { Species, Language } from '../types';
 
@@ -8,10 +8,11 @@ interface ExportViewProps {
   guideName: string;
   tourId: string | null;
   onBack: () => void;
-  onLanguageToggle: () => void;
+  onEndSession: () => void; // New prop to go back to lobby
+  setLanguage: (lang: Language) => void; // New prop for the toggle
 }
 
-export function ExportView({ loggedSpecies, language, tourId, onBack }: ExportViewProps) {
+export function ExportView({ loggedSpecies, language, tourId, onBack, onEndSession, setLanguage }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
 
   // Fallback to the current window URL if test mode doesn't have a tourId
@@ -23,12 +24,16 @@ export function ExportView({ loggedSpecies, language, tourId, onBack }: ExportVi
     setTimeout(() => setCopied(false), 2000);
   };
 
-  // Find how many "Tier 1" (Highlights) they saw!
-  const tier1Count = loggedSpecies.filter(s => s.tier === 1).length;
-
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6 font-sans" style={{ background: '#0b170f' }}>
-      <div className="w-full max-w-md bg-[#162b1d] p-8 rounded-3xl shadow-2xl border border-white/10 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center p-6 font-sans relative" style={{ background: '#0b170f' }}>
+      
+      {/* Language Toggle */}
+      <div className="absolute top-6 right-6 flex bg-white/10 rounded-full p-1 backdrop-blur-md">
+        <button onClick={() => setLanguage('EN')} className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${language === 'EN' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>EN</button>
+        <button onClick={() => setLanguage('ES')} className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${language === 'ES' ? 'bg-[#C86A27] text-white' : 'text-white/50'}`}>ES</button>
+      </div>
+
+      <div className="w-full max-w-md bg-[#162b1d] p-8 rounded-3xl shadow-2xl border border-white/10 text-center mt-8">
         
         {/* Success Icon */}
         <div className="flex justify-center mb-6">
@@ -46,23 +51,12 @@ export function ExportView({ loggedSpecies, language, tourId, onBack }: ExportVi
             : 'Buen trabajo. Comparte este enlace con tus invitados para que accedan a su pasaporte digital.'}
         </p>
 
-        {/* Motivational Stats Box */}
-        <div className="bg-black/30 rounded-2xl p-4 mb-8 flex items-center justify-around border border-white/5 shadow-inner">
-          <div className="text-center w-1/2">
-            <p className="text-4xl font-black text-[#C86A27] mb-1">{loggedSpecies.length}</p>
-            <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold">
-              {language === 'EN' ? 'Total Species' : 'Especies Totales'}
-            </p>
-          </div>
-          <div className="w-px h-12 bg-white/10"></div>
-          <div className="text-center w-1/2">
-            <p className="text-4xl font-black text-emerald-400 flex items-center justify-center gap-1 mb-1">
-              {tier1Count} <Trophy className="w-6 h-6 mb-1 text-emerald-500" />
-            </p>
-            <p className="text-[10px] text-white/50 uppercase tracking-widest font-bold">
-              {language === 'EN' ? 'Rare Finds' : 'Hallazgos Raros'}
-            </p>
-          </div>
+        {/* Simplified Motivational Stats Box */}
+        <div className="bg-black/30 rounded-2xl p-6 mb-8 flex flex-col items-center justify-center border border-white/5 shadow-inner">
+          <p className="text-6xl font-black text-[#C86A27] mb-2">{loggedSpecies.length}</p>
+          <p className="text-xs text-white/50 uppercase tracking-widest font-bold">
+            {language === 'EN' ? 'Total Species Logged' : 'Especies Registradas'}
+          </p>
         </div>
 
         {/* The Link Button */}
@@ -80,10 +74,19 @@ export function ExportView({ loggedSpecies, language, tourId, onBack }: ExportVi
         {/* Back Button */}
         <button 
           onClick={onBack}
-          className="text-white/40 hover:text-white transition-colors flex items-center justify-center gap-2 w-full font-semibold text-sm"
+          className="w-full py-4 rounded-xl font-bold text-white/70 hover:bg-white/5 transition-all flex items-center justify-center gap-2 mb-2"
         >
           <ArrowLeft className="w-4 h-4" />
-          {language === 'EN' ? 'Back to Portal Lobby' : 'Volver al Inicio'}
+          {language === 'EN' ? "Back to Today's Log" : 'Volver al Registro de Hoy'}
+        </button>
+
+        {/* End Session Button */}
+        <button 
+          onClick={onEndSession}
+          className="w-full py-4 rounded-xl font-bold text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-all flex items-center justify-center gap-2"
+        >
+          <LogOut className="w-4 h-4" />
+          {language === 'EN' ? "End Session" : 'Finalizar Sesión'}
         </button>
         
       </div>
