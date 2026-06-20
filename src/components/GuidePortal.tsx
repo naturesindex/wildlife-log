@@ -382,13 +382,23 @@ const handleGenerateClick = async () => {
 if (showExport) {
     return (
       <ExportView
-        loggedSpecies={loggedSpecies}
-        language={language}
-        guideName={guideName}
-        tourId={tourId}
-        onBack={() => setShowExport(false)}
-        onLanguageToggle={() => setLanguage((l) => (l === 'EN' ? 'ES' : 'EN'))}
-      />
+  loggedSpecies={loggedSpecies}
+  language={language}
+  guideName={guideName}
+  tourId={tourId}
+  onBack={() => setShowExport(false)}
+  setLanguage={(lang) => setLanguage(lang)}
+  onEndSession={() => {
+    // 1. Reset species to default (all isLogged = false)
+    setSpecies(initialSpecies);
+    // 2. Hide the export screen
+    setShowExport(false);
+    // 3. Clear localStorage for this session
+    localStorage.removeItem('corcovado_species_state');
+    // 4. Reload to return to lobby (this resets the app state)
+    window.location.reload();
+  }}
+/>
     );
   }
 
