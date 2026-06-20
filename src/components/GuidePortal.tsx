@@ -36,8 +36,13 @@ export function GuidePortal() {
   const [tourId, setTourId] = useState<string | null>(() => {
     return localStorage.getItem('corcovado_tour_id') || null;
   });
+  
   const [guideId, setGuideId] = useState(() => {
     return localStorage.getItem('corcovado_guide_id') || '';
+  });
+
+  const [sessionActive, setSessionActive] = useState(() => {
+    return localStorage.getItem('corcovado_session_active') !== 'false';
   });
 
   // 1b. Initialize species from localStorage OR default data
@@ -82,6 +87,10 @@ export function GuidePortal() {
       fetchRecentTours();
     }
   }, [guideId, tourId]);
+
+  useEffect(() => {
+    localStorage.setItem('corcovado_session_active', String(sessionActive));
+  }, [sessionActive]);
 
   const fetchRecentTours = async () => {
     setLoadingTours(true);
@@ -280,6 +289,24 @@ const handleGenerateClick = async () => {
     const allTimeEarnings = recentTours.length * 10;
     const thisMonthEarnings = thisMonthTours.length * 10;
 
+    if (!sessionActive) {
+    return (
+      <div className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-[#0b170f]">
+        <h1 className="text-3xl font-black text-white mb-2">Welcome, {guideName}!</h1>
+        <p className="text-white/70 mb-8">Ready to start a new tour?</p>
+        <button 
+          onClick={() => {
+            setSpecies((initialSpecies as Species[]).map(normalize));
+            setSessionActive(true);
+          }}
+          className="bg-[#C86A27] text-white px-8 py-4 rounded-2xl font-black text-lg hover:bg-[#b05a1f] transition-all"
+        >
+          Start New Tour
+        </button>
+      </div>
+    );
+  }
+    
     return (
       <div className="min-h-screen flex flex-col items-center py-12 px-6" style={{ background: '#0b170f' }}>
         {/* Language Toggle */}
