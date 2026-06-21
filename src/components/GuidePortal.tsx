@@ -60,7 +60,8 @@ export function GuidePortal() {
   });
 
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
-  const [selectedZone, setSelectedZone] = useState('Sirena'); // NEW: Route selection
+const [expeditionType, setExpeditionType] = useState('Sirena Station (Day Tour)');
+  const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<ActiveFilter>(null);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -144,7 +145,7 @@ const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
   const startNewTour = async () => {
     const { data, error } = await supabase
       .from('tours')
-      .insert({ guide_id: guideId, status: 'active', zone: selectedZone })
+      .insert({ guide_id: guideId, status: 'active', zone: expeditionType })
       .select()
       .single();
 
@@ -154,10 +155,10 @@ const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
       return;
     }
 
-  if (data) {
-      setTourId(data.id); // This officially starts the hike!
-      setSessionActive(true); // <--- THIS WAS MISSING! Wakes the app up!
-      // Clear out yesterday's checked animals
+    if (data) {
+      setTourId(data.id);
+      setSessionActive(true);
+      setShowExpeditionModal(false); // Closes our sleek new popup!
       setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
     }
   };
@@ -365,28 +366,10 @@ if (!tourId || !sessionActive) {
           </div>
         </div>
 
-        {/* Route Selector */}
-        <div className="w-full mb-4">
-          <label className="text-white/70 text-xs font-bold uppercase tracking-wider mb-2 block ml-2">
-            {language === 'EN' ? 'Select Route' : 'Seleccionar Ruta'}
-          </label>
-          <select
-            value={selectedZone}
-            onChange={(e) => setSelectedZone(e.target.value)}
-            className="w-full bg-[#162b1d] text-white font-semibold text-lg p-4 rounded-2xl border border-white/10 appearance-none outline-none focus:border-[#C86A27] transition-colors shadow-lg"
-            style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23FFFFFF%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 1.5rem top 50%', backgroundSize: '0.8rem auto' }}
-          >
-            <option value="Sirena">Sirena Sector</option>
-            <option value="San Pedrillo">San Pedrillo Sector</option>
-            <option value="La Leona">La Leona Sector</option>
-            <option value="Los Patos">Los Patos Sector</option>
-          </select>
-        </div>
-
-        {/* Start Tour Button */}
+{/* Start Tour Button (Intercepts with Modal) */}
         <button 
-          onClick={startNewTour}
-          className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95 mb-4"
+          onClick={() => setShowExpeditionModal(true)}
+          className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95 mb-4 mt-4"
         >
           {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
         </button>
@@ -509,6 +492,53 @@ if (showExport) {
           </button>
         </div>
       </div>
+
+{/* EXPEDITION SELECTOR MODAL */}
+      {showExpeditionModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+          <div className="bg-[#162b1d] border border-[#C86A27]/30 rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+            <h3 className="text-xl font-black text-white mb-1">
+              {language === 'EN' ? 'Select Expedition' : 'Seleccionar Expedición'}
+            </h3>
+            <p className="text-white/60 mb-6 text-sm">
+              {language === 'EN' ? 'Choose your route to start logging.' : 'Elige tu ruta para empezar.'}
+            </p>
+            <div className="flex flex-col gap-3 mb-6">
+              {[
+                { id: 'Sirena Station (Day Tour)', km: '7.5km' },
+                { id: 'San Pedrillo Station (Day Tour)', km: '6.5km' },
+                { id: 'Sirena Station (Overnight)', km: '10km' },
+                { id: 'Combo: Sirena + San Pedrillo (day tour)', km: '10km' },
+                { id: 'Combo: Sirena + San Pedrillo (overnight)', km: '20km' },
+                { id: 'Combo: Sirena + San Pedrillo (3 day)', km: '30km' }
+              ].map((exp) => (
+                <button
+                  key={exp.id}
+                  onClick={() => setExpeditionType(exp.id)}
+                  className={`flex justify-between items-center p-4 rounded-xl border text-left transition-all ${expeditionType === exp.id ? 'bg-[#C86A27]/20 border-[#C86A27] text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'}`}
+                >
+                  <span className="font-bold text-sm leading-tight pr-2">{exp.id}</span>
+                  <span className="text-xs font-semibold opacity-70 whitespace-nowrap">{exp.km}</span>
+                </button>
+              ))}
+            </div>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowExpeditionModal(false)}
+                className="flex-1 py-3 px-4 rounded-xl font-semibold text-white/70 bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+              >
+                {language === 'EN' ? 'Cancel' : 'Cancelar'}
+              </button>
+              <button
+                onClick={startNewTour}
+                className="flex-1 py-3 px-4 rounded-xl font-black text-white bg-[#C86A27] hover:bg-[#b05a1f] transition-all"
+              >
+                {language === 'EN' ? 'Begin' : 'Comenzar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* RESET CONFIRMATION MODAL */}
       {showResetConfirm && (
