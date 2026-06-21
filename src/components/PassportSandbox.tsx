@@ -140,7 +140,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </div>
               </div>
 
-              <div className="flex items-start gap-4 mt-6">
+<div className="flex items-start gap-4 mt-6">
                 <div className={`${ratingBg} p-3 rounded-full ${ratingColor}`}>
                   <Trophy className="w-6 h-6" />
                 </div>
@@ -149,7 +149,6 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                   <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Expedition Rating</p>
                 </div>
               </div>
-            </div>
             </div>
           </div>
         </div>
