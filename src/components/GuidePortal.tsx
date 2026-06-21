@@ -415,8 +415,56 @@ if (!tourId || !sessionActive) {
           onClick={() => { setGuideId(''); setGuideName(''); }} 
           className="mt-8 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
         >
-          {language === 'EN' ? 'Log out of Guide Portal' : 'Cerrar Sesión'}
+{language === 'EN' ? 'Log out of Guide Portal' : 'Cerrar Sesión'}
         </button>
+
+        {/* EXPEDITION SELECTOR MODAL */}
+        {showExpeditionModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+            <div className="bg-[#162b1d] border border-[#C86A27]/30 rounded-3xl p-6 w-full max-w-sm shadow-2xl">
+              <h3 className="text-xl font-black text-white mb-1">
+                {language === 'EN' ? 'Select Expedition' : 'Seleccionar Expedición'}
+              </h3>
+              <p className="text-white/60 mb-6 text-sm">
+                {language === 'EN' ? 'Choose your route to start logging.' : 'Elige tu ruta para empezar.'}
+              </p>
+              <div className="flex flex-col gap-3 mb-6">
+                {[
+                  { id: 'Sirena Station (Day Tour)', km: '7.5km' },
+                  { id: 'San Pedrillo Station (Day Tour)', km: '6.5km' },
+                  { id: 'Sirena Station (Overnight)', km: '10km' },
+                  { id: 'Combo: Sirena + San Pedrillo (day tour)', km: '10km' },
+                  { id: 'Combo: Sirena + San Pedrillo (overnight)', km: '20km' },
+                  { id: 'Combo: Sirena + San Pedrillo (3 day)', km: '30km' }
+                ].map((exp) => (
+                  <button
+                    key={exp.id}
+                    onClick={() => setExpeditionType(exp.id)}
+                    className={`flex justify-between items-center p-4 rounded-xl border text-left transition-all ${expeditionType === exp.id ? 'bg-[#C86A27]/20 border-[#C86A27] text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'}`}
+                  >
+                    <span className="font-bold text-sm leading-tight pr-2">{exp.id}</span>
+                    <span className="text-xs font-semibold opacity-70 whitespace-nowrap">{exp.km}</span>
+                  </button>
+                ))}
+              </div>
+              <div className="flex gap-3">
+                <button
+                  onClick={() => setShowExpeditionModal(false)}
+                  className="flex-1 py-3 px-4 rounded-xl font-semibold text-white/70 bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
+                >
+                  {language === 'EN' ? 'Cancel' : 'Cancelar'}
+                </button>
+                <button
+                  onClick={startNewTour}
+                  className="flex-1 py-3 px-4 rounded-xl font-black text-white bg-[#C86A27] hover:bg-[#b05a1f] transition-all"
+                >
+                  {language === 'EN' ? 'Begin' : 'Comenzar'}
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+        
       </div>
     </div>
   );
@@ -492,53 +540,6 @@ if (showExport) {
           </button>
         </div>
       </div>
-
-{/* EXPEDITION SELECTOR MODAL */}
-      {showExpeditionModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-          <div className="bg-[#162b1d] border border-[#C86A27]/30 rounded-3xl p-6 w-full max-w-sm shadow-2xl">
-            <h3 className="text-xl font-black text-white mb-1">
-              {language === 'EN' ? 'Select Expedition' : 'Seleccionar Expedición'}
-            </h3>
-            <p className="text-white/60 mb-6 text-sm">
-              {language === 'EN' ? 'Choose your route to start logging.' : 'Elige tu ruta para empezar.'}
-            </p>
-            <div className="flex flex-col gap-3 mb-6">
-              {[
-                { id: 'Sirena Station (Day Tour)', km: '7.5km' },
-                { id: 'San Pedrillo Station (Day Tour)', km: '6.5km' },
-                { id: 'Sirena Station (Overnight)', km: '10km' },
-                { id: 'Combo: Sirena + San Pedrillo (day tour)', km: '10km' },
-                { id: 'Combo: Sirena + San Pedrillo (overnight)', km: '20km' },
-                { id: 'Combo: Sirena + San Pedrillo (3 day)', km: '30km' }
-              ].map((exp) => (
-                <button
-                  key={exp.id}
-                  onClick={() => setExpeditionType(exp.id)}
-                  className={`flex justify-between items-center p-4 rounded-xl border text-left transition-all ${expeditionType === exp.id ? 'bg-[#C86A27]/20 border-[#C86A27] text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'}`}
-                >
-                  <span className="font-bold text-sm leading-tight pr-2">{exp.id}</span>
-                  <span className="text-xs font-semibold opacity-70 whitespace-nowrap">{exp.km}</span>
-                </button>
-              ))}
-            </div>
-            <div className="flex gap-3">
-              <button
-                onClick={() => setShowExpeditionModal(false)}
-                className="flex-1 py-3 px-4 rounded-xl font-semibold text-white/70 bg-white/5 border border-white/10 hover:bg-white/10 transition-all"
-              >
-                {language === 'EN' ? 'Cancel' : 'Cancelar'}
-              </button>
-              <button
-                onClick={startNewTour}
-                className="flex-1 py-3 px-4 rounded-xl font-black text-white bg-[#C86A27] hover:bg-[#b05a1f] transition-all"
-              >
-                {language === 'EN' ? 'Begin' : 'Comenzar'}
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* RESET CONFIRMATION MODAL */}
       {showResetConfirm && (
