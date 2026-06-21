@@ -9,106 +9,101 @@ interface SocialStoryProps {
 
 const HERO_ORANGE = '#C86A27';
 
-function StoryPhoto({ species, language }: { species: Species; language: Language; }) {
-  const primaryName = language === 'EN' ? species.nameEN : species.nameES;
-  return (
-    <div className="w-full relative mb-5">
-      <img
-        src={`${species.image}?v=1`}
-        alt={primaryName}
-        className="w-full rounded-2xl block"
-        crossOrigin="anonymous"
-        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?auto=format&fit=crop&q=80&w=500'; }}
-      />
-      <div className="absolute bottom-0 translate-y-1/2 left-0 w-full flex justify-center z-20 px-1">
-        <div className="w-full max-w-[85%] py-1.5 px-2 rounded-lg shadow-md flex items-center justify-center" style={{ backgroundColor: HERO_ORANGE }}>
-          <p className="text-white font-bold text-[10px] leading-none m-0 text-center truncate block">{primaryName}</p>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export function SocialStory({
   loggedSpecies,
   language,
   guideName,
   totalLogged,
 }: SocialStoryProps) {
-  const sorted = [
-    ...loggedSpecies.filter((s) => s.tier === 1),
+  // Calculate stats for the Strava-like dashboard
+  const rareSpecies = loggedSpecies.filter((s) => s.tier === 1);
+  const rareCount = rareSpecies.length;
+  
+  // Grab top 3 for the premium showcase (dynamic grid looks better than 4 cramped ones)
+  const featured = [
+    ...rareSpecies,
     ...loggedSpecies.filter((s) => s.tier === 2),
     ...loggedSpecies.filter((s) => s.tier === 3),
-  ];
+  ].slice(0, 3);
   
-  const featured = sorted.slice(0, 4);
-  const otherCount = totalLogged - featured.length;
-
-  const leftColumn = featured.filter((_, index) => index % 2 === 0);
-  const rightColumn = featured.filter((_, index) => index % 2 !== 0);
-
-  const titleTextLine1 = language === 'EN' ? 'What I Saw Today in' : 'Lo Que Vi Hoy en el';
-  const titleTextLine2 = language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado';
-  const withText = language === 'EN' ? 'With [Your Company Name]' : 'Con [Tu Empresa]';
-  const guideText = language === 'EN' ? 'Guide:' : 'Guía:';
-  const otherSpeciesText = language === 'EN' ? `+ ${otherCount} other species!` : `+ ¡${otherCount} otras especies!`;
-  const noSpeciesText = language === 'EN' ? 'No species logged' : 'Aún no se han registrado especies';
+  const titleTextLine1 = language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado';
+  const titleTextLine2 = language === 'EN' ? 'Deep Jungle Expedition' : 'Expedición en la Selva';
+  const withText = language === 'EN' ? 'Guided by' : 'Guiado por';
 
   return (
-    <div
-      // 1. ADDED: 'flex flex-col' so the top and bottom stack naturally
-      className="relative bg-[#162b1d] rounded-2xl overflow-hidden flex flex-col"
+    <div 
+      className="relative bg-[#0b170f] rounded-2xl overflow-hidden flex flex-col font-sans border border-white/10" 
       style={{ aspectRatio: '9/16' }}
     >
-      {/* 2. REMOVED: 'absolute inset-0 pb-[220px]'. ADDED: 'flex-1' so it fills available space */}
-      <div className="flex-1 p-4 flex flex-col justify-center overflow-hidden">
-        {featured.length === 0 ? (
-          <div className="flex items-center justify-center h-full">
-            <p className="text-white/30 text-sm block m-0">{noSpeciesText}</p>
+      {/* Top Strava-Style Stat Block */}
+      <div className="w-full shrink-0 bg-[#162b1d] p-5 border-b border-white/10 relative overflow-hidden">
+        {/* Fake Topo Map texture using CSS gradients */}
+        <div className="absolute inset-0 opacity-10" style={{ backgroundImage: 'radial-gradient(circle at 100% 0%, transparent 20%, #C86A27 21%, transparent 22%), radial-gradient(circle at 100% 0%, transparent 40%, #C86A27 41%, transparent 42%), radial-gradient(circle at 100% 0%, transparent 60%, #C86A27 61%, transparent 62%)', backgroundSize: '100px 100px' }}></div>
+        
+        <h3 className="text-[#C86A27] font-black tracking-widest text-[10px] uppercase mb-3 relative z-10">
+          {language === 'EN' ? 'Expedition Stats' : 'Estadísticas del Trek'}
+        </h3>
+        
+        <div className="flex justify-between items-end relative z-10">
+          <div className="flex flex-col">
+            <span className="text-white/50 text-[10px] uppercase font-bold tracking-wider mb-0.5">
+              {language === 'EN' ? 'Total Species' : 'Especies Total'}
+            </span>
+            <span className="text-white font-black text-4xl leading-none">{totalLogged}</span>
           </div>
+          
+          <div className="flex flex-col border-l border-white/20 pl-4">
+            <span className="text-white/50 text-[10px] uppercase font-bold tracking-wider mb-0.5">
+              {language === 'EN' ? 'Rare Sightings' : 'Avistamientos Raros'}
+            </span>
+            <span className="text-emerald-400 font-black text-3xl leading-none">{rareCount}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Photo Showcase (Dynamic Grid) */}
+      <div className="flex-1 p-3 flex flex-col gap-2 overflow-hidden bg-[#0b170f]">
+        {featured.length === 0 ? (
+           <div className="flex items-center justify-center h-full border-2 border-dashed border-white/10 rounded-xl">
+             <p className="text-white/30 text-sm font-semibold uppercase tracking-widest">
+               {language === 'EN' ? 'No species logged' : 'No hay registros'}
+             </p>
+           </div>
         ) : (
-          <div className="flex gap-4 items-center">
-            <div className="flex-1 flex flex-col gap-4">
-              {leftColumn.map((s) => (
-                <StoryPhoto key={s.id} species={s} language={language} />
-              ))}
-            </div>
-            <div className="flex-1 flex flex-col gap-4"> 
-              {rightColumn.map((s) => (
-                <StoryPhoto key={s.id} species={s} language={language} />
-              ))}
-            </div>
+          <div className={`w-full h-full grid gap-2 ${featured.length === 3 ? 'grid-cols-2 grid-rows-2' : featured.length === 2 ? 'grid-cols-1 grid-rows-2' : 'grid-cols-1 grid-rows-1'}`}>
+            {featured.map((s, i) => {
+              const isHero = featured.length === 3 && i === 0; // First photo takes top row
+              return (
+                <div key={s.id} className={`relative rounded-xl overflow-hidden ${isHero ? 'col-span-2 row-span-1' : ''}`}>
+                  <img 
+                    src={`${s.image}?v=1`} 
+                    alt={s.nameEN} 
+                    className="absolute inset-0 w-full h-full object-cover"
+                    crossOrigin="anonymous"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
+                  <p className="absolute bottom-2 left-3 text-white font-bold text-xs uppercase tracking-wide shadow-black drop-shadow-md z-10">
+                    {language === 'EN' ? s.nameEN : s.nameES}
+                  </p>
+                </div>
+              );
+            })}
           </div>
         )}
       </div>
 
-      {/* 3. REMOVED: 'absolute bottom-0 left-0 right-0 z-20'. ADDED: 'w-full shrink-0' */}
-      <div className="w-full shrink-0 h-[220px] bg-[#0b170f]/95 border-t border-white/10 px-6 pt-6 block">
-        <div className="text-center mb-2 block">
-          <h2 className="font-serif text-white font-black text-2xl leading-[28px] m-0 block">
-            {titleTextLine1}<br />{titleTextLine2}
-          </h2>
+      {/* Footer Branding */}
+      <div className="w-full shrink-0 h-[90px] bg-gradient-to-t from-[#C86A27] to-[#b05a1f] px-5 flex flex-col justify-center relative overflow-hidden">
+        {/* Decorative Circle */}
+        <div className="absolute top-0 right-0 opacity-20 transform translate-x-1/4 -translate-y-1/4">
+          <div className="w-32 h-32 rounded-full border-[16px] border-white"></div>
         </div>
-
-        <p className="text-white/60 text-sm font-light italic text-center mb-2 leading-[20px] m-0 block">
-          {withText}
+        <h2 className="text-white font-black text-[18px] leading-tight m-0 uppercase tracking-wide relative z-10 drop-shadow-md">
+          {titleTextLine1}
+        </h2>
+        <p className="text-white/90 text-[10px] font-bold uppercase tracking-wider mt-0.5 relative z-10 drop-shadow-md">
+          {titleTextLine2} • {withText} {guideName}
         </p>
-
-        {guideName && (
-          <div className="text-center mb-4 block">
-            <p className="text-white/40 text-xs leading-[16px] m-0 block">
-              {guideText} {guideName}
-            </p>
-          </div>
-        )}
-
-        {otherCount > 0 && (
-          <div className="text-center block mt-2">
-            <div className="inline-block rounded-full px-5 py-2" style={{ backgroundColor: HERO_ORANGE }}>
-              <p className="text-white font-bold text-sm m-0 block">{otherSpeciesText}</p>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
