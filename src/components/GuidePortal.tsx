@@ -83,9 +83,11 @@ const [expeditionType, setExpeditionType] = useState('Sirena Station (Day Tour)'
   }, [tourId]);
 // --- NEW: RECENT TOURS LOGIC ---
   const [recentTours, setRecentTours] = useState<any[]>([]);
-  const [loadingTours, setLoadingTours] = useState(false);
+ const [loadingTours, setLoadingTours] = useState(false);
   const [showSandbox, setShowSandbox] = useState(false);
   const [sandboxSpecies, setSandboxSpecies] = useState<Species[]>([]);
+  const [showArchive, setShowArchive] = useState(false); // NEW: Archive State
+
   useEffect(() => {
     // Only fetch if we are in the Lobby (logged in, but no active tour)
     if (guideId && !tourId) {
@@ -99,10 +101,11 @@ const [expeditionType, setExpeditionType] = useState('Sirena Station (Day Tour)'
 
   const fetchRecentTours = async () => {
     setLoadingTours(true);
- // Fetch completed tours and their attached logs
+    // Fetch completed tours, sorted newest first!
     const { data, error } = await supabase
       .from('tours')
       .select('id, created_at, tour_logs(species_id)')
+      .order('created_at', { ascending: false }); // NEW: Sorts chronologically
 
     if (data) {
       // Filter out tours that have 0 logs (the empty misclicks)
@@ -375,10 +378,10 @@ if (!tourId || !sessionActive) {
           {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
         </button>
 
-        {/* RECENT TOURS SECTION */}
+{/* RECENT TOURS SECTION */}
         <div className="w-full">
           <h3 className="text-white/70 font-bold uppercase tracking-widest text-xs mb-4">
-            {language === 'EN' ? 'Recent Tours' : 'Tours Recientes'}
+            {language === 'EN' ? 'This Month' : 'Este Mes'}
           </h3>
           
           {loadingTours ? (
@@ -387,32 +390,77 @@ if (!tourId || !sessionActive) {
             <p className="text-white/50 text-sm italic">{language === 'EN' ? 'No completed tours yet.' : 'Aún no hay tours completados.'}</p>
           ) : (
             <div className="flex flex-col gap-3">
-              {recentTours.map((tour) => (
-                <div key={tour.id} className="bg-[#162b1d] border border-white/5 rounded-2xl p-4 flex items-center justify-between">
+              {/* Only map through THIS month's tours first */}
+              {thisMonthTours.map((tour) => (
+                <div key={tour.id} className="bg-[#162b1d] border border-emerald-500/20 rounded-2xl p-4 flex items-center justify-between shadow-lg">
                   <div onClick={() => handleOpenPastTour(tour)} className="cursor-pointer group flex-1">
                     <p className="text-white font-semibold text-sm group-hover:text-[#C86A27] transition-colors flex items-center gap-2">
-                      {new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      {new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'short', day: 'numeric' })}
                       <Eye className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </p>
-                    <p className="text-emerald-400/80 text-xs mt-0.5">
-                      {tour.tour_logs.length} {language === 'EN' ? 'species logged' : 'especies registradas'}
+                    <p className="text-emerald-400/80 text-xs mt-0.5 font-bold">
+                      {tour.tour_logs.length} {language === 'EN' ? 'species' : 'especies'}
                     </p>
                   </div>
                   <div className="flex gap-2">
-                    <button onClick={() => handleCopyTourLink(tour.id)} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white" title={language === 'EN' ? 'Copy Link' : 'Copiar Enlace'}>
+                    <button onClick={() => handleCopyTourLink(tour.id)} className="p-2 bg-[#C86A27] hover:bg-[#b05a1f] rounded-lg transition-colors text-white shadow-md">
                       <Copy className="w-4 h-4" />
                     </button>
-                    <button onClick={() => handleDeleteTour(tour.id)} className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-colors text-white/50 hover:text-red-400" title={language === 'EN' ? 'Delete Tour' : 'Eliminar Tour'}>
+                    <button onClick={() => handleDeleteTour(tour.id)} className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-colors text-white/30 hover:text-red-400">
                       <Trash2 className="w-4 h-4" />
                     </button>
                   </div>
                 </div>
               ))}
+
+              {/* The Archive Folder for older tours */}
+              {recentTours.length > thisMonthTours.length && (
+                <div className="mt-4">
+                  <button 
+                    onClick={() => setShowArchive(!showArchive)}
+                    className="w-full flex items-center justify-between p-4 bg-[#112217] border border-white/5 rounded-2xl text-white/50 hover:text-white transition-colors"
+                  >
+                    <span className="font-bold text-sm tracking-wide uppercase">
+                      {language === 'EN' ? 'Past Tours Archive' : 'Archivo de Tours Pasados'}
+                    </span>
+                    <span className="text-xs bg-white/10 px-2 py-1 rounded-full">
+                      {recentTours.length - thisMonthTours.length}
+                    </span>
+                  </button>
+
+                  {/* Render Archived Tours if toggled open */}
+                  {showArchive && (
+                    <div className="flex flex-col gap-3 mt-3 opacity-70">
+                      {recentTours.filter(t => !thisMonthTours.includes(t)).map((tour) => (
+                        <div key={tour.id} className="bg-[#112217] border border-white/5 rounded-2xl p-4 flex items-center justify-between">
+                          <div onClick={() => handleOpenPastTour(tour)} className="cursor-pointer group flex-1">
+                            <p className="text-white/80 font-medium text-sm group-hover:text-[#C86A27] transition-colors flex items-center gap-2">
+                              {new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
+                              <Eye className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
+                            </p>
+                            <p className="text-emerald-400/50 text-xs mt-0.5">
+                              {tour.tour_logs.length} {language === 'EN' ? 'species' : 'especies'}
+                            </p>
+                          </div>
+                          <div className="flex gap-2">
+                            <button onClick={() => handleCopyTourLink(tour.id)} className="p-2 bg-white/5 hover:bg-white/10 rounded-lg transition-colors text-white/70">
+                              <Copy className="w-4 h-4" />
+                            </button>
+                            <button onClick={() => handleDeleteTour(tour.id)} className="p-2 bg-white/5 hover:bg-red-500/20 rounded-lg transition-colors text-white/30 hover:text-red-400">
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>
 
-        <button 
+        <button
           onClick={() => { setGuideId(''); setGuideName(''); }} 
           className="mt-8 text-white/30 font-semibold text-sm underline hover:text-white/60 transition-colors"
         >
