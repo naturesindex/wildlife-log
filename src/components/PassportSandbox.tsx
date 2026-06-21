@@ -59,9 +59,9 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
           <p className="text-[#C86A27] font-bold tracking-[0.2em] text-sm mb-6 flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4" /> VOLUME I • OFFICIAL SOUVENIR
           </p>
-          <h1 className="text-5xl md:text-7xl font-black text-white leading-tight mb-8">
-            Expedition <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Corcovado</span>
-          </h1>
+<h1 className="text-4xl md:text-7xl font-black text-white leading-tight mb-8 px-2 break-words hyphens-auto">
+  Expedition <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Corcovado</span>
+</h1>
           
           {/* The Personal Story Block */}
           <div className="bg-[#112217]/60 backdrop-blur-sm border border-emerald-500/10 rounded-3xl p-8 md:p-10 text-left shadow-2xl relative overflow-hidden">
@@ -160,14 +160,23 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </p>
               </div>
 
-              {/* Pinterest-Style CSS Columns Container -> Forced 2 columns on mobile! */}
-              <div className="columns-2 md:columns-3 gap-3 md:gap-6">
-                
-                {speciesInSection.map((species, idx) => (
-                  <div 
-                    key={idx} 
-                    className="break-inside-avoid mb-3 md:mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer shadow-lg"
-                  >
+{/* Special Layout for Highlights */}
+{sectionName === "Today's Highlights" ? (
+  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    {speciesInSection.map((species, idx) => (
+      <div key={idx} className="bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl p-2 relative group">
+        <img src={species.image} className="w-full h-64 object-cover rounded-2xl" />
+        <div className="p-4">
+          <h3 className="text-xl font-black text-white">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+        </div>
+      </div>
+    ))}
+  </div>
+) : (
+  /* Standard Pinterest-Style Columns for others */
+  <div className="columns-2 md:columns-3 gap-3 md:gap-6">
+    {speciesInSection.map((species, idx) => (
+      <div key={idx} className="break-inside-avoid mb-3 md:mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer shadow-lg">
                     <div className="w-full relative overflow-hidden">
                       <img 
                         src={species.image} 
