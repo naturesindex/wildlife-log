@@ -429,21 +429,20 @@ if (!tourId || !sessionActive) {
                 {language === 'EN' ? 'Choose your route to start logging.' : 'Elige tu ruta para empezar.'}
               </p>
               <div className="flex flex-col gap-3 mb-6">
-                {[
-                  { id: 'Sirena Station (Day Tour)', km: '7.5km' },
-                  { id: 'San Pedrillo Station (Day Tour)', km: '6.5km' },
-                  { id: 'Sirena Station (Overnight)', km: '10km' },
-                  { id: 'Combo: Sirena + San Pedrillo (day tour)', km: '10km' },
-                  { id: 'Combo: Sirena + San Pedrillo (overnight)', km: '20km' },
-                  { id: 'Combo: Sirena + San Pedrillo (3 day)', km: '30km' }
+            {[
+                  'Sirena Station (Day Tour)',
+                  'San Pedrillo Station (Day Tour)',
+                  'Sirena Station (Overnight)',
+                  'Combo: Sirena + San Pedrillo (day tour)',
+                  'Combo: Sirena + San Pedrillo (overnight)',
+                  'Combo: Sirena + San Pedrillo (3 day)'
                 ].map((exp) => (
                   <button
-                    key={exp.id}
-                    onClick={() => setExpeditionType(exp.id)}
-                    className={`flex justify-between items-center p-4 rounded-xl border text-left transition-all ${expeditionType === exp.id ? 'bg-[#C86A27]/20 border-[#C86A27] text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'}`}
+                    key={exp}
+                    onClick={() => setExpeditionType(exp)}
+                    className={`w-full p-4 rounded-xl border text-left transition-all ${expeditionType === exp ? 'bg-[#C86A27]/20 border-[#C86A27] text-white' : 'bg-white/5 border-white/10 text-white/70 hover:bg-white/10'}`}
                   >
-                    <span className="font-bold text-sm leading-tight pr-2">{exp.id}</span>
-                    <span className="text-xs font-semibold opacity-70 whitespace-nowrap">{exp.km}</span>
+                    <span className="font-bold text-sm leading-tight">{exp}</span>
                   </button>
                 ))}
               </div>
