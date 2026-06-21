@@ -8,7 +8,10 @@ interface SandboxProps {
   onBack: () => void;
 }
 
-export function PassportSandbox({ loggedSpecies, language, guideName, onBack }: SandboxProps) {
+export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName, onBack }: SandboxProps) {
+  // Safety Net: If rawSpecies is undefined (like when history is cleared), default to an empty array so it never crashes!
+  const loggedSpecies = rawSpecies || [];
+  
   // Let's create some dynamic "Wrapped" style stats based on their actual clicks
   const totalSpecies = loggedSpecies.length;
   const tier1Count = loggedSpecies.filter(s => s.tier === 1).length;
