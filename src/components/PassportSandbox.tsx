@@ -117,7 +117,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
             </div>
           </div>
 
-          {/* Stats Side */}
+{/* Stats Side */}
           <div className="w-full md:w-1/2 p-8 md:p-12 relative z-20 bg-gradient-to-br from-[#112217] to-[#0b170f]">
             <h3 className="text-2xl font-black text-white mb-6">
               {language === 'EN' ? "The Trek" : "La Caminata"}
@@ -140,11 +140,12 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </div>
                 <div>
                   <p className="text-3xl font-black text-white">{totalSpecies} <span className="text-lg text-white/50 font-normal">species</span></p>
-<p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Unique Discoveries</p>
+                  <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Unique Discoveries</p>
                 </div>
               </div>
 
-<div className="flex flex-col sm:flex-row gap-6 mt-6 pt-6 border-t border-white/10">
+              {/* Rarity & Expedition Stat Row */}
+              <div className="flex flex-col sm:flex-row gap-6 mt-6 pt-6 border-t border-white/10">
                 <div className="flex items-start gap-4">
                   <div className={`${ratingBg} p-3 rounded-full ${ratingColor}`}>
                     <Trophy className="w-6 h-6" />
@@ -165,18 +166,13 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                   </div>
                 </div>
               </div>
-            </div>
-            
-                  <p className={`text-2xl md:text-3xl font-black ${ratingColor}`}>{expeditionRating}</p>
-                  <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Expedition Rating</p>
-                </div>
-              </div>
+
             </div>
           </div>
         </div>
       </div>
 
-    {/* The Asymmetrical Gallery */}
+      {/* The Asymmetrical Gallery */}
       <div className="max-w-5xl mx-auto px-4 md:px-6">
         
         {/* Iterate over our chapters in the preferred order */}
