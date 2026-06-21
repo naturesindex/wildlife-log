@@ -232,7 +232,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                         {species.scientificName ? species.scientificName : "Species scientifica"}
                       </p>
                       
-                      {species.tier === 1 && (
+                   {species.tier === 1 && (
                         <p className="text-white/60 text-[10px] md:text-sm leading-relaxed mt-2 border-t border-white/10 pt-2 hidden md:block">
                           An incredible find. These species are known to be particularly elusive.
                         </p>
@@ -242,6 +242,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 ))}
                 
               </div>
+            )}
             </div>
           );
         })}
