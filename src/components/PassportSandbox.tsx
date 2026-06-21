@@ -35,9 +35,13 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
     ratingBg = "bg-amber-500/10";
   }
 
-  // Group species by section so we can create beautiful editorial chapters
+ // Calculate Elite Count for our new stat
+  const eliteCount = loggedSpecies.filter(s => s.tier === 1).length;
+  const rarityStat = eliteCount > 0 ? `Top ${Math.max(1, 15 - eliteCount)}%` : "Standard";
+
+  // Group species by section, but FORCE Tier 1 into "Today's Highlights"
   const groupedSpecies = loggedSpecies.reduce((acc, species) => {
-    const sec = species.section || 'Other Discoveries';
+    const sec = species.tier === 1 ? "Today's Highlights" : (species.section || 'Other Notables');
     if (!acc[sec]) acc[sec] = [];
     acc[sec].push(species);
     return acc;
@@ -140,11 +144,29 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </div>
               </div>
 
-<div className="flex items-start gap-4 mt-6">
-                <div className={`${ratingBg} p-3 rounded-full ${ratingColor}`}>
-                  <Trophy className="w-6 h-6" />
+<div className="flex flex-col sm:flex-row gap-6 mt-6 pt-6 border-t border-white/10">
+                <div className="flex items-start gap-4">
+                  <div className={`${ratingBg} p-3 rounded-full ${ratingColor}`}>
+                    <Trophy className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className={`text-2xl md:text-3xl font-black ${ratingColor}`}>{expeditionRating}</p>
+                    <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Expedition Rating</p>
+                  </div>
                 </div>
-                <div>
+
+                <div className="flex items-start gap-4">
+                  <div className="bg-purple-500/10 p-3 rounded-full text-purple-400">
+                    <Sparkles className="w-6 h-6" />
+                  </div>
+                  <div>
+                    <p className="text-2xl md:text-3xl font-black text-purple-400">{rarityStat}</p>
+                    <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Rarity Score</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
                   <p className={`text-2xl md:text-3xl font-black ${ratingColor}`}>{expeditionRating}</p>
                   <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Expedition Rating</p>
                 </div>
