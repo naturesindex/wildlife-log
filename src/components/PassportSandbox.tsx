@@ -1,4 +1,4 @@
-import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf } from 'lucide-react';
+import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf, Trophy } from 'lucide-react';
 import { Species, Language } from '../types';
 
 interface SandboxProps {
@@ -13,8 +13,27 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
   const totalSpecies = loggedSpecies.length;
   
   // Fake data for the demo (Phase 2 will make this dynamic)
-  const mapKms = "8.5";
+ const mapKms = "8.5";
   const guestName = "Explorer"; 
+
+  // Calculate Expedition Rating dynamically based on total species!
+  let expeditionRating = "Jungle Voyager";
+  let ratingColor = "text-blue-400";
+  let ratingBg = "bg-blue-500/10";
+
+  if (totalSpecies >= 25) {
+    expeditionRating = "Elite Explorer";
+    ratingColor = "text-purple-400";
+    ratingBg = "bg-purple-500/10";
+  } else if (totalSpecies <= 10) {
+    expeditionRating = "Stealth Tracker";
+    ratingColor = "text-stone-400";
+    ratingBg = "bg-stone-500/10";
+  } else {
+    expeditionRating = "Seasoned Adventurer";
+    ratingColor = "text-amber-400";
+    ratingBg = "bg-amber-500/10";
+  }
 
   // Group species by section so we can create beautiful editorial chapters
   const groupedSpecies = loggedSpecies.reduce((acc, species) => {
@@ -59,8 +78,9 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
           <p className="text-[#C86A27] font-bold tracking-[0.2em] text-sm mb-6 flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4" /> VOLUME I • OFFICIAL SOUVENIR
           </p>
-<h1 className="text-4xl md:text-7xl font-black text-white leading-tight mb-8 px-2 break-words hyphens-auto">
-  Expedition <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Corcovado</span>
+<h1 className="text-5xl md:text-7xl font-black text-white leading-none mb-8">
+  Expedition <br className="md:hidden" />
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Corcovado</span>
 </h1>
           
           {/* The Personal Story Block */}
@@ -116,9 +136,20 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </div>
                 <div>
                   <p className="text-3xl font-black text-white">{totalSpecies} <span className="text-lg text-white/50 font-normal">species</span></p>
-                  <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Unique Discoveries</p>
+<p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Unique Discoveries</p>
                 </div>
               </div>
+
+              <div className="flex items-start gap-4 mt-6">
+                <div className={`${ratingBg} p-3 rounded-full ${ratingColor}`}>
+                  <Trophy className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className={`text-2xl md:text-3xl font-black ${ratingColor}`}>{expeditionRating}</p>
+                  <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Expedition Rating</p>
+                </div>
+              </div>
+            </div>
             </div>
           </div>
         </div>
@@ -162,12 +193,18 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
 
 {/* Special Layout for Highlights */}
 {sectionName === "Today's Highlights" ? (
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
     {speciesInSection.map((species, idx) => (
-      <div key={idx} className="bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl p-2 relative group">
-        <img src={species.image} className="w-full h-64 object-cover rounded-2xl" />
-        <div className="p-4">
-          <h3 className="text-xl font-black text-white">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+      <div key={idx} className="bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col">
+        <div className="h-64 sm:h-80 w-full relative overflow-hidden p-2">
+          <img src={species.image} className="w-full h-full object-cover rounded-2xl" />
+          <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
+            Elite Tier
+          </div>
+        </div>
+        <div className="p-5 pt-2">
+          <h3 className="text-2xl font-black text-white mb-1">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+          <p className="text-white/50 text-sm italic font-serif">{species.scientificName}</p>
         </div>
       </div>
     ))}
