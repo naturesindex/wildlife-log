@@ -7,7 +7,8 @@ import { Header } from './Header';
 import { SearchBar, CategoryTabs } from './Filters';
 import { SpeciesGrid } from './SpeciesGrid';
 import { ExportView } from './ExportView';
-import { RotateCcw, Copy, Trash2 } from 'lucide-react';
+import { PassportSandbox } from './PassportSandbox';
+import { RotateCcw, Copy, Trash2, Eye } from 'lucide-react';
 
 type ActiveFilter = BioCategory | 'Favorites' | null;
 
@@ -81,7 +82,8 @@ const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
 // --- NEW: RECENT TOURS LOGIC ---
   const [recentTours, setRecentTours] = useState<any[]>([]);
   const [loadingTours, setLoadingTours] = useState(false);
-
+  const [showSandbox, setShowSandbox] = useState(false);
+  const [sandboxSpecies, setSandboxSpecies] = useState<Species[]>([]);
   useEffect(() => {
     // Only fetch if we are in the Lobby (logged in, but no active tour)
     if (guideId && !tourId) {
@@ -95,13 +97,10 @@ const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
 
   const fetchRecentTours = async () => {
     setLoadingTours(true);
-    // Fetch completed tours and their attached logs
+ // Fetch completed tours and their attached logs
     const { data, error } = await supabase
       .from('tours')
-      .select('id, created_at, tour_logs(id)')
-      .eq('guide_id', guideId)
-      .eq('status', 'completed')
-      .order('created_at', { ascending: false });
+      .select('id, created_at, tour_logs(species_id)')
 
     if (data) {
       // Filter out tours that have 0 logs (the empty misclicks)
@@ -127,6 +126,18 @@ const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
     const guestLink = `${window.location.origin}/tour/${idToCopy}`;
     navigator.clipboard.writeText(guestLink);
     alert(language === 'EN' ? "Guest Link Copied!" : "¡Enlace Copiado!");
+  };
+
+  const handleOpenPastTour = (tour: any) => {
+    // Extract just the species IDs from the logs
+    const pastSpeciesIds = tour.tour_logs.map((log: any) => log.species_id);
+    // Rebuild the logged list from our master initialSpecies list
+    const pastLogged = initialSpecies
+      .filter(s => pastSpeciesIds.includes(s.id))
+      .map(s => ({ ...s, isLogged: true }));
+    
+    setSandboxSpecies(pastLogged);
+    setShowSandbox(true);
   };
   // --- END RECENT TOURS LOGIC ---
 // --- NEW: Start Tour Logic ---
@@ -275,6 +286,19 @@ const handleGenerateClick = async () => {
 
 // Phase 2: Logged in, but either NO tourId OR session not active? Show Lobby.
 if (!tourId || !sessionActive) {
+
+  // If they clicked a past tour, show the sandbox!
+  if (showSandbox) {
+    return (
+      <PassportSandbox 
+        loggedSpecies={sandboxSpecies} 
+        language={language} 
+        guideName={guideName} 
+        onBack={() => setShowSandbox(false)} 
+      />
+    );
+  }
+
 // --- STATS CALCULATIONS ---
   const currentMonth = new Date().getMonth();
   const currentYear = new Date().getFullYear();
@@ -381,9 +405,10 @@ if (!tourId || !sessionActive) {
             <div className="flex flex-col gap-3">
               {recentTours.map((tour) => (
                 <div key={tour.id} className="bg-[#162b1d] border border-white/5 rounded-2xl p-4 flex items-center justify-between">
-                  <div>
-                    <p className="text-white font-semibold text-sm">
+                  <div onClick={() => handleOpenPastTour(tour)} className="cursor-pointer group flex-1">
+                    <p className="text-white font-semibold text-sm group-hover:text-[#C86A27] transition-colors flex items-center gap-2">
                       {new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'short', day: 'numeric', year: 'numeric' })}
+                      <Eye className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
                     </p>
                     <p className="text-emerald-400/80 text-xs mt-0.5">
                       {tour.tour_logs.length} {language === 'EN' ? 'species logged' : 'especies registradas'}
