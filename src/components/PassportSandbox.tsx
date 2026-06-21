@@ -124,60 +124,72 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
         </div>
       </div>
 
-      {/* The Asymmetrical Gallery */}
-      <div className="max-w-5xl mx-auto px-6">
+    {/* The Asymmetrical Gallery */}
+      <div className="max-w-5xl mx-auto px-4 md:px-6">
         
         {/* Iterate over our chapters in the preferred order */}
         {sectionOrder.map((sectionName) => {
           const speciesInSection = groupedSpecies[sectionName];
           if (!speciesInSection || speciesInSection.length === 0) return null;
 
+          // Our new "Poetic Blurbs" dictionary!
+          const descriptions: Record<string, {en: string, es: string}> = {
+            "Today's Highlights": { en: "The rare, the elusive, and the magnificent. These sightings are true expedition trophies.", es: "Lo raro, lo esquivo y lo magnífico. Estos avistamientos son verdaderos trofeos." },
+            "The Canopy Crew": { en: "Life from the treetops. Looking up reveals a vibrant world of climbers and flyers.", es: "Vida desde las copas de los árboles. Mirar hacia arriba revela un mundo vibrante." },
+            "The Forest Floor": { en: "The foundation of the jungle. A bustling metropolis of shadows, leaves, and stealth.", es: "Los cimientos de la selva. Una bulliciosa metrópolis de sombras, hojas y sigilo." },
+            "Sea and Shore": { en: "Where the jungle meets the tide. A unique ecosystem of coastal wanderers.", es: "Donde la selva se encuentra con la marea. Un ecosistema único de vagabundos costeros." },
+            "Fascinating Flora": { en: "The ancient giants and complex botanicals that breathe life into Corcovado.", es: "Los antiguos gigantes y complejos botánicos que dan vida a Corcovado." },
+            "Other Notables": { en: "Every detail matters. The supporting cast that makes this ecosystem thrive.", es: "Cada detalle importa. El elenco de apoyo que hace prosperar este ecosistema." }
+          };
+
+          const sectionDesc = descriptions[sectionName] || descriptions["Other Notables"];
+
           return (
-            <div key={sectionName} className="mb-20">
+            <div key={sectionName} className="mb-16 md:mb-20">
               {/* Chapter Header */}
-              <div className="mb-8 border-b border-white/10 pb-4 flex items-center justify-between">
-                <h2 className="text-3xl md:text-4xl font-black text-white capitalize">
-                  {language === 'EN' ? sectionName : sectionName /* We will add a translation dictionary here later! */}
-                </h2>
-                <span className="text-emerald-400 font-bold">{speciesInSection.length} spotted</span>
+              <div className="mb-6 md:mb-8 border-b border-white/10 pb-4">
+                <div className="flex items-end justify-between mb-2">
+                  <h2 className="text-2xl md:text-4xl font-black text-white capitalize">
+                    {language === 'EN' ? sectionName : sectionName}
+                  </h2>
+                  <span className="text-emerald-400 font-bold text-xs md:text-base mb-1">{speciesInSection.length} spotted</span>
+                </div>
+                {/* The personalized section blurb */}
+                <p className="text-white/60 font-light italic text-sm md:text-base leading-relaxed pr-4">
+                  {language === 'EN' ? sectionDesc.en : sectionDesc.es}
+                </p>
               </div>
 
-              {/* Pinterest-Style CSS Columns Container */}
-              <div className="columns-1 sm:columns-2 md:columns-3 gap-6">
+              {/* Pinterest-Style CSS Columns Container -> Forced 2 columns on mobile! */}
+              <div className="columns-2 md:columns-3 gap-3 md:gap-6">
                 
                 {speciesInSection.map((species, idx) => (
                   <div 
                     key={idx} 
-                    // break-inside-avoid prevents cards from being cut in half across columns
-                    className="break-inside-avoid mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer"
+                    className="break-inside-avoid mb-3 md:mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer shadow-lg"
                   >
-                    {/* Natural height image, no aggressive cropping */}
                     <div className="w-full relative overflow-hidden">
                       <img 
                         src={species.image} 
                         alt={species.nameEN} 
                         className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
                       />
-                      {/* Gentle bottom fade just to make text readable if we overlay anything, otherwise minimal */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                     </div>
                     
                     {/* Species Info */}
-                    <div className="p-5">
-                      <h3 className="text-xl font-black text-white leading-tight mb-1 group-hover:text-emerald-400 transition-colors">
+                    <div className="p-3 md:p-5">
+                      <h3 className="text-sm md:text-xl font-black text-white leading-tight mb-1 group-hover:text-emerald-400 transition-colors">
                         {language === 'EN' ? species.nameEN : species.nameES}
                       </h3>
-                      {/* Scientific Name Added Here! */}
-                      {species.scientificName && (
-                        <p className="text-white/40 text-sm italic mb-3 font-serif">
-                          {species.scientificName}
-                        </p>
-                      )}
+                      {/* Forced Scientific Name (with a fallback if empty!) */}
+                      <p className="text-white/50 text-[10px] md:text-sm italic mb-1 md:mb-3 font-serif">
+                        {species.scientificName ? species.scientificName : "Species scientifica"}
+                      </p>
                       
-                      {/* Optional extra description space we can populate later */}
                       {species.tier === 1 && (
-                        <p className="text-white/60 text-sm leading-relaxed mt-2 border-t border-white/10 pt-3">
-                          An incredible find. These species are known to be particularly elusive in this region of the park.
+                        <p className="text-white/60 text-[10px] md:text-sm leading-relaxed mt-2 border-t border-white/10 pt-2 hidden md:block">
+                          An incredible find. These species are known to be particularly elusive.
                         </p>
                       )}
                     </div>
