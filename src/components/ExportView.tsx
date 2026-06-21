@@ -1,7 +1,7 @@
 import { CheckCircle, Copy, ArrowLeft, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { Species, Language } from '../types';
-
+import { PassportSandbox } from './PassportSandbox';
 
 interface ExportViewProps {
   loggedSpecies: Species[];
@@ -15,6 +15,18 @@ interface ExportViewProps {
 
 export function ExportView({ loggedSpecies, language, tourId, onBack, onEndSession, setLanguage }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
+  const [showSandbox, setShowSandbox] = useState(false);
+
+  if (showSandbox) {
+    return (
+      <PassportSandbox 
+        loggedSpecies={loggedSpecies} 
+        language={language} 
+        guideName={guideName} 
+        onBack={() => setShowSandbox(false)} 
+      />
+    );
+  }
 
 // Ensure we include the correct path for the Natures Index router
   const guestLink = tourId ? `${window.location.origin}/corcovado/tour/${tourId}` : window.location.href;
@@ -87,7 +99,15 @@ export function ExportView({ loggedSpecies, language, tourId, onBack, onEndSessi
           className="w-full py-4 rounded-xl font-bold text-red-400/70 hover:text-red-400 hover:bg-red-400/10 transition-all flex items-center justify-center gap-2"
         >
           <LogOut className="w-4 h-4" />
-          {language === 'EN' ? "End Session" : 'Finalizar Sesión'}
+   {language === 'EN' ? "End Session" : 'Finalizar Sesión'}
+        </button>
+
+        {/* DEV: SANDBOX TOGGLE */}
+        <button 
+          onClick={() => setShowSandbox(true)}
+          className="w-full py-4 mt-4 border-2 border-[#C86A27]/50 rounded-xl font-bold text-[#C86A27] hover:bg-[#C86A27]/10 transition-all flex items-center justify-center"
+        >
+          🛠️ Enter Web Sandbox (Dev)
         </button>
         
       </div>
