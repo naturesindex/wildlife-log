@@ -258,7 +258,7 @@ export const initialSpecies: Species[] = [
     "rarityScore": 45,
     "descEN": "Smaller and more common than their white-lipped cousins, these agile foragers travel in tight family bands. They rely on their keen sense of smell to unearth fallen fruits, roots, and tubers from the forest floor.",
     "descES": "Más pequeños y comunes que sus primos de labios blancos, estos ágiles recolectores viajan en estrechos grupos familiares. Confían en su agudo sentido del olfato para desenterrar frutos caídos, raíces y tubérculos del suelo del bosque."
-  }
+  },
   {
     "id": "central-american-agouti",
     "nameEN": "Central American Agouti",
