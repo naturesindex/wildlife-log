@@ -1,14 +1,14 @@
-import { Species } from '../types';
-
 export const initialSpecies: Species[] = [
   {
     "id": "bairds-tapir",
     "nameEN": "Baird's Tapir",
     "nameES": "Danta",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657218/Baird_s_Tapir.jpg",
+    "scientificName": "Tapirus bairdii",
+    "rarityScore": 60,
     "descEN": "The Baird's tapir is the largest land mammal in Central America, weighing up to 300 kg. Despite their barrel-shaped bulk, they are agile swimmers and climbers, using a flexible prehensile nose to grab vegetation. Their lineage stretches back 35 million years, making them one of Earth's most ancient surviving large mammals.",
     "descES": "La danta es el mamífero terrestre más grande de América Central, con un peso de hasta 300 kg. A pesar de su enorme tamaño, son nadadores y trepadores ágiles, y usan su nariz prensil y flexible para agarrar la vegetación. Su linaje se remonta 35 millones de años, lo que las convierte en uno de los grandes mamíferos vivos más antiguos del planeta."
   },
@@ -17,9 +17,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Scarlet Macaw",
     "nameES": "Lapa Roja",
     "category": "Birds",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Scarlet_Macaw.jpg",
+    "scientificName": "Ara macao",
+    "rarityScore": 30,
     "descEN": "The scarlet macaw is one of the most visually striking birds in the Americas, flashing red, yellow, and blue as it crosses the canopy in mated pairs. These birds mate for life and are rarely seen apart. Their powerful beaks can crack palm nuts with ease, and they have a white facial patch that blushes pink when excited.",
     "descES": "La lapa roja es una de las aves más llamativas de América, mostrando rojo, amarillo y azul al cruzar el dosel en parejas. Se emparejan de por vida y rara vez se separan. Su poderoso pico puede romper nueces de palma con facilidad, y tienen un parche facial blanco que se sonroja de rosa cuando están emocionadas."
   },
@@ -28,9 +30,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Jaguar",
     "nameES": "Jaguar",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Jaguar.jpg",
+    "scientificName": "Panthera onca",
+    "rarityScore": 98,
     "descEN": "The jaguar is the apex predator of the Americas and the largest wild cat on the continent, with a stocky, muscular build and a bite force strong enough to pierce turtle shells and caiman skulls. Unlike other big cats, jaguars don't avoid water; they often hunt directly in rivers. Their rosette coat pattern is unique to each individual.",
     "descES": "El jaguar es el depredador apex de América y el felino más grande del continente, con una complexión musculosa y una mordida tan fuerte que puede perforar caparazones de tortugas y cráneos de caimanes. A diferencia de otros grandes felinos, los jaguares no evitan el agua y con frecuencia cazan directamente en los ríos. Su patrón de rosetas es único para cada individuo."
   },
@@ -39,9 +43,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Puma",
     "nameES": "Puma",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Puma.jpg",
+    "scientificName": "Puma concolor",
+    "rarityScore": 98,
     "descEN": "The puma is the second-largest cat in Corcovado and the most wide-ranging land mammal in the Western Hemisphere, found from Canada to Patagonia. Powerfully built, they can take down prey as large as a deer or peccary and are capable of leaping 5 meters vertically. Despite their size, pumas cannot roar.",
     "descES": "El puma es el segundo felino más grande de Corcovado y el mamífero terrestre con mayor rango de distribución en el hemisferio occidental, desde Canadá hasta la Patagonia. De complexión poderosa, puede derribar presas tan grandes como venados o saínos y es capaz de saltar 5 metros en vertical. A pesar de su tamaño, los pumas no pueden rugir."
   },
@@ -50,9 +56,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Three-toed Sloth",
     "nameES": "Perezoso de Tres Dedos",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Three-toed_Sloth.jpg",
+    "scientificName": "Bradypus variegatus",
+    "rarityScore": 50,
     "descEN": "The three-toed sloth is the slowest mammal on Earth, moving at just 0.03 mph. Their entire biology is optimized for energy conservation: a metabolism so low it can take a month to digest a single meal. They sleep up to 20 hours a day and descend from the canopy only once a week to defecate.",
     "descES": "El perezoso de tres dedos es el mamífero más lento del planeta, moviéndose a solo 0.05 km/h. Su biología completa está optimizada para conservar energía: un metabolismo tan lento que puede tardar un mes en digerir una sola comida. Duermen hasta 20 horas al día y bajan del dosel solo una vez a la semana para defecar."
   },
@@ -61,9 +69,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Bull Shark",
     "nameES": "Tiburón Toro",
     "category": "Marine Life",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Bull_Shark.jpg",
+    "scientificName": "Carcharhinus leucas",
+    "rarityScore": 85,
     "descEN": "The bull shark is one of the few shark species capable of surviving in both saltwater and freshwater, thanks to specialized kidneys that regulate salt levels. They are stocky and aggressive by nature, with the highest testosterone levels recorded in any animal. They give birth to live young and prefer murky, shallow coastal waters.",
     "descES": "El tiburón toro es una de las pocas especies de tiburón capaz de sobrevivir en agua salada y dulce, gracias a riñones especializados que regulan los niveles de sal. Son robustos y agresivos por naturaleza, con los niveles más altos de testosterona registrados en cualquier animal. Dan a luz crías vivas y prefieren las aguas costeras turbias y poco profundas."
   },
@@ -72,9 +82,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Humpback Whale",
     "nameES": "Ballena Jorobada",
     "category": "Marine Life",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Humpback_Whale.jpg",
+    "scientificName": "Megaptera novaeangliae",
+    "rarityScore": 80,
     "descEN": "The humpback whale is one of the ocean's most acrobatic giants, famous for its full-body breaches and complex, haunting songs that can last hours. Adults can reach 16 meters and weigh 30 tonnes. They feed by lunging through schools of fish with their mouth open, filtering thousands of liters of water through baleen plates.",
     "descES": "La ballena jorobada es uno de los gigantes más acrobáticos del océano, famosa por sus saltos completos fuera del agua y sus complejos y evocadores cantos que pueden durar horas. Los adultos alcanzan 16 metros y 30 toneladas. Se alimentan lanzándose a través de cardúmenes de peces con la boca abierta, filtrando miles de litros de agua a través de sus barbas."
   },
@@ -83,9 +95,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Squirrel Monkey",
     "nameES": "Mono Tití",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Squirrel_Monkey.jpg",
+    "scientificName": "Saimiri oerstedii",
+    "rarityScore": 45,
     "descEN": "The Central American squirrel monkey is the smallest and most endangered of Costa Rica's four monkey species, with fewer than 3,000 individuals estimated in the wild. They travel in chaotic, fast-moving troops of up to 70 individuals, chattering constantly as they forage for insects, fruit, and small vertebrates through the mid-canopy.",
     "descES": "El mono tití centroamericano es el más pequeño y en mayor peligro de extinción de las cuatro especies de monos de Costa Rica, con menos de 3,000 individuos estimados en estado silvestre. Viajan en tropas caóticas y veloces de hasta 70 individuos, parloteando constantemente mientras buscan insectos, frutos y pequeños vertebrados en el dosel medio."
   },
@@ -94,9 +108,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Howler Monkey",
     "nameES": "Mono Congo",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Howler_Monkey.jpg",
+    "scientificName": "Alouatta palliata",
+    "rarityScore": 30,
     "descEN": "The mantled howler monkey produces one of the loudest sounds in the animal kingdom, a deep guttural roar amplified by a specialized hollow bone in their throat, audible over a kilometer away. Despite their fierce vocal performance, they are surprisingly docile leaf-eaters that spend most of the day resting.",
     "descES": "El mono congo produce uno de los sonidos más fuertes del reino animal, un rugido profundo y gutural amplificado por un hueso hueco especializado en su garganta, audible a más de un kilómetro de distancia. A pesar de su impresionante despliegue vocal, son comedores de hojas sorprendentemente tranquilos que pasan la mayor parte del día descansando."
   },
@@ -105,9 +121,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Spider Monkey",
     "nameES": "Mono Araña",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Spider_Monkey.jpg",
+    "scientificName": "Ateles geoffroyi",
+    "rarityScore": 35,
     "descEN": "The spider monkey is the largest monkey in Costa Rica, built for speed through the canopy with arms 25% longer than its legs and a fully prehensile tail that functions as a fifth limb. They are highly sensitive to habitat disturbance and serve as a reliable indicator of healthy primary forest. When threatened, they bark loudly and shake branches.",
     "descES": "El mono araña es el mono más grande de Costa Rica, construido para la velocidad en el dosel con brazos un 25% más largos que sus piernas y una cola completamente prensil que funciona como un quinto miembro. Son muy sensibles a las perturbaciones del hábitat y sirven como indicador confiable de bosque primario saludable. Cuando se sienten amenazados, ladran fuerte y sacuden las ramas."
   },
@@ -116,9 +134,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "White-faced Capuchin",
     "nameES": "Mono Carablanca",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-faced_Capuchin.jpg",
+    "scientificName": "Cebus imitator",
+    "rarityScore": 25,
     "descEN": "The white-faced capuchin is considered the most intelligent New World monkey, known to use tools, recognize themselves in mirrors, and learn behaviors socially. They are opportunistic omnivores and have been observed rubbing citrus and insects on their fur, possibly as a form of self-medication. Bold and curious, they are among the most commonly encountered monkeys.",
     "descES": "El mono carablanca es considerado el mono del Nuevo Mundo más inteligente, conocido por usar herramientas, reconocerse en espejos y aprender comportamientos socialmente. Son omnívoros oportunistas y se los ha observado frotando cítricos e insectos en su pelaje, posiblemente como forma de automedicación. Audaces y curiosos, son de los monos más fácilmente avistados."
   },
@@ -127,42 +147,50 @@ export const initialSpecies: Species[] = [
     "nameEN": "Chestnut-mandibled Toucan",
     "nameES": "Tucán Pico Castaño",
     "category": "Birds",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Chestnut-mandibled_Toucan.jpg",
-    "descEN": "The chestnut-mandibled toucan is one of the largest toucans in the Americas, identified by its bold yellow-and-dark-chestnut bill that can be nearly as long as its body. Despite its size, the bill is hollow and lightweight. They swallow fruit whole and regurgitate seeds far from parent trees, making them critical for forest regeneration.",
-    "descES": "El tucán pico castaño es uno de los tucanes más grandes de América, identificado por su llamativo pico amarillo y castaño oscuro que puede ser casi tan largo como su cuerpo. A pesar de su tamaño, el pico es hueco y liviano. Tragan los frutos enteros y regurgitan las semillas lejos de los árboles madre, lo que los hace fundamentales para la regeneración del bosque."
+    "scientificName": "Ramphastos ambiguus",
+    "rarityScore": 40,
+    "descEN": "One of the largest toucans in the Americas, identified by its bold yellow-and-dark-chestnut bill that can be nearly as long as its body. Despite its size, the bill is hollow and lightweight. They swallow fruit whole and regurgitate seeds far from parent trees, making them critical for forest regeneration.",
+    "descES": "Uno de los tucanes más grandes de América, identificado por su llamativo pico amarillo y castaño oscuro que puede ser casi tan largo como su cuerpo. A pesar de su tamaño, el pico es hueco y liviano. Tragan los frutos enteros y regurgitan las semillas lejos de los árboles madre, lo que los hace fundamentales para la regeneración del bosque."
   },
   {
     "id": "american-crocodile",
     "nameEN": "American Crocodile",
     "nameES": "Cocodrilo Americano",
     "category": "Reptiles & Amphibians",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/American_Crocodile.jpg",
-    "descEN": "The American crocodile is among the largest reptiles in the Americas, with males capable of exceeding 5 meters in length. Unlike the more aggressive saltwater crocodile, they are generally shy and will typically retreat from humans. They are remarkably long-lived, with individuals in the wild potentially surviving over 70 years, and have changed little in appearance over 85 million years.",
-    "descES": "El cocodrilo americano es uno de los reptiles mas grandes de America, con machos capaces de superar los 5 metros de longitud. A diferencia del cocodrilo de agua salada, mas agresivo, generalmente son timidos y suelen retirarse ante los humanos. Son notablemente longevos; los individuos en la naturaleza pueden vivir mas de 70 anos y han cambiado poco en apariencia durante 85 millones de anos."
+    "scientificName": "Crocodylus acutus",
+    "rarityScore": 60,
+    "descEN": "Among the largest reptiles in the Americas, with males capable of exceeding 5 meters in length. Unlike the more aggressive saltwater crocodile, they are generally shy and will typically retreat from humans. They are remarkably long-lived, with individuals in the wild potentially surviving over 70 years, and have changed little in appearance over 85 million years.",
+    "descES": "Uno de los reptiles mas grandes de America, con machos capaces de superar los 5 metros de longitud. A diferencia del cocodrilo de agua salada, mas agresivo, generalmente son timidos y suelen retirarse ante los humanos. Son notablemente longevos; los individuos en la naturaleza pueden vivir mas de 70 anos y han cambiado poco en apariencia durante 85 millones de anos."
   },
   {
     "id": "ocelot",
     "nameEN": "Ocelot",
     "nameES": "Manigordo",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Ocelot.jpg",
-    "descEN": "The ocelot is a stunning, medium-sized wild cat with an intricate coat of chain-like rosettes and streaks. Mostly nocturnal and solitary, they are exceptional hunters that can take prey ranging from rodents and lizards to iguanas and land crabs. Unlike most cats, ocelots are not deterred by water and are competent swimmers.",
-    "descES": "El ocelote es un impresionante felino silvestre de tamano mediano con un intricado pelaje de rosetas y rayas en forma de cadena. Mayormente nocturno y solitario, es un cazador excepcional que puede capturar presas que van desde roedores y lagartijas hasta iguanas y cangrejos terrestres. A diferencia de la mayoria de los gatos, los ocelotes no se ven disuadidos por el agua y son nadadores competentes."
+    "scientificName": "Leopardus pardalis",
+    "rarityScore": 90,
+    "descEN": "A stunning, medium-sized wild cat with an intricate coat of chain-like rosettes and streaks. Mostly nocturnal and solitary, they are exceptional hunters that can take prey ranging from rodents and lizards to iguanas and land crabs. Unlike most cats, ocelots are not deterred by water and are competent swimmers.",
+    "descES": "Un impresionante felino silvestre de tamano mediano con un intricado pelaje de rosetas y rayas en forma de cadena. Mayormente nocturno y solitario, es un cazador excepcional que puede capturar presas que van desde roedores y lagartijas hasta iguanas y cangrejos terrestres. A diferencia de la mayoria de los gatos, los ocelotes no se ven disuadidos por el agua y son nadadores competentes."
   },
   {
     "id": "two-toed-sloth",
     "nameEN": "Two-toed Sloth",
     "nameES": "Perezoso de Dos Dedos",
     "category": "Mammals",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Two-toed_Sloth.jpg",
+    "scientificName": "Choloepus hoffmanni",
+    "rarityScore": 65,
     "descEN": "The two-toed sloth is the nocturnal counterpart to the three-toed sloth — slower to spot and more secretive, spending the daylight hours curled into a tight ball high in the canopy. Unlike its three-toed cousin, it is an omnivore, occasionally supplementing its leafy diet with insects, fruit, and even small lizards.",
     "descES": "El perezoso de dos dedos es el equivalente nocturno del perezoso de tres dedos: más difícil de avistar y más reservado, pasando las horas de luz del día hecho un ovillo en lo alto del dosel. A diferencia de su primo de tres dedos, es omnívoro y ocasionalmente complementa su dieta de hojas con insectos, frutos e incluso pequeñas lagartijas."
   },
@@ -171,9 +199,11 @@ export const initialSpecies: Species[] = [
     "nameEN": "Blue Morpho Butterfly",
     "nameES": "Mariposa Morfo Azul",
     "category": "Insects & Invertebrates",
-    "section": "Hero",
+    "section": "Highlights",
     "tier": 1,
     "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Blue_Morpho_Butterfly.jpg",
+    "scientificName": "Morpho peleides",
+    "rarityScore": 10,
     "descEN": "The blue morpho is one of the most spectacular insects in Corcovado — its wings produce an iridescent electric blue through microscopic light-refracting scales, not pigment. They flash brilliantly in sunlit gaps and along forest edges, making them a highlight of nearly every trail walk.",
     "descES": "La mariposa morpho azul es uno de los insectos más espectaculares de Corcovado: sus alas producen un azul eléctrico iridiscente a través de escamas microscópicas que refractan la luz, no por pigmento. Destellan de manera brillante en los claros de luz solar y a lo largo de los bordes del bosque, convirtiéndose en un punto destacado de casi cualquier caminata por los senderos."
   },
@@ -184,7 +214,11 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Great_Curassow.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Great_Curassow.jpg",
+    "scientificName": "Crax rubra",
+    "rarityScore": 40,
+    "descEN": "A large and striking ground bird resembling a wild turkey, often seen foraging on the forest floor. The males boast jet-black plumage and a bright yellow knob on their beak, while females are a rich chestnut brown.",
+    "descES": "Un ave terrestre grande y llamativa que se asemeja a un pavo salvaje, frecuentemente vista buscando alimento en el suelo del bosque. Los machos lucen un plumaje negro azabache y una protuberancia amarilla brillante en el pico, mientras que las hembras son de un rico color castaño."
   },
   {
     "id": "white-lipped-peccary",
@@ -193,7 +227,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-lipped_Peccary.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-lipped_Peccary.jpg",
+    "scientificName": "Tayassu pecari",
+    "rarityScore": 75,
+    "descEN": "These highly social and aggressive wild pigs travel in massive and noisy herds that can number in the hundreds. You will often smell their distinct musky odor or hear the clacking of their teeth before you spot them crashing through the underbrush.",
+    "descES": "Estos cerdos salvajes agresivos y altamente sociales viajan en manadas masivas y ruidosas que pueden sumar cientos. A menudo olerás su distintivo olor almizclado o escucharás el chasquido de sus dientes antes de verlos atravesando la maleza."
   },
   {
     "id": "golfo-dulce-poison-dart-frog",
@@ -202,7 +240,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Golfo_Dulce_Poison_Dart_Frog.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Golfo_Dulce_Poison_Dart_Frog.jpg",
+    "scientificName": "Phyllobates vittatus",
+    "rarityScore": 75,
+    "descEN": "Endemic to the region, this dazzling little amphibian flashes neon orange stripes against a jet-black body to warn predators of its potent skin toxins. They are typically found clinging to moist leaf litter near the jungle streams.",
+    "descES": "Endémico de la región, este deslumbrante pequeño anfibio muestra rayas de color naranja neón sobre un cuerpo negro azabache para advertir a los depredadores de las potentes toxinas de su piel. Por lo general, se encuentran aferrados a la hojarasca húmeda cerca de los arroyos de la selva."
   },
   {
     "id": "collared-peccary",
@@ -211,8 +253,12 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Collared_Peccary.jpg"
-  },
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Collared_Peccary.jpg",
+    "scientificName": "Pecari tajacu",
+    "rarityScore": 45,
+    "descEN": "Smaller and more common than their white-lipped cousins, these agile foragers travel in tight family bands. They rely on their keen sense of smell to unearth fallen fruits, roots, and tubers from the forest floor.",
+    "descES": "Más pequeños y comunes que sus primos de labios blancos, estos ágiles recolectores viajan en estrechos grupos familiares. Confían en su agudo sentido del olfato para desenterrar frutos caídos, raíces y tubérculos del suelo del bosque."
+  }
   {
     "id": "central-american-agouti",
     "nameEN": "Central American Agouti",
@@ -220,7 +266,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Central_American_Agouti.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Central_American_Agouti.jpg",
+    "scientificName": "Dasyprocta punctata",
+    "rarityScore": 25,
+    "descEN": "This large, long-legged rodent acts as a crucial seed disperser for the jungle. You will often see them sitting on their haunches, nibbling on fallen seeds before burying the leftovers for later.",
+    "descES": "Este roedor grande de patas largas actúa como un dispersor de semillas crucial para la selva. A menudo los verás sentados sobre sus ancas, mordisqueando semillas caídas antes de enterrar las sobras para más tarde."
   },
   {
     "id": "white-nosed-coati",
@@ -229,7 +279,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-nosed_Coati.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-nosed_Coati.jpg",
+    "scientificName": "Nasua narica",
+    "rarityScore": 35,
+    "descEN": "A highly intelligent and social member of the raccoon family, easily identified by their long snouts and ringed, upright tails. Females and young travel in large bands, constantly sniffing the leaf litter for insects and fruit.",
+    "descES": "Un miembro altamente inteligente y social de la familia de los mapaches, fácilmente identificable por sus largos hocicos y colas anilladas y erguidas. Las hembras y las crías viajan en grandes bandas, olfateando constantemente la hojarasca en busca de insectos y frutas."
   },
   {
     "id": "strawberry-poison-dart-frog",
@@ -238,7 +292,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Strawberry_Poison_Dart_Frog.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Strawberry_Poison_Dart_Frog.jpg",
+    "scientificName": "Oophaga pumilio",
+    "rarityScore": 35,
+    "descEN": "Often called the blue-jeans frog due to its striking red body and navy-blue legs. This tiny, toxic amphibian is famous for its devoted parenting, as females carry their tadpoles high into the canopy to deposit them in water-filled bromeliads.",
+    "descES": "A menudo llamada la rana con pantalones vaqueros debido a su llamativo cuerpo rojo y patas azul marino. Este pequeño y tóxico anfibio es famoso por su devoción como padre, ya que las hembras llevan a sus renacuajos a lo alto del dosel para depositarlos en bromelias llenas de agua."
   },
   {
     "id": "green-and-black-poison-dart-frog",
@@ -247,7 +305,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Green-and-black_Poison_Dart_Frog.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Green-and-black_Poison_Dart_Frog.jpg",
+    "scientificName": "Dendrobates auratus",
+    "rarityScore": 60,
+    "descEN": "A jewel of the leaf litter, this frog uses its vibrant mint-green and black pattern as a bold warning to predators. They absorb their potent toxins entirely from a specialized diet of wild ants and mites.",
+    "descES": "Una joya de la hojarasca, esta rana utiliza su vibrante patrón verde menta y negro como una audaz advertencia para los depredadores. Absorben sus potentes toxinas completamente de una dieta especializada de hormigas y ácaros silvestres."
   },
   {
     "id": "red-eyed-tree-frog",
@@ -256,7 +318,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Red-eyed_Tree_Frog.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Red-eyed_Tree_Frog.jpg",
+    "scientificName": "Agalychnis callidryas",
+    "rarityScore": 70,
+    "descEN": "The quintessential icon of the rainforest. During the day, they conceal their brilliant neon green, blue, and orange colors by tucking their limbs tight and closing their bulging, crimson eyes to blend into the foliage.",
+    "descES": "El ícono por excelencia de la selva tropical. Durante el día, ocultan sus brillantes colores verde neón, azul y naranja metiendo sus extremidades y cerrando sus saltones ojos carmesí para mezclarse con el follaje."
   },
   {
     "id": "fer-de-lance",
@@ -265,7 +331,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Fer-de-lance.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Fer-de-lance.jpg",
+    "scientificName": "Bothrops asper",
+    "rarityScore": 60,
+    "descEN": "One of the most formidable predators in the neotropics. This highly venomous pit viper relies on masterful camouflage to ambush prey, blending perfectly into the dead leaves and tangled roots of the forest floor.",
+    "descES": "Uno de los depredadores más formidables de los neotrópicos. Esta víbora de foseta altamente venenosa confía en un camuflaje magistral para emboscar a sus presas, mezclándose perfectamente con las hojas muertas y las raíces enredadas del suelo del bosque."
   },
   {
     "id": "jesus-christ-lizard",
@@ -274,7 +344,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Jesus_Christ_Lizard.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Jesus_Christ_Lizard.jpg",
+    "scientificName": "Basiliscus basiliscus",
+    "rarityScore": 30,
+    "descEN": "Earning its miraculous nickname, this prehistoric-looking lizard can sprint completely upright across the surface of the water to escape predators. They are almost always found basking on rocks or branches near jungle streams.",
+    "descES": "Ganándose su apodo milagroso, este lagarto de aspecto prehistórico puede correr completamente erguido sobre la superficie del agua para escapar de los depredadores. Casi siempre se encuentran tomando el sol en rocas o ramas cerca de los arroyos de la selva."
   },
   {
     "id": "eyelash-palm-pit-viper",
@@ -283,7 +357,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Eyelash_Palm_Pit_Viper.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Eyelash_Palm_Pit_Viper.jpg",
+    "scientificName": "Bothriechis schlegelii",
+    "rarityScore": 75,
+    "descEN": "A striking, arboreal ambush predator known for the modified scales above its eyes. They come in an incredible variety of color phases, from mossy green to brilliant golden yellow, allowing them to vanish among fruits and flowers.",
+    "descES": "Un llamativo depredador de emboscada arbóreo conocido por las escamas modificadas sobre sus ojos. Vienen en una increíble variedad de fases de color, desde el verde musgoso hasta el amarillo dorado brillante, lo que les permite desaparecer entre frutas y flores."
   },
   {
     "id": "spectacled-caiman",
@@ -292,7 +370,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Spectacled_Caiman.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Spectacled_Caiman.jpg",
+    "scientificName": "Caiman crocodilus",
+    "rarityScore": 50,
+    "descEN": "A stealthy aquatic reptile easily identified by the bony ridge between its eyes that resembles a pair of glasses. They patrol the murky rivers and coastal lagoons, waiting patiently for fish, birds, or small mammals.",
+    "descES": "Un reptil acuático sigiloso fácilmente identificable por la cresta ósea entre sus ojos que se asemeja a un par de anteojos. Patrullan los ríos turbios y las lagunas costeras, esperando pacientemente a peces, aves o pequeños mamíferos."
   },
   {
     "id": "spinner-dolphin",
@@ -301,7 +383,11 @@ export const initialSpecies: Species[] = [
     "category": "Marine Life",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Spinner_Dolphin.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Spinner_Dolphin.jpg",
+    "scientificName": "Stenella longirostris",
+    "rarityScore": 70,
+    "descEN": "A small, highly athletic marine mammal famous for leaping out of the water and spinning multiple times in the air. Pods can occasionally be seen riding the bow wakes of boats traveling to and from the national park.",
+    "descES": "Un pequeño y muy atlético mamífero marino famoso por saltar fuera del agua y girar múltiples veces en el aire. Ocasionalmente se pueden ver manadas montando las estelas de proa de los barcos que viajan hacia y desde el parque nacional."
   },
   {
     "id": "hawksbill-sea-turtle",
@@ -310,7 +396,11 @@ export const initialSpecies: Species[] = [
     "category": "Marine Life",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Hawksbill_Sea_Turtle.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Hawksbill_Sea_Turtle.jpg",
+    "scientificName": "Eretmochelys imbricata",
+    "rarityScore": 85,
+    "descEN": "A critically endangered marine wanderer recognizable by its beautiful, overlapping shell plates and sharp beak. They frequent the coastal reefs bordering the park to feed on a highly toxic diet of sea sponges.",
+    "descES": "Un vagabundo marino en peligro crítico de extinción reconocible por sus hermosas placas superpuestas en el caparazón y su pico afilado. Frecuentan los arrecifes costeros que bordean el parque para alimentarse de una dieta altamente tóxica de esponjas de mar."
   },
   {
     "id": "green-sea-turtle",
@@ -319,7 +409,11 @@ export const initialSpecies: Species[] = [
     "category": "Marine Life",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Green_Sea_Turtle.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Green_Sea_Turtle.jpg",
+    "scientificName": "Chelonia mydas",
+    "rarityScore": 75,
+    "descEN": "One of the largest species of sea turtle, known to graze on seagrass beds just offshore. During nesting season, females return to the exact beaches where they were born to lay their eggs under the cover of darkness.",
+    "descES": "Una de las especies más grandes de tortugas marinas, conocida por pastar en los lechos de pastos marinos cerca de la costa. Durante la temporada de anidación, las hembras regresan a las playas exactas donde nacieron para desovar al amparo de la oscuridad."
   },
   {
     "id": "giant-kapok-tree",
@@ -328,7 +422,11 @@ export const initialSpecies: Species[] = [
     "category": "Flora",
     "section": "Fascinating Flora",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Giant_Kapok_Tree.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Giant_Kapok_Tree.jpg",
+    "scientificName": "Ceiba pentandra",
+    "rarityScore": 5,
+    "descEN": "A towering monarch of the rainforest, pushing straight through the canopy to reach the sunlight. Their massive, supportive buttress roots can grow taller than a human, providing shelter for countless jungle inhabitants.",
+    "descES": "Un imponente monarca de la selva tropical, que se abre paso a través del dosel para alcanzar la luz del sol. Sus raíces tabulares masivas y de apoyo pueden crecer más altas que un humano, proporcionando refugio a innumerables habitantes de la selva."
   },
   {
     "id": "strangler-fig",
@@ -337,7 +435,11 @@ export const initialSpecies: Species[] = [
     "category": "Flora",
     "section": "Fascinating Flora",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Strangler_Fig.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Strangler_Fig.jpg",
+    "scientificName": "Ficus spp.",
+    "rarityScore": 5,
+    "descEN": "A marvel of jungle survival. This parasitic tree begins life as a seed deposited high in the canopy, dropping roots down to the forest floor that eventually wrap around and strangle the original host tree to death.",
+    "descES": "Una maravilla de la supervivencia en la selva. Este árbol parasitario comienza su vida como una semilla depositada en lo alto del dosel, dejando caer raíces hasta el suelo del bosque que eventualmente envuelven y estrangulan al árbol huésped original hasta la muerte."
   },
   {
     "id": "heliconia",
@@ -346,7 +448,11 @@ export const initialSpecies: Species[] = [
     "category": "Flora",
     "section": "Fascinating Flora",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Heliconia.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Heliconia.jpg",
+    "scientificName": "Heliconia spp.",
+    "rarityScore": 5,
+    "descEN": "Famous for their vibrant, geometric bracts that resemble lobster claws or bird beaks. These striking plants are essential to the ecosystem, pooling water for insects and providing exclusive nectar sources for specialized hummingbirds.",
+    "descES": "Famosas por sus brácteas vibrantes y geométricas que se asemejan a garras de langosta o picos de aves. Estas llamativas plantas son esenciales para el ecosistema, acumulando agua para los insectos y proporcionando fuentes exclusivas de néctar para colibríes especializados."
   },
   {
     "id": "walking-palm",
@@ -355,7 +461,11 @@ export const initialSpecies: Species[] = [
     "category": "Flora",
     "section": "Fascinating Flora",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Walking_Palm.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Walking_Palm.jpg",
+    "scientificName": "Socratea exorrhiza",
+    "rarityScore": 5,
+    "descEN": "Supported by a bizarre teepee of stilt roots, local legend claims this palm can slowly walk out of the shade toward sunlight. While they cannot truly walk, their unique root system allows them to thrive in swampy, unstable soils.",
+    "descES": "Apoyada por un extraño tipi de raíces zancudas, la leyenda local afirma que esta palmera puede caminar lentamente para salir de la sombra hacia la luz del sol. Aunque no pueden caminar realmente, su sistema de raíces único les permite prosperar en suelos pantanosos e inestables."
   },
   {
     "id": "king-vulture",
@@ -364,7 +474,11 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/King_Vulture.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/King_Vulture.jpg",
+    "scientificName": "Sarcoramphus papa",
+    "rarityScore": 70,
+    "descEN": "The undisputed ruler of the scavenging birds, easily dominating carcasses on the forest floor. Unlike other vultures, they lack a strong sense of smell and instead rely on their massive size and sharp vision to find a meal.",
+    "descES": "El gobernante indiscutible de las aves carroñeras, que domina fácilmente los cadáveres en el suelo del bosque. A diferencia de otros buitres, carecen de un fuerte sentido del olfato y, en cambio, confían en su tamaño masivo y su visión aguda para encontrar comida."
   },
   {
     "id": "great-tinamou",
@@ -373,7 +487,11 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Great_Tinamou.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Great_Tinamou.jpg",
+    "scientificName": "Tinamus major",
+    "rarityScore": 70,
+    "descEN": "A plump, ground-dwelling bird known for the haunting, melancholic whistles it sings at dusk and dawn. Though they resemble partridges, they are actually ancient relatives of ostriches and emus, completely adapted to life in the undergrowth.",
+    "descES": "Un ave regordeta que habita en el suelo, conocida por los silbidos melancólicos y evocadores que canta al anochecer y al amanecer. Aunque se parecen a las perdices, en realidad son antiguos parientes de los avestruces y emúes, completamente adaptados a la vida en la maleza."
   },
   {
     "id": "yellow-billed-cotinga",
@@ -382,7 +500,11 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Yellow-billed_Cotinga.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Yellow-billed_Cotinga.jpg",
+    "scientificName": "Carpodectes antoniae",
+    "rarityScore": 95,
+    "descEN": "A highly endangered and elusive bird endemic to the Pacific mangroves and surrounding forests. The male is a striking, pure snowy white, making it look like a floating phantom against the dense green canopy.",
+    "descES": "Un ave escurridiza y en gran peligro de extinción, endémica de los manglares del Pacífico y los bosques circundantes. El macho es de un llamativo blanco nieve puro, lo que lo hace parecer un fantasma flotante contra el denso dosel verde."
   },
   {
     "id": "magnificent-frigatebird",
@@ -391,7 +513,11 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Magnificent_Frigatebird.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Magnificent_Frigatebird.jpg",
+    "scientificName": "Fregata magnificens",
+    "rarityScore": 20,
+    "descEN": "A massive seabird with dark plumage and a deeply forked tail that gracefully patrols the ocean skies. The males possess a striking bright red throat pouch which they inflate like a balloon during mating season.",
+    "descES": "Un ave marina masiva con plumaje oscuro y una cola profundamente bifurcada que patrulla con gracia los cielos del océano. Los machos poseen una llamativa bolsa en la garganta de color rojo brillante que inflan como un globo durante la temporada de apareamiento."
   },
   {
     "id": "northern-tamandua",
@@ -400,16 +526,24 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Northern_Tamandua.jpg"
-  },
-  {
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Northern_Tamandua.jpg",
+    "scientificName": "Tamandua mexicana",
+    "rarityScore": 85,
+    "descEN": "A medium-sized anteater that splits its time between the trees and the ground. With a prehensile tail and sharp claws, it tears into termite mounds. When threatened, it stands on its hind legs and spreads its arms to display its powerful claws.",
+    "descES": "Un oso hormiguero mediano que divide su tiempo entre los árboles y el suelo. Con una cola prensil y garras afiladas, rompe los termiteros. Cuando se siente amenazado, se pone de pie sobre sus patas traseras y abre los brazos para mostrar sus garras."
+  }
+    {
     "id": "anhinga",
     "nameEN": "Anhinga",
     "nameES": "Pato Aguja",
     "category": "Birds",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Anhinga.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Anhinga.jpg",
+    "scientificName": "Anhinga anhinga",
+    "rarityScore": 35,
+    "descEN": "A specialized water bird that swims with its body entirely submerged leaving only its snake like neck and head above the surface. After hunting they are frequently seen perched on branches with their wings spread wide to dry in the sun.",
+    "descES": "Un ave acuática especializada que nada con su cuerpo completamente sumergido dejando solo su cuello de serpiente y cabeza sobre la superficie. Después de cazar frecuentemente se les ve posadas en ramas con sus alas bien abiertas para secarse al sol."
   },
   {
     "id": "rufous-tailed-hummingbird",
@@ -418,7 +552,11 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Rufous-tailed_Hummingbird.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Rufous-tailed_Hummingbird.jpg",
+    "scientificName": "Amazilia tzacatl",
+    "rarityScore": 15,
+    "descEN": "An aggressive and highly territorial little bird marked by a beautiful copper colored tail. They are constantly buzzing around forest edges fiercely defending their favorite flowering plants from rivals.",
+    "descES": "Un pajarito agresivo y muy territorial marcado por una hermosa cola color cobre. Están zumbando constantemente alrededor de los bordes del bosque defendiendo ferozmente sus plantas con flores favoritas de los rivales."
   },
   {
     "id": "black-crowned-night-heron",
@@ -427,7 +565,11 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black-crowned_Night_Heron.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black-crowned_Night_Heron.jpg",
+    "scientificName": "Nycticorax nycticorax",
+    "rarityScore": 40,
+    "descEN": "A stocky and mysterious wading bird equipped with large red eyes adapted for hunting after dark. During the daytime they are often found tucked away completely hidden within the dense mangrove branches.",
+    "descES": "Una garza robusta y misteriosa equipada con grandes ojos rojos adaptados para cazar después del anochecer. Durante el día a menudo se encuentran escondidas completamente ocultas dentro de las densas ramas de los manglares."
   },
   {
     "id": "tent-making-bat",
@@ -436,7 +578,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Tent-making_Bat.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Tent-making_Bat.jpg",
+    "scientificName": "Uroderma bilobatum",
+    "rarityScore": 60,
+    "descEN": "A tiny and resourceful mammal that carefully bites the veins of large palm leaves causing them to fold into a waterproof tent. Looking underneath these modified leaves often reveals a small family roosting closely together.",
+    "descES": "Un mamífero diminuto e ingenioso que muerde cuidadosamente las venas de las hojas grandes de palma haciendo que se plieguen en una tienda de campaña impermeable. Mirar debajo de estas hojas modificadas a menudo revela una pequeña familia descansando muy junta."
   },
   {
     "id": "mesoamerican-slider",
@@ -445,7 +591,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Mesoamerican_Slider.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Mesoamerican_Slider.jpg",
+    "scientificName": "Trachemys venusta",
+    "rarityScore": 30,
+    "descEN": "A freshwater turtle frequently spotted stacked on top of logs basking under the hot tropical sun. They are highly observant and will quickly slip into the murky river water at the first sign of danger.",
+    "descES": "Una tortuga de agua dulce que frecuentemente se ve apilada sobre troncos tomando el sol bajo el caluroso sol tropical. Son muy observadoras y se deslizarán rápidamente en el agua turbia del río a la primera señal de peligro."
   },
   {
     "id": "sandbox-tree",
@@ -454,7 +604,11 @@ export const initialSpecies: Species[] = [
     "category": "Flora",
     "section": "Fascinating Flora",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Sandbox_Tree.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Sandbox_Tree.jpg",
+    "scientificName": "Hura crepitans",
+    "rarityScore": 5,
+    "descEN": "A towering canopy giant covered from base to branches in vicious conical spikes. Its explosive seed pods pop with a loud bang scattering seeds far and wide across the jungle floor.",
+    "descES": "Un gigante imponente del dosel cubierto desde la base hasta las ramas con feroces púas cónicas. Sus vainas de semillas explosivas estallan con un fuerte estallido esparciendo semillas a lo largo y ancho por el suelo de la selva."
   },
   {
     "id": "hercules-beetle",
@@ -463,7 +617,11 @@ export const initialSpecies: Species[] = [
     "category": "Insects & Invertebrates",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Hercules_Beetle.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Hercules_Beetle.jpg",
+    "scientificName": "Dynastes hercules",
+    "rarityScore": 75,
+    "descEN": "One of the most spectacular insects in the rainforest famed for the enormous pincers protruding from the head of the male. Despite their intimidating armored appearance these gentle giants feed exclusively on rotting fruit.",
+    "descES": "Uno de los insectos más espectaculares de la selva tropical famoso por las enormes pinzas que sobresalen de la cabeza del macho. A pesar de su apariencia blindada e intimidante estos gentiles gigantes se alimentan exclusivamente de fruta podrida."
   },
   {
     "id": "costa-rican-striped-knee-zebra-tarantula",
@@ -472,7 +630,11 @@ export const initialSpecies: Species[] = [
     "category": "Insects & Invertebrates",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Costa_Rican_Striped-Knee_Zebra_Tarantula.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Costa_Rican_Striped-Knee_Zebra_Tarantula.jpg",
+    "scientificName": "Aphonopelma seemanni",
+    "rarityScore": 70,
+    "descEN": "A deeply fascinating but entirely harmless spider living in deep burrows scattered across the forest floor. They emerge mostly at night displaying distinct white stripes running down their hairy legs.",
+    "descES": "Una araña profundamente fascinante pero completamente inofensiva que vive en madrigueras profundas esparcidas por el suelo del bosque. Emergen principalmente de noche mostrando distintas rayas blancas que descienden por sus patas peludas."
   },
   {
     "id": "dink-frog",
@@ -481,7 +643,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Dink_Frog.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Dink_Frog.jpg",
+    "scientificName": "Diasporus diastema",
+    "rarityScore": 55,
+    "descEN": "A minute and exceptionally well camouflaged amphibian known for its incredibly loud metallic call. Finding one requires extreme patience as they blend perfectly into the damp leaf litter.",
+    "descES": "Un anfibio diminuto y excepcionalmente bien camuflado conocido por su llamado metálico increíblemente fuerte. Encontrar uno requiere extrema paciencia ya que se camuflan perfectamente en la hojarasca húmeda."
   },
   {
     "id": "osa-anole",
@@ -490,7 +656,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Osa_Anole.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Osa_Anole.jpg",
+    "scientificName": "Anolis osae",
+    "rarityScore": 30,
+    "descEN": "A sleek and agile forest lizard perfectly adapted for darting up and around thick tree trunks. Males have a bright throat fan which they proudly display to attract mates or defend their territory.",
+    "descES": "Un lagarto de bosque elegante y ágil perfectamente adaptado para correr hacia arriba y alrededor de gruesos troncos de árboles. Los machos tienen un abanico en la garganta brillante que muestran con orgullo para atraer parejas o defender su territorio."
   },
   {
     "id": "litter-skink",
@@ -499,7 +669,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Litter_Skink.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Litter_Skink.jpg",
+    "scientificName": "Sphenomorphus cherriei",
+    "rarityScore": 25,
+    "descEN": "A smooth and glossy reptile that moves somewhat like a snake through the dry debris of the forest floor. They are incredibly fast making them a challenging but rewarding catch for the eager observer.",
+    "descES": "Un reptil suave y brillante que se mueve un poco como una serpiente a través de los escombros secos del suelo del bosque. Son increíblemente rápidos lo que los convierte en una captura desafiante pero gratificante para el observador entusiasta."
   },
   {
     "id": "owl-butterfly",
@@ -508,7 +682,11 @@ export const initialSpecies: Species[] = [
     "category": "Insects & Invertebrates",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Owl_Butterfly.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Owl_Butterfly.jpg",
+    "scientificName": "Caligo eurilochus",
+    "rarityScore": 40,
+    "descEN": "A massive and breathtaking insect that features an incredibly realistic eye pattern on the underside of its wings. This clever adaptation serves to startle predators into thinking they have encountered a large bird.",
+    "descES": "Un insecto masivo e impresionante que presenta un patrón de ojo increíblemente realista en la parte inferior de sus alas. Esta inteligente adaptación sirve para asustar a los depredadores haciéndoles pensar que se han encontrado con un pájaro grande."
   },
   {
     "id": "dead-leaf-mantis",
@@ -517,7 +695,11 @@ export const initialSpecies: Species[] = [
     "category": "Insects & Invertebrates",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Dead_Leaf_Mantis.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Dead_Leaf_Mantis.jpg",
+    "scientificName": "Acanthops falcata",
+    "rarityScore": 80,
+    "descEN": "The absolute master of forest camouflage perfectly mimicking the curled edges and brown tones of a decaying leaf. They rock gently back and forth to imitate foliage blowing in the breeze while waiting to ambush prey.",
+    "descES": "El maestro absoluto del camuflaje del bosque imitando perfectamente los bordes rizados y los tonos marrones de una hoja en descomposición. Se balancean suavemente hacia adelante y hacia atrás para imitar el follaje mecido por la brisa mientras esperan emboscar a sus presas."
   },
   {
     "id": "stick-insect",
@@ -526,7 +708,11 @@ export const initialSpecies: Species[] = [
     "category": "Insects & Invertebrates",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Stick_Insect.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Stick_Insect.jpg",
+    "scientificName": "Phasmatodea",
+    "rarityScore": 65,
+    "descEN": "An elongated and bizarrely shaped creature that evolved to look exactly like a broken twig. They move with agonizing slowness making them almost invisible against the tangled forest background.",
+    "descES": "Una criatura alargada y de forma extraña que evolucionó para parecer exactamente una ramita rota. Se mueven con una lentitud agonizante haciéndolas casi invisibles contra el enredado fondo del bosque."
   },
   {
     "id": "salmon-bellied-racer",
@@ -535,7 +721,11 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Salmon-Bellied_Racer.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Salmon-Bellied_Racer.jpg",
+    "scientificName": "Mastigodryas melanolomus",
+    "rarityScore": 60,
+    "descEN": "A highly active and completely non venomous snake frequently seen hunting during the day. They have a sleek dark body that contrasts sharply with a bright pinkish belly making for a beautiful sighting.",
+    "descES": "Una serpiente muy activa y completamente no venenosa frecuentemente vista cazando durante el día. Tienen un cuerpo oscuro y elegante que contrasta fuertemente con un vientre de color rosado brillante lo que hace que sea un hermoso avistamiento."
   },
   {
     "id": "margay",
@@ -544,7 +734,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Margay.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Margay.jpg",
+    "scientificName": "Leopardus wiedii",
+    "rarityScore": 98,
+    "descEN": "A beautiful, elusive spotted cat specially adapted for a life in the trees. It possesses flexible ankles that can rotate 180 degrees, allowing it to run headfirst down tree trunks like a squirrel.",
+    "descES": "Un hermoso y escurridizo felino moteado, especialmente adaptado para la vida en los árboles. Posee tobillos flexibles que pueden girar 180 grados, lo que le permite bajar corriendo por los troncos de los árboles de cabeza como una ardilla."
   },
   {
     "id": "jaguarundi",
@@ -553,7 +747,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Jaguarundi.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Jaguarundi.jpg",
+    "scientificName": "Herpailurus yagouaroundi",
+    "rarityScore": 95,
+    "descEN": "A highly unusual, unspotted wild cat that looks somewhat like a large weasel or otter. Active during the day, it hunts birds and small mammals in dense brush.",
+    "descES": "Un felino silvestre muy inusual y sin manchas que se parece un poco a una comadreja grande o una nutria. Activo durante el día, caza aves y pequeños mamíferos en la densa maleza."
   },
   {
     "id": "silky-anteater",
@@ -562,7 +760,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Silky_Anteater.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Silky_Anteater.jpg",
+    "scientificName": "Cyclopes didactylus",
+    "rarityScore": 97,
+    "descEN": "The smallest anteater in the world, spending its entire life high in the forest canopy. Rarely seen due to its nocturnal habits and tiny size, it sleeps curled up in a golden ball of fur during the day.",
+    "descES": "El oso hormiguero más pequeño del mundo, que pasa toda su vida en lo alto del dosel del bosque. Rara vez se le ve debido a sus hábitos nocturnos y su diminuto tamaño; duerme enrollado en una bola dorada de pelaje durante el día."
   },
   {
     "id": "kinkajou",
@@ -571,7 +773,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Kinkajou.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Kinkajou.jpg",
+    "scientificName": "Potos flavus",
+    "rarityScore": 85,
+    "descEN": "A nocturnal and elusive tree dweller with a prehensile tail used for gripping branches. Often heard rustling in the canopy at night but rarely seen clearly during the day.",
+    "descES": "Un habitante nocturno y esquivo de los árboles con una cola prensil que usa para agarrarse a las ramas. A menudo se le escucha en el dosel por la noche pero rara vez se le ve claramente durante el día."
   },
   {
     "id": "central-american-paca",
@@ -580,7 +786,11 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Central_American_Paca.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Central_American_Paca.jpg",
+    "scientificName": "Cuniculus paca",
+    "rarityScore": 75,
+    "descEN": "A large nocturnal rodent with distinctive white spots along its sides. It is very shy and typically stays close to rivers and streams deep within the forest.",
+    "descES": "Un roedor nocturno grande con distintivas manchas blancas en sus costados. Es muy tímido y generalmente se mantiene cerca de ríos y arroyos en lo profundo del bosque."
   },
   {
     "id": "white-tailed-deer",
@@ -589,16 +799,23 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-tailed_Deer.jpg"
-  },
-  {
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-tailed_Deer.jpg",
+    "scientificName": "Odocoileus virginianus",
+    "rarityScore": 40,
+    "descEN": "A graceful herbivore often spotted quietly browsing at the edge of the forest or near clearings. They are highly alert and will quickly bound away if startled.",
+    "descES": "Un grácil herbívoro que a menudo se observa pastando tranquilamente en el borde del bosque o cerca de los claros. Son muy alertas y se alejarán rápidamente si se asustan."
+  }
+    {
     "id": "tayra",
     "nameEN": "Tayra",
     "nameES": "Tolomuco",
     "category": "Mammals",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Tayra.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Tayra.jpg",
+    "rarityScore": 80,
+    "descEN": "A sleek and energetic member of the weasel family with a long bushy tail. They are incredibly agile climbers and are sometimes spotted darting rapidly across forest trails.",
+    "descES": "Un miembro elegante y enérgico de la familia de las comadrejas con una larga cola poblada. Son trepadores increíblemente ágiles y a veces se les ve cruzando rápidamente los senderos del bosque."
   },
   {
     "id": "neotropical-river-otter",
@@ -607,7 +824,10 @@ export const initialSpecies: Species[] = [
     "category": "Mammals",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Neotropical_River_Otter.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Neotropical_River_Otter.jpg",
+    "rarityScore": 85,
+    "descEN": "A highly elusive aquatic predator that requires pristine waterways. Spotting one swimming or playing along the remote riverbanks of Corcovado is a very special and rare event.",
+    "descES": "Un depredador acuático muy esquivo que requiere vías fluviales prístinas. Ver a uno nadando o jugando a lo largo de las remotas riberas de los ríos de Corcovado es un evento muy especial y raro."
   },
   {
     "id": "boat-billed-heron",
@@ -616,7 +836,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Boat-billed_Heron.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Boat-billed_Heron.jpg",
+    "rarityScore": 60,
+    "descEN": "A fascinating nocturnal bird named for its massive and wide bill. During the day they can sometimes be found resting quietly in the tangled branches of mangrove swamps.",
+    "descES": "Un ave nocturna fascinante llamada así por su pico masivo y ancho. Durante el día a veces se les puede encontrar descansando tranquilamente en las ramas enredadas de los manglares."
   },
   {
     "id": "black-hawk",
@@ -625,7 +848,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black_Hawk.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black_Hawk.jpg",
+    "rarityScore": 35,
+    "descEN": "A dark and robust raptor typically seen perched prominently near coastal areas and rivers. They hunt primarily for crabs and small fish along the muddy banks.",
+    "descES": "Una rapaz oscura y robusta que normalmente se ve posada de manera prominente cerca de áreas costeras y ríos. Cazan principalmente cangrejos y peces pequeños a lo largo de las orillas fangosas."
   },
   {
     "id": "white-hawk",
@@ -634,7 +860,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White_Hawk.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White_Hawk.jpg",
+    "rarityScore": 65,
+    "descEN": "A stunningly beautiful raptor with brilliant white plumage and striking black bands on its wings. They are usually spotted soaring high over the dense rainforest canopy.",
+    "descES": "Una rapaz asombrosamente hermosa con un plumaje blanco brillante y llamativas bandas negras en sus alas. Por lo general se les ve volando alto sobre el denso dosel de la selva tropical."
   },
   {
     "id": "long-billed-hermit",
@@ -643,7 +872,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Long-billed_Hermit.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Long-billed_Hermit.jpg",
+    "rarityScore": 50,
+    "descEN": "A large hummingbird with an extremely long curved bill perfectly adapted for feeding on heliconia flowers. They fly rapidly through the shadowy forest understory.",
+    "descES": "Un colibrí grande con un pico curvo extremadamente largo perfectamente adaptado para alimentarse de flores de heliconia. Vuelan rápidamente a través del sombrío sotobosque."
   },
   {
     "id": "fiery-billed-aracari",
@@ -652,7 +884,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Fiery-billed_Aracari.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Fiery-billed_Aracari.jpg",
+    "rarityScore": 45,
+    "descEN": "A colorful and highly social toucan species with a striking red and orange beak. They travel in noisy small flocks and are a spectacular sight in the fruit trees.",
+    "descES": "Una especie de tucán colorida y muy social con un llamativo pico rojo y naranja. Viajan en pequeñas y ruidosas bandadas y son un espectáculo increíble en los árboles frutales."
   },
   {
     "id": "orange-chinned-parakeet",
@@ -661,7 +896,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Orange-chinned_Parakeet.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Orange-chinned_Parakeet.jpg",
+    "rarityScore": 20,
+    "descEN": "A small and vibrant green parrot that is often heard chattering loudly before it is seen. They zip rapidly through the air and blend perfectly into the leafy canopy.",
+    "descES": "Un pequeño y vibrante loro verde que a menudo se escucha charlar ruidosamente antes de ser visto. Vuelan rápidamente por el aire y se camuflan perfectamente en el dosel frondoso."
   },
   {
     "id": "pale-billed-woodpecker",
@@ -670,7 +908,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Pale-billed_Woodpecker.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Pale-billed_Woodpecker.jpg",
+    "rarityScore": 55,
+    "descEN": "A massive woodpecker featuring a bright red head and striking black and white body. Their powerful double knock drumming resonates deeply through the thick forest.",
+    "descES": "Un pájaro carpintero masivo que presenta una cabeza roja brillante y un llamativo cuerpo blanco y negro. Su poderoso tamborileo de doble golpe resuena profundamente a través del espeso bosque."
   },
   {
     "id": "northern-jacana",
@@ -679,7 +920,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Northern_Jacana.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Northern_Jacana.jpg",
+    "rarityScore": 30,
+    "descEN": "A striking wetland bird equipped with incredibly long toes that allow it to walk effortlessly across floating vegetation. When they fly their bright yellow wing patches flash brilliantly.",
+    "descES": "Un ave de humedal llamativa equipada con dedos increíblemente largos que le permiten caminar sin esfuerzo sobre la vegetación flotante. Cuando vuelan sus parches amarillos brillantes en las alas destellan espléndidamente."
   },
   {
     "id": "roseate-spoonbill",
@@ -688,7 +932,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "Sea and Shore",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Roseate_Spoonbill.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Roseate_Spoonbill.jpg",
+    "rarityScore": 65,
+    "descEN": "An unmistakable wading bird displaying gorgeous pink feathers and a unique spoon shaped bill. They sweep their bills side to side through shallow water to catch small fish and shrimp.",
+    "descES": "Un ave zancuda inconfundible que exhibe hermosas plumas rosadas y un pico único en forma de cuchara. Barren sus picos de lado a lado en aguas poco profundas para atrapar peces pequeños y camarones."
   },
   {
     "id": "black-hooded-antshrike",
@@ -697,7 +944,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black-hooded_Antshrike.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black-hooded_Antshrike.jpg",
+    "rarityScore": 40,
+    "descEN": "A highly vocal bird commonly found flitting through the dense underbrush of the rainforest. Males are striking black and white while females wear a subtle brown plumage.",
+    "descES": "Un ave muy vocal que se encuentra comúnmente revoloteando a través de la densa maleza de la selva tropical. Los machos son llamativos de color blanco y negro mientras que las hembras lucen un sutil plumaje marrón."
   },
   {
     "id": "mealy-amazon",
@@ -706,16 +956,34 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Mealy_Amazon.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Mealy_Amazon.jpg",
+    "rarityScore": 40,
+    "descEN": "One of the largest parrots in the region easily identified by its loud raucous calls. They are often seen flying in pairs or small noisy groups high above the treetops.",
+    "descES": "Uno de los loros más grandes de la región fácilmente identificado por sus fuertes y roncos llamados. A menudo se les ve volando en parejas o en pequeños grupos ruidosos muy por encima de las copas de los árboles."
   },
   {
     "id": "turquoise-browed-motmot",
     "nameEN": "Turquoise-Browed Motmot",
-    "nameES": "Momoto (Pájaro Bobo)",
+    "nameES": "Momoto Pájaro Bobo",
     "category": "Birds",
-    "section": "The Forest Floor",
+    "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Turquoise-Browed_Motmot.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Turquoise-Browed_Motmot.jpg",
+    "rarityScore": 85,
+    "descEN": "An incredibly beautiful bird famous for its vibrant plumage and pendulum like tail feathers. They sit patiently on branches before darting out to catch flying insects.",
+    "descES": "Un ave increíblemente hermosa famosa por su plumaje vibrante y las plumas de su cola en forma de péndulo. Se sientan pacientemente en las ramas antes de lanzarse a atrapar insectos voladores."
+  },
+  {
+    "id": "lesson-s-motmot",
+    "nameEN": "Lesson's Motmot",
+    "nameES": "Momoto Frentiazul",
+    "category": "Birds",
+    "section": "The Canopy Crew",
+    "tier": 2,
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1782155264/Lesson_s_Motmot.jpg",
+    "rarityScore": 55,
+    "descEN": "Lesson's Motmot is the characteristic motmot of Corcovado's primary rainforest, a calm and confident perch hunter that sits still in the shaded midstory watching for large insects, lizards, and small frogs. Like all motmots, it sports a long, racket-tipped tail that it swings like a slow pendulum — a behavior that may signal alertness to predators. Its iridescent turquoise-blue crown and mask make it stunning despite its still, subtle presence.",
+    "descES": "El Momoto Frentiazul es el motmot característico del bosque primario de Corcovado, un ave tranquila y confiada que caza desde su percha en el sotobosque sombreado, a la espera de grandes insectos, lagartijas y pequeñas ranas. Como todos los momotos, luce una larga cola con punta en forma de raqueta que balancea como un péndulo lento, un comportamiento que puede señalar alerta ante los depredadores. Su corona y máscara de azul turquesa iridiscente lo hacen impresionante a pesar de su presencia quieta y discreta."
   },
   {
     "id": "black-throated-trogon",
@@ -724,7 +992,10 @@ export const initialSpecies: Species[] = [
     "category": "Birds",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black-throated_Trogon.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black-throated_Trogon.jpg",
+    "rarityScore": 55,
+    "descEN": "A stunningly colorful forest bird with bright yellow underparts and a contrasting black throat. They often sit completely motionless in the shaded midstory making them a rewarding spot.",
+    "descES": "Un ave de bosque asombrosamente colorida con partes inferiores de un amarillo brillante y una garganta negra en contraste. A menudo se sientan completamente inmóviles en el sotobosque sombreado haciéndolas un hallazgo gratificante."
   },
   {
     "id": "green-iguana",
@@ -733,7 +1004,10 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Green_Iguana.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Green_Iguana.jpg",
+    "rarityScore": 15,
+    "descEN": "A massive and prehistoric looking reptile frequently found basking in the sun high up in trees along riverbanks. If threatened they will boldly dive straight into the water to escape.",
+    "descES": "Un reptil masivo de aspecto prehistórico que frecuentemente se encuentra tomando el sol en lo alto de los árboles a lo largo de las orillas de los ríos. Si se ven amenazados se zambullirán audazmente directamente al agua para escapar."
   },
   {
     "id": "black-spiny-tailed-iguana",
@@ -742,7 +1016,10 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black_Spiny-tailed_Iguana.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black_Spiny-tailed_Iguana.jpg",
+    "rarityScore": 20,
+    "descEN": "A fast moving and terrestrial lizard often seen sunning on rocks or fallen logs near coastal areas. They are highly alert and will sprint rapidly to safety if you get too close.",
+    "descES": "Un lagarto terrestre de movimiento rápido que a menudo se ve tomando el sol en rocas o troncos caídos cerca de áreas costeras. Están muy alertas y correrán rápidamente a un lugar seguro si te acercas demasiado."
   },
   {
     "id": "boa-constrictor",
@@ -751,7 +1028,10 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Boa_Constrictor.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Boa_Constrictor.jpg",
+    "rarityScore": 75,
+    "descEN": "A large and powerful non venomous snake that relies on stealth and camouflage. Finding one coiled up sleeping in the rafters or hidden in thick brush is a thrilling discovery.",
+    "descES": "Una serpiente grande y poderosa no venenosa que confía en el sigilo y el camuflaje. Encontrar una enrollada durmiendo en las vigas o escondida en la espesa maleza es un descubrimiento emocionante."
   },
   {
     "id": "bushmaster",
@@ -760,7 +1040,10 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Bushmaster.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Bushmaster.jpg",
+    "rarityScore": 95,
+    "descEN": "The largest venomous snake in the Americas and incredibly elusive. They are absolute masters of camouflage on the forest floor making a sighting a truly rare and legendary event.",
+    "descES": "El depredador venenoso más grande de las Américas e increíblemente esquivo. Son maestros absolutos del camuflaje en el suelo del bosque haciendo que un avistamiento sea un evento verdaderamente raro y legendario."
   },
   {
     "id": "glass-frog",
@@ -769,303 +1052,10 @@ export const initialSpecies: Species[] = [
     "category": "Reptiles & Amphibians",
     "section": "The Canopy Crew",
     "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Glass_Frog.jpg"
-  },
-  {
-    "id": "beach-almond-tree",
-    "nameEN": "Beach Almond Tree",
-    "nameES": "Almendro de Playa",
-    "category": "Flora",
-    "section": "Fascinating Flora",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Beach_Almond_Tree.jpg"
-  },
-  {
-    "id": "wild-cashew",
-    "nameEN": "Wild Cashew",
-    "nameES": "Espavel",
-    "category": "Flora",
-    "section": "Fascinating Flora",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Wild_Cashew.jpg"
-  },
-  {
-    "id": "mangrove-red",
-    "nameEN": "Mangrove (Red)",
-    "nameES": "Mangle Rojo",
-    "category": "Flora",
-    "section": "Fascinating Flora",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657299/Mangrove_Red.jpg"
-  },
-  {
-    "id": "bromeliad",
-    "nameEN": "Bromeliad",
-    "nameES": "Bromelia",
-    "category": "Flora",
-    "section": "Fascinating Flora",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Bromeliad.jpg"
-  },
-  {
-    "id": "cacao-tree",
-    "nameEN": "Cacao Tree",
-    "nameES": "Árbol de Cacao",
-    "category": "Flora",
-    "section": "Fascinating Flora",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Cacao_Tree.jpg"
-  },
-  {
-    "id": "pantropical-spotted-dolphin",
-    "nameEN": "Pantropical Spotted Dolphin",
-    "nameES": "Delfín Manchado",
-    "category": "Marine Life",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Pantropical_Spotted_Dolphin.jpg"
-  },
-  {
-    "id": "sunbittern",
-    "nameEN": "Sunbittern",
-    "nameES": "Sol y Luna",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Sunbittern.jpg"
-  },
-  {
-    "id": "ringed-kingfisher",
-    "nameEN": "Ringed Kingfisher",
-    "nameES": "Martín Pescador",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Ringed_Kingfisher.jpg"
-  },
-  {
-    "id": "black-bellied-whistling-duck",
-    "nameEN": "Black-bellied Whistling Duck",
-    "nameES": "Piche",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Black-bellied_Whistling_Duck.jpg"
-  },
-  {
-    "id": "crested-caracara",
-    "nameEN": "Crested Caracara",
-    "nameES": "Caracara Crestado",
-    "category": "Birds",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Crested_Caracara.jpg"
-  },
-  {
-    "id": "brown-pelican",
-    "nameEN": "Brown Pelican",
-    "nameES": "Pelícano",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Brown_Pelican.jpg"
-  },
-  {
-    "id": "rainbow-ameiva",
-    "nameEN": "Rainbow Ameiva",
-    "nameES": "Chisbala",
-    "category": "Reptiles & Amphibians",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Rainbow_Ameiva.jpg"
-  },
-  {
-    "id": "smoky-jungle-frog",
-    "nameEN": "Smoky Jungle Frog",
-    "nameES": "Rana Toro",
-    "category": "Reptiles & Amphibians",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Smoky_Jungle_Frog.jpg"
-  },
-  {
-    "id": "leaf-cutter-ant",
-    "nameEN": "Leaf-cutter Ant",
-    "nameES": "Zompopa",
-    "category": "Insects & Invertebrates",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Leaf-cutter_Ant.jpg"
-  },
-  {
-    "id": "bullet-ant",
-    "nameEN": "Bullet Ant",
-    "nameES": "Hormiga Bala",
-    "category": "Insects & Invertebrates",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Bullet_Ant.jpg"
-  },
-  {
-    "id": "rhinoceros-beetle",
-    "nameEN": "Rhinoceros Beetle",
-    "nameES": "Escarabajo Rinoceronte",
-    "category": "Insects & Invertebrates",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Rhinoceros_Beetle.jpg"
-  },
-  {
-    "id": "turnip-tailed-gecko",
-    "nameEN": "Turnip-tailed Gecko",
-    "nameES": "Limpiacasa",
-    "category": "Reptiles & Amphibians",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Turnip-tailed_Gecko.jpg"
-  },
-  {
-    "id": "golden-silk-orb-weaver",
-    "nameEN": "Golden Silk Orb-weaver",
-    "nameES": "Araña Tejedora Dorada",
-    "category": "Insects & Invertebrates",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Golden_Silk_Orb-weaver.jpg"
-  },
-  {
-    "id": "peruvian-shield-mantis",
-    "nameEN": "Peruvian Shield Mantis",
-    "nameES": "Mantis Escudo",
-    "category": "Insects & Invertebrates",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Peruvian_Shield_Mantis.jpg"
-  },
-  {
-    "id": "bare-throated-tiger-heron",
-    "nameEN": "Bare-throated Tiger-Heron",
-    "nameES": "Garza Tigre",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Bare-throated_Tiger-Heron.jpg"
-  },
-  {
-    "id": "brown-basilisk",
-    "nameEN": "Brown Basilisk",
-    "nameES": "Gallego",
-    "category": "Reptiles & Amphibians",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Brown_Basilisk.jpg"
-  },
-  {
-    "id": "hermit-crab",
-    "nameEN": "Hermit Crab",
-    "nameES": "Cangrejo Ermitaño",
-    "category": "Insects & Invertebrates",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Hermit_Crab.jpg"
-  },
-  {
-    "id": "crested-guan",
-    "nameEN": "Crested Guan",
-    "nameES": "Pava Crestada",
-    "category": "Birds",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Crested_Guan.jpg"
-  },
-  {
-    "id": "slaty-tailed-trogon",
-    "nameEN": "Slaty-tailed Trogon",
-    "nameES": "Trogón (Viuda)",
-    "category": "Birds",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Slaty-tailed_Trogon.jpg"
-  },
-  {
-    "id": "white-ibis",
-    "nameEN": "White Ibis",
-    "nameES": "Ibis Blanco",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White_Ibis.jpg"
-  },
-  {
-    "id": "giant-red-winged-grasshopper",
-    "nameEN": "Giant Red-winged Grasshopper",
-    "nameES": "Langosta Gigante",
-    "category": "Insects & Invertebrates",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Giant_Red-winged_Grasshopper.jpg"
-  },
-  {
-    "id": "snowy-egret",
-    "nameEN": "Snowy Egret",
-    "nameES": "Garza Blanca",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Snowy_Egret.jpg"
-  },
-  {
-    "id": "american-oystercatcher",
-    "nameEN": "American Oystercatcher",
-    "nameES": "Ostrero Americano",
-    "category": "Birds",
-    "section": "Sea and Shore",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/American_Oystercatcher.jpg"
-  },
-  {
-    "id": "halloween-crab",
-    "nameEN": "Halloween Crab",
-    "nameES": "Cangrejo Halloween",
-    "category": "Insects & Invertebrates",
-    "section": "The Forest Floor",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Halloween_Crab.jpg"
-  },
-  {
-    "id": "great-kiskadee",
-    "nameEN": "Great Kiskadee",
-    "nameES": "Pecho Amarillo",
-    "category": "Birds",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Great_Kiskadee.jpg"
-  },
-  {
-    "id": "turkey-vulture",
-    "nameEN": "Turkey Vulture",
-    "nameES": "Zopilote",
-    "category": "Birds",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Turkey_Vulture.jpg"
-  },
-  {
-    "id": "white-throated-shrike-tanager",
-    "nameEN": "White-throated Shrike-Tanager",
-    "nameES": "Tangara Goli-blanca",
-    "category": "Birds",
-    "section": "The Canopy Crew",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/White-throated_Shrike-Tanager.jpg"
-  },
-  {
-    "id": "cookeina-speciosa",
-    "nameEN": "Cookeina speciosa",
-    "nameES": "Hongo Copa",
-    "category": "Flora",
-    "section": "Fascinating Flora",
-    "tier": 2,
-    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Cookeina_speciosa.jpg"
+    "image": "https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Glass_Frog.jpg",
+    "rarityScore": 75,
+    "descEN": "A tiny nocturnal amphibian famous for its translucent belly that reveals its beating heart. Spotting these delicate creatures requires searching the undersides of leaves near rushing streams at night.",
+    "descES": "Un diminuto anfibio nocturno famoso por su vientre translúcido que revela su corazón palpitante. Encontrar a estas delicadas criaturas requiere buscar en la parte inferior de las hojas cerca de arroyos caudalosos por la noche."
   }
 ];
+
