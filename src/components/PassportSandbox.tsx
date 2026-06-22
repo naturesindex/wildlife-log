@@ -12,32 +12,71 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
   const loggedSpecies = rawSpecies || [];
   const totalSpecies = loggedSpecies.length;
   
-  // Fake data for the demo (Phase 2 will make this dynamic)
- const mapKms = "8.5";
+// Fake data for the demo (Phase 2 will make this dynamic)
+  const mapKms = "8.5";
   const guestName = "Explorer"; 
 
-  // Calculate Expedition Rating dynamically based on total species!
-  let expeditionRating = "Jungle Voyager";
-  let ratingColor = "text-blue-400";
-  let ratingBg = "bg-blue-500/10";
+  // --- 1. EXPEDITION TITLE LOGIC ---
+  const monkeyNames = ["Squirrel Monkey", "Howler Monkey", "Spider Monkey", "White-faced Capuchin"];
+  const loggedNames = loggedSpecies.map(s => s.nameEN);
+  const hasGrandSlam = monkeyNames.every(monkey => loggedNames.includes(monkey));
 
-  if (totalSpecies >= 25) {
-    expeditionRating = "Elite Explorer";
+  const birdCount = loggedSpecies.filter(s => s.category === 'Birds').length;
+  // Checking if they looked closely at the ground/small things
+  const microCount = loggedSpecies.filter(s => s.section === 'Fascinating Flora' || s.section === 'The Forest Floor').length;
+  // Counting their highly rare finds
+  const eliteCount = loggedSpecies.filter(s => s.tier === 1 || (s.rarityScore && s.rarityScore >= 90)).length;
+
+  let expeditionRating = "Jungle Voyager";
+  let ratingColor = "text-amber-400";
+  let ratingBg = "bg-amber-500/10";
+
+  if (hasGrandSlam) {
+    expeditionRating = "Primate Grand Slam";
+    ratingColor = "text-yellow-400";
+    ratingBg = "bg-yellow-500/20";
+  } else if (eliteCount >= 2) {
+    expeditionRating = "Elite Tracker";
     ratingColor = "text-purple-400";
     ratingBg = "bg-purple-500/10";
-  } else if (totalSpecies <= 10) {
+  } else if (birdCount > totalSpecies * 0.4 && birdCount > 3) {
+    expeditionRating = "Canopy Scout";
+    ratingColor = "text-sky-400";
+    ratingBg = "bg-sky-500/10";
+  } else if (microCount > totalSpecies * 0.4 && microCount > 3) {
+    expeditionRating = "Micro-Explorer";
+    ratingColor = "text-emerald-400";
+    ratingBg = "bg-emerald-500/10";
+  } else if (totalSpecies <= 8) {
     expeditionRating = "Stealth Tracker";
     ratingColor = "text-stone-400";
     ratingBg = "bg-stone-500/10";
   } else {
-    expeditionRating = "Seasoned Adventurer";
+    expeditionRating = "Jungle Navigator";
     ratingColor = "text-amber-400";
     ratingBg = "bg-amber-500/10";
   }
 
- // Calculate Elite Count for our new stat
-  const eliteCount = loggedSpecies.filter(s => s.tier === 1).length;
-  const rarityStat = eliteCount > 0 ? `Top ${Math.max(1, 15 - eliteCount)}%` : "Standard";
+  // --- 2. BRAGGING RIGHTS MATH (Calculates their best stat) ---
+  let rarityStat = "Top 25% Overall";
+  const mammalCount = loggedSpecies.filter(s => s.category === 'Mammals').length;
+  
+  if (eliteCount >= 3) {
+    rarityStat = "Top 1% for Rare Finds";
+  } else if (hasGrandSlam) {
+    rarityStat = "Top 2% of Explorers";
+  } else if (eliteCount > 0) {
+    // Math tricks it into sounding highly specific (e.g., Top 12%, Top 9%)
+    rarityStat = `Top ${Math.max(2, 15 - (eliteCount * 3))}% for Rare Finds`;
+  } else if (mammalCount >= 5) {
+    rarityStat = `Top 8% in Mammal Sightings`;
+  } else if (birdCount >= 10) {
+    rarityStat = `Top 10% in Bird Sightings`;
+  } else if (totalSpecies > 0) {
+    rarityStat = `Top ${Math.max(10, 40 - totalSpecies)}% Overall`;
+  } else {
+    rarityStat = "Standard Rank";
+  }
 
   // Group species by section, but FORCE Tier 1 into "Today's Highlights"
   const groupedSpecies = loggedSpecies.reduce((acc, species) => {
