@@ -1329,7 +1329,7 @@ export const initialSpecies: Species[] = [
     "rarityScore": 20,
     "descEN": "A lightning fast lizard famous for its ability to sprint upright across the surface of the water. They are frequently seen basking on logs near streams and will dash away rapidly if disturbed.",
     "descES": "Un lagarto rápido como el rayo famoso por su capacidad de correr erguido sobre la superficie del agua. Frecuentemente se les ve tomando el sol en troncos cerca de arroyos y saldrán corriendo rápidamente si son molestados."
-  }
+  },
     {
     "id": "hermit-crab",
     "nameEN": "Hermit Crab",
