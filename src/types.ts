@@ -30,7 +30,17 @@ export interface Species {
   isLogged: boolean;
   nameEN: string;
   nameES: string;
+  scientificName?: string; // NEW
+  rarityScore?: number;    // NEW: 0-100 scale
   descEN?: string;
   descES?: string;
   image: string;
 }
+
+/** Dynamic titles earned based on what the guest saw */
+export type ExpeditionTitle =
+  | 'Primate Grand Slam' // All 4 monkeys
+  | 'Elite Tracker'      // High rarity score or legendary finds
+  | 'Canopy Scout'       // Bird/Canopy heavy
+  | 'Micro-Explorer'     // Insects/Flora heavy
+  | 'Jungle Navigator';  // Standard great day
