@@ -122,8 +122,8 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
             <Sparkles className="w-4 h-4" /> VOLUME I • OFFICIAL SOUVENIR
           </p>
 <h1 className="text-5xl md:text-7xl font-black text-white leading-none mb-8">
-  Expedition <br className="md:hidden" />
-  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Corcovado</span>
+  {guestName}'s <br className="md:hidden" />
+  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Expedition</span>
 </h1>
           
           {/* The Personal Story Block */}
@@ -207,8 +207,50 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
 
             </div>
           </div>
-        </div>
+   </div>
       </div>
+
+      {/* EXPEDITION BADGES ROW */}
+      {(hasGrandSlam || birdCount >= 10 || loggedSpecies.some(s => ["Baird's Tapir", "Collared Peccary", "Jaguar", "Puma"].includes(s.nameEN))) && (
+        <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
+          <h3 className="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Expedition Badges</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {hasGrandSlam && (
+              <div className="bg-[#112217] border border-yellow-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                <div className="bg-yellow-500/10 p-3 rounded-full text-yellow-400">
+                  <Trophy className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-black text-yellow-400 leading-tight">Primate Grand Slam</p>
+                  <p className="text-xs text-white/60 mt-1">Spotted all 4 Corcovado monkeys!</p>
+                </div>
+              </div>
+            )}
+            {birdCount >= 10 && (
+              <div className="bg-[#112217] border border-sky-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                <div className="bg-sky-500/10 p-3 rounded-full text-sky-400">
+                  <Sparkles className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-black text-sky-400 leading-tight">Eagle Eye</p>
+                  <p className="text-xs text-white/60 mt-1">Logged over 10 different bird species.</p>
+                </div>
+              </div>
+            )}
+            {loggedSpecies.some(s => ["Baird's Tapir", "Collared Peccary", "Jaguar", "Puma"].includes(s.nameEN)) && (
+              <div className="bg-[#112217] border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                <div className="bg-emerald-500/10 p-3 rounded-full text-emerald-400">
+                  <Footprints className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-black text-emerald-400 leading-tight">Titan Tracker</p>
+                  <p className="text-xs text-white/60 mt-1">Encountered Corcovado's heavyweights.</p>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
 
       {/* The Asymmetrical Gallery */}
       <div className="max-w-5xl mx-auto px-4 md:px-6">
@@ -220,7 +262,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
 
           // Our new "Poetic Blurbs" dictionary!
           const descriptions: Record<string, {en: string, es: string}> = {
-            "Today's Highlights": { en: "The rare, the elusive, and the magnificent. These sightings are true expedition trophies.", es: "Lo raro, lo esquivo y lo magnífico. Estos avistamientos son verdaderos trofeos." },
+            "Today's Highlights": { en: "The best moments from ${guestName}'s trek. Breathtaking encounters that made this expedition unforgettable.`, es: `Los mejores momentos de la caminata de ${guestName}. Encuentros impresionantes que hicieron esta expedición inolvidable.` },
             "The Canopy Crew": { en: "Life from the treetops. Looking up reveals a vibrant world of climbers and flyers.", es: "Vida desde las copas de los árboles. Mirar hacia arriba revela un mundo vibrante." },
             "The Forest Floor": { en: "The foundation of the jungle. A bustling metropolis of shadows, leaves, and stealth.", es: "Los cimientos de la selva. Una bulliciosa metrópolis de sombras, hojas y sigilo." },
             "Sea and Shore": { en: "Where the jungle meets the tide. A unique ecosystem of coastal wanderers.", es: "Donde la selva se encuentra con la marea. Un ecosistema único de vagabundos costeros." },
@@ -253,8 +295,8 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
       <div key={idx} className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col">
         <div className="w-full relative overflow-hidden p-2 pb-0">
           <img src={species.image} className="w-full h-auto object-cover rounded-2xl" />
-          <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
-            Elite Tier
+        <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
+            {language === 'EN' ? 'Highlight' : 'Destacado'}
           </div>
         </div>
         <div className="p-5 pt-4">
@@ -288,9 +330,9 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                         {species.scientificName ? species.scientificName : "Species scientifica"}
                       </p>
                       
-                   {species.tier === 1 && (
+                  {species.tier === 1 && (
                         <p className="text-white/60 text-[10px] md:text-sm leading-relaxed mt-2 border-t border-white/10 pt-2 hidden md:block">
-                          An incredible find. These species are known to be particularly elusive.
+                          {language === 'EN' ? "A standout moment from today's journey." : "Un momento destacado del viaje de hoy."}
                         </p>
                       )}
                     </div>
