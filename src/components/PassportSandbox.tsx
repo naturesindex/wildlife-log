@@ -1,4 +1,4 @@
-import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf, Trophy } from 'lucide-react';
+import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf, Trophy, Map, Bug, Eye } from 'lucide-react';
 import { useState } from 'react';
 import { Species, Language } from '../types';
 
@@ -11,13 +11,24 @@ interface SandboxProps {
 
 export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName, onBack }: SandboxProps) {
   const [flippedId, setFlippedId] = useState<string | null>(null);
+  const [mapFlipped, setMapFlipped] = useState(false);
   
   const loggedSpecies = rawSpecies || [];
   const totalSpecies = loggedSpecies.length;
   
-  // Fake data for the demo (Phase 2 will make this dynamic)
-  const mapKms = "8.5";
+  // Phase 2: This will be passed down from the session. For now, change this string to test!
+  const demoExpeditionType = "Combo: Sirena + San Pedrillo"; 
   const guestName = "Explorer";
+
+  // Dynamic Trek Dictionary
+  const trekData = {
+    "Sirena Station (Day Tour)": { kms: "7.5", title: "Sirena Trail", desc: "A deep dive into Corcovado's biological heart, walking the coastal and dense secondary forests." },
+    "San Pedrillo Station (Day Tour)": { kms: "6.5", title: "San Pedrillo", desc: "Exploring the ancient primary rainforest and majestic waterfalls of the park's northern edge." },
+    "Sirena Station (Overnight)": { kms: "10.0", title: "Sirena Nocturnal", desc: "Experiencing the jungle as it transforms at night, unlocking a completely different nocturnal ecosystem." },
+    "Combo: Sirena + San Pedrillo": { kms: "20.0", title: "The Ultimate Trek", desc: "The grand dual-station expedition. From ancient primary giants to the beating heart of Sirena." }
+  };
+  
+  const activeTrek = trekData[demoExpeditionType as keyof typeof trekData] || trekData["Sirena Station (Day Tour)"];
 
 // --- 1. EXPEDITION TITLE LOGIC ---
   const monkeyNames = ["Squirrel Monkey", "Howler Monkey", "Spider Monkey", "White-faced Capuchin"];
@@ -137,18 +148,33 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
       <div className="max-w-4xl mx-auto px-6 mb-20">
         <div className="bg-[#112217] border border-white/5 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative">
           
-          {/* Mock Map Side */}
-          <div className="w-full md:w-1/2 h-[250px] md:h-auto relative bg-[#0b170f] overflow-hidden group">
-            <div className="absolute inset-0 opacity-30 group-hover:scale-105 transition-transform duration-700" 
-                 style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #C86A27 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
-            <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#112217] via-transparent to-transparent z-10"></div>
-            <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2">
-              <div className="w-3 h-3 bg-[#C86A27] rounded-full animate-pulse shadow-[0_0_10px_#C86A27]"></div>
-              <p className="text-[#C86A27] font-bold text-xs uppercase tracking-widest">Sirena Trail Route</p>
-            </div>
+ {/* Mock Map Side */}
+          <div 
+            onClick={() => setMapFlipped(!mapFlipped)}
+            className="w-full md:w-1/2 h-[250px] md:h-auto relative bg-[#0b170f] overflow-hidden group cursor-pointer"
+          >
+            {mapFlipped ? (
+              <div className="absolute inset-0 bg-[#C86A27]/10 p-8 flex flex-col justify-center items-center text-center">
+                <Map className="w-8 h-8 text-[#C86A27] mb-4" />
+                <h4 className="text-xl font-black text-white mb-2">{activeTrek.title}</h4>
+                <p className="text-white/70 text-sm leading-relaxed">{activeTrek.desc}</p>
+                <p className="text-[#C86A27]/50 text-[10px] uppercase tracking-widest font-bold mt-6">Tap to close</p>
+              </div>
+            ) : (
+              <>
+                <div className="absolute inset-0 opacity-30 group-hover:scale-105 transition-transform duration-700" 
+                     style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #C86A27 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+                <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#112217] via-transparent to-transparent z-10"></div>
+                <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2">
+                  <div className="w-3 h-3 bg-[#C86A27] rounded-full animate-pulse shadow-[0_0_10px_#C86A27]"></div>
+                  <p className="text-[#C86A27] font-bold text-xs uppercase tracking-widest">{activeTrek.title} Route</p>
+                </div>
+                <div className="absolute top-6 right-6 z-20 bg-black/40 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10 text-white/50 text-[10px] uppercase tracking-widest font-bold">Tap for info</div>
+              </>
+            )}
           </div>
 
-{/* Stats Side */}
+          {/* Stats Side */}
           <div className="w-full md:w-1/2 p-8 md:p-12 relative z-20 bg-gradient-to-br from-[#112217] to-[#0b170f]">
             <h3 className="text-2xl font-black text-white mb-6">
               {language === 'EN' ? "The Trek" : "La Caminata"}
@@ -160,7 +186,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                   <Footprints className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-3xl font-black text-white">{mapKms} <span className="text-lg text-white/50 font-normal">km</span></p>
+                  <p className="text-3xl font-black text-white">{activeTrek.kms} <span className="text-lg text-white/50 font-normal">km</span></p>
                   <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Distance Hiked</p>
                 </div>
               </div>
@@ -203,57 +229,67 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
       </div>
 
 {/* EXPEDITION BADGES ROW */}
-      {(hasGrandSlam || birdCount >= 10 || loggedSpecies.some(s => ["Baird's Tapir", "Collared Peccary", "Jaguar", "Puma"].includes(s.nameEN)) || hasMythical) && (
-        <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
-          <h3 className="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Expedition Badges</h3>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {hasGrandSlam && (
-              <div className="bg-[#112217] border border-yellow-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                <div className="bg-yellow-500/10 p-3 rounded-full text-yellow-400">
-                  <Trophy className="w-6 h-6" />
+      {(() => {
+        // Badge Math
+        const repAmphibCount = loggedSpecies.filter(s => s.category === 'Reptiles' || s.category === 'Amphibians').length;
+        const insectCount = loggedSpecies.filter(s => s.category === 'Insects').length;
+        
+        // Only show badge row if they unlocked at least one
+        if (!hasGrandSlam && birdCount < 10 && !hasMythical && repAmphibCount < 2 && insectCount < 3) return null;
+
+        return (
+          <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
+            <h3 className="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Expedition Badges</h3>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              {hasGrandSlam && (
+                <div className="bg-[#112217] border border-yellow-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <div className="bg-yellow-500/10 p-3 rounded-full text-yellow-400"><Trophy className="w-6 h-6" /></div>
+                  <div>
+                    <p className="font-black text-yellow-400 leading-tight">Primate Grand Slam</p>
+                    <p className="text-xs text-white/60 mt-1">Spotted all 4 Corcovado monkeys!</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-black text-yellow-400 leading-tight">Primate Grand Slam</p>
-                  <p className="text-xs text-white/60 mt-1">Spotted all 4 Corcovado monkeys!</p>
+              )}
+              {birdCount >= 10 && (
+                <div className="bg-[#112217] border border-sky-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <div className="bg-sky-500/10 p-3 rounded-full text-sky-400"><Sparkles className="w-6 h-6" /></div>
+                  <div>
+                    <p className="font-black text-sky-400 leading-tight">Eagle Eye</p>
+                    <p className="text-xs text-white/60 mt-1">Logged over 10 different bird species.</p>
+                  </div>
                 </div>
-              </div>
-            )}
-            {birdCount >= 10 && (
-              <div className="bg-[#112217] border border-sky-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                <div className="bg-sky-500/10 p-3 rounded-full text-sky-400">
-                  <Sparkles className="w-6 h-6" />
+              )}
+              {repAmphibCount >= 2 && (
+                <div className="bg-[#112217] border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <div className="bg-emerald-500/10 p-3 rounded-full text-emerald-400"><Eye className="w-6 h-6" /></div>
+                  <div>
+                    <p className="font-black text-emerald-400 leading-tight">Jungle Ninja</p>
+                    <p className="text-xs text-white/60 mt-1">Found elusive reptiles & amphibians.</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-black text-sky-400 leading-tight">Eagle Eye</p>
-                  <p className="text-xs text-white/60 mt-1">Logged over 10 different bird species.</p>
+              )}
+              {insectCount >= 3 && (
+                <div className="bg-[#112217] border border-stone-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <div className="bg-stone-500/10 p-3 rounded-full text-stone-400"><Bug className="w-6 h-6" /></div>
+                  <div>
+                    <p className="font-black text-stone-400 leading-tight">Macro Master</p>
+                    <p className="text-xs text-white/60 mt-1">Investigated the tiny giants of the floor.</p>
+                  </div>
                 </div>
-              </div>
-            )}
-            {loggedSpecies.some(s => ["Baird's Tapir", "Collared Peccary", "Jaguar", "Puma"].includes(s.nameEN)) && (
-              <div className="bg-[#112217] border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                <div className="bg-emerald-500/10 p-3 rounded-full text-emerald-400">
-                  <Footprints className="w-6 h-6" />
+              )}
+              {hasMythical && (
+                <div className="bg-[#112217] border border-purple-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <div className="bg-purple-500/10 p-3 rounded-full text-purple-400"><Leaf className="w-6 h-6" /></div>
+                  <div>
+                    <p className="font-black text-purple-400 leading-tight">Myth Seeker</p>
+                    <p className="text-xs text-white/60 mt-1">Logged a near-mythical rarity species!</p>
+                  </div>
                 </div>
-                <div>
-                  <p className="font-black text-emerald-400 leading-tight">Titan Tracker</p>
-                  <p className="text-xs text-white/60 mt-1">Encountered Corcovado's heavyweights.</p>
-                </div>
-              </div>
-            )}
-            {hasMythical && (
-              <div className="bg-[#112217] border border-purple-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                <div className="bg-purple-500/10 p-3 rounded-full text-purple-400">
-                  <Leaf className="w-6 h-6" />
-                </div>
-                <div>
-                  <p className="font-black text-purple-400 leading-tight">Myth Seeker</p>
-                  <p className="text-xs text-white/60 mt-1">Logged a near-mythical rarity species!</p>
-                </div>
-              </div>
-            )}
+              )}
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
 
       {/* The Asymmetrical Gallery */}
       <div className="max-w-5xl mx-auto px-4 md:px-6">
@@ -291,88 +327,103 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </p>
               </div>
 
-              {/* Special Layout for Highlights */}
-{sectionName === "Today's Highlights" ? (
-  <div className="columns-1 sm:columns-2 gap-4 md:gap-6">
-    {speciesInSection.map((species, idx) => {
-      const isFlipped = flippedId === species.id;
-      return (
-      <div 
-        key={idx} 
-        onClick={() => setFlippedId(isFlipped ? null : species.id!)}
-        className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col cursor-pointer transition-all duration-300"
-      >
-        {isFlipped ? (
-          <div className="p-8 flex flex-col justify-center items-center h-full min-h-[300px] bg-[#C86A27]/5">
-            <h3 className="text-2xl font-black text-[#C86A27] mb-4 text-center">{language === 'EN' ? species.nameEN : species.nameES}</h3>
-            <p className="text-white/80 italic text-sm md:text-base leading-relaxed text-center">
-              {language === 'EN' ? (species.descEN || 'Description coming soon.') : (species.descES || 'Descripción en breve.')}
-            </p>
-            <p className="text-[#C86A27]/50 text-[10px] uppercase tracking-widest font-bold mt-6">Tap to flip</p>
-          </div>
-        ) : (
-          <>
-            <div className="w-full relative overflow-hidden p-2 pb-0">
-              <img src={species.image} className="w-full h-auto object-cover rounded-2xl" />
-            <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
-                {language === 'EN' ? 'Highlight' : 'Destacado'}
-              </div>
-            </div>
-            <div className="p-5 pt-4">
-              <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight">{language === 'EN' ? species.nameEN : species.nameES}</h3>
-              <p className="text-white/50 text-sm italic font-serif">{species.scientificName}</p>
-            </div>
-          </>
-        )}
-      </div>
-    )})}
-  </div>
-) : (
-  /* Standard Pinterest-Style Columns for others */
-  <div className="columns-2 md:columns-3 gap-3 md:gap-6">
-    {speciesInSection.map((species, idx) => {
-      const isFlipped = flippedId === species.id;
-      return (
-      <div 
-        key={idx} 
-        onClick={() => setFlippedId(isFlipped ? null : species.id!)}
-        className="break-inside-avoid mb-3 md:mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer shadow-lg"
-      >
-        {isFlipped ? (
-          <div className="p-6 flex flex-col justify-center items-center h-full min-h-[200px] bg-emerald-500/5">
-            <h3 className="text-lg font-black text-emerald-400 mb-3 text-center">{language === 'EN' ? species.nameEN : species.nameES}</h3>
-            <p className="text-white/80 italic text-xs md:text-sm leading-relaxed text-center">
-              {language === 'EN' ? (species.descEN || 'Description coming soon.') : (species.descES || 'Descripción en breve.')}
-            </p>
-            <p className="text-emerald-400/50 text-[10px] uppercase tracking-widest font-bold mt-4">Tap to flip</p>
-          </div>
-        ) : (
-          <>
-            <div className="w-full relative overflow-hidden">
-              <img 
-                src={species.image} 
-                alt={species.nameEN} 
-                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
-              />
-            </div>
-            <div className="p-3 md:p-5">
-              <h3 className="text-sm md:text-xl font-black text-white leading-tight mb-1 group-hover:text-emerald-400 transition-colors">
-                {language === 'EN' ? species.nameEN : species.nameES}
-              </h3>
-              <p className="text-white/50 text-[10px] md:text-sm italic mb-1 md:mb-3 font-serif">
-                {species.scientificName ? species.scientificName : "Species scientifica"}
-              </p>
-            </div>
-          </>
-        )}
-      </div>
-    )})}
-  </div>
-)}
-            </div>
+{/* Special Layout for Highlights */}
+              {sectionName === "Today's Highlights" ? (
+                <div className="columns-1 sm:columns-2 gap-4 md:gap-6">
+                  {speciesInSection.map((species, idx) => {
+                    const isFlipped = flippedId === species.id;
+                    return (
+                    <div 
+                      key={idx} 
+                      onClick={() => setFlippedId(isFlipped ? null : species.id!)}
+                      className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col cursor-pointer"
+                    >
+                      {/* ANTI-HOP FLIP OVERLAY */}
+                      <div className={`absolute inset-0 z-30 bg-[#112217]/95 backdrop-blur-md p-6 md:p-8 flex flex-col justify-center items-center transition-opacity duration-300 ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                        <h3 className="text-2xl font-black text-[#C86A27] mb-4 text-center">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+                        <p className="text-white/80 italic text-sm md:text-base leading-relaxed text-center overflow-y-auto">
+                          {language === 'EN' ? (species.descEN || 'Description coming soon.') : (species.descES || 'Descripción en breve.')}
+                        </p>
+                        <p className="text-[#C86A27]/50 text-[10px] uppercase tracking-widest font-bold mt-4 shrink-0">Tap to close</p>
+                      </div>
 
+                      {/* BASE CARD (Always renders to hold height) */}
+                      <div className="w-full relative overflow-hidden p-2 pb-0">
+                        <img src={species.image} className="w-full h-auto object-cover rounded-2xl" />
+                        <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
+                          {language === 'EN' ? 'Highlight' : 'Destacado'}
+                        </div>
+                      </div>
+                      <div className="p-5 pt-4">
+                        <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+                        <p className="text-white/50 text-sm italic font-serif">{species.scientificName}</p>
+                      </div>
+                    </div>
+                  )})}
+                </div>
+              ) : (
+                /* Standard Pinterest-Style Columns for others */
+                <div className="columns-2 md:columns-3 gap-3 md:gap-6">
+                  {speciesInSection.map((species, idx) => {
+                    const isFlipped = flippedId === species.id;
+                    return (
+                    <div 
+                      key={idx} 
+                      onClick={() => setFlippedId(isFlipped ? null : species.id!)}
+                      className="break-inside-avoid mb-3 md:mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer shadow-lg relative"
+                    >
+                      {/* ANTI-HOP FLIP OVERLAY */}
+                      <div className={`absolute inset-0 z-30 bg-[#112217]/95 backdrop-blur-md p-4 flex flex-col justify-center items-center transition-opacity duration-300 ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
+                        <h3 className="text-lg font-black text-emerald-400 mb-2 text-center leading-tight">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+                        <p className="text-white/80 italic text-xs md:text-sm leading-snug text-center overflow-y-auto">
+                          {language === 'EN' ? (species.descEN || 'Description coming soon.') : (species.descES || 'Descripción en breve.')}
+                        </p>
+                      </div>
+
+                      {/* BASE CARD (Always renders to hold height) */}
+                      <div className="w-full relative overflow-hidden">
+                        <img 
+                          src={species.image} 
+                          alt={species.nameEN} 
+                          className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
+                        />
+                      </div>
+                      <div className="p-3 md:p-5">
+                        <h3 className="text-sm md:text-xl font-black text-white leading-tight mb-1 group-hover:text-emerald-400 transition-colors">
+                          {language === 'EN' ? species.nameEN : species.nameES}
+                        </h3>
+                        <p className="text-white/50 text-[10px] md:text-sm italic mb-1 md:mb-3 font-serif">
+                          {species.scientificName ? species.scientificName : "Species scientifica"}
+                        </p>
+                      </div>
+                    </div>
+                  )})}
+                </div>
+              )}
+            </div>
           );
         })}
+      </div>
+
+      {/* FIELD NOTES / POKEDEX BONES */}
+      <div className="max-w-5xl mx-auto px-4 md:px-6 mb-20 mt-10">
+        <div className="bg-gradient-to-br from-[#112217] to-[#060c08] border border-white/10 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
+          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-[#C86A27]"></div>
+          <Camera className="w-12 h-12 text-white/20 mx-auto mb-4" />
+          <h3 className="text-2xl md:text-3xl font-black text-white mb-3">
+            {language === 'EN' ? 'My Field Notes' : 'Mis Notas de Campo'}
+          </h3>
+          <p className="text-white/50 mb-8 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
+            {language === 'EN' 
+              ? 'Coming Soon: Upload your own photos from the trek to replace the guide shots and create a truly unique souvenir.' 
+              : 'Próximamente: Sube tus propias fotos para reemplazar las imágenes de la guía y crear un recuerdo único.'}
+          </p>
+          <div className="flex justify-center gap-4 opacity-40 grayscale pointer-events-none">
+             <div className="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-2xl border border-dashed border-white/20 flex items-center justify-center"><Camera className="w-6 h-6 text-white/30"/></div>
+             <div className="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-2xl border border-dashed border-white/20 flex items-center justify-center"><Camera className="w-6 h-6 text-white/30"/></div>
+             <div className="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-2xl border border-dashed border-white/20 hidden sm:flex items-center justify-center"><Camera className="w-6 h-6 text-white/30"/></div>
+          </div>
+        </div>
       </div>
 
     </div>
