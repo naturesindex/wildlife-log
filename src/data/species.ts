@@ -531,7 +531,7 @@ export const initialSpecies: Species[] = [
     "rarityScore": 85,
     "descEN": "A medium-sized anteater that splits its time between the trees and the ground. With a prehensile tail and sharp claws, it tears into termite mounds. When threatened, it stands on its hind legs and spreads its arms to display its powerful claws.",
     "descES": "Un oso hormiguero mediano que divide su tiempo entre los árboles y el suelo. Con una cola prensil y garras afiladas, rompe los termiteros. Cuando se siente amenazado, se pone de pie sobre sus patas traseras y abre los brazos para mostrar sus garras."
-  }
+  },
     {
     "id": "anhinga",
     "nameEN": "Anhinga",
@@ -804,7 +804,7 @@ export const initialSpecies: Species[] = [
     "rarityScore": 40,
     "descEN": "A graceful herbivore often spotted quietly browsing at the edge of the forest or near clearings. They are highly alert and will quickly bound away if startled.",
     "descES": "Un grácil herbívoro que a menudo se observa pastando tranquilamente en el borde del bosque o cerca de los claros. Son muy alertas y se alejarán rápidamente si se asustan."
-  }
+  },
     {
     "id": "tayra",
     "nameEN": "Tayra",
@@ -1056,7 +1056,7 @@ export const initialSpecies: Species[] = [
     "rarityScore": 75,
     "descEN": "A tiny nocturnal amphibian famous for its translucent belly that reveals its beating heart. Spotting these delicate creatures requires searching the undersides of leaves near rushing streams at night.",
     "descES": "Un diminuto anfibio nocturno famoso por su vientre translúcido que revela su corazón palpitante. Encontrar a estas delicadas criaturas requiere buscar en la parte inferior de las hojas cerca de arroyos caudalosos por la noche."
-  }
+  },
     {
     "id": "beach-almond-tree",
     "nameEN": "Beach Almond Tree",
