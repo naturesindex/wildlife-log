@@ -2,6 +2,7 @@ import { CheckCircle, Copy, ArrowLeft, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { Species, Language } from '../types';
 import { PassportSandbox } from './PassportSandbox';
+import { PrintablePoster } from './PrintablePoster';
 
 interface ExportViewProps {
   loggedSpecies: Species[];
@@ -15,7 +16,8 @@ interface ExportViewProps {
 
 export function ExportView({ loggedSpecies, language, tourId, onBack, onEndSession, setLanguage }: ExportViewProps) {
   const [copied, setCopied] = useState(false);
-  const [showSandbox, setShowSandbox] = useState(false);
+const [showSandbox, setShowSandbox] = useState(false);
+  const [showPoster, setShowPoster] = useState(false);
 
   if (showSandbox) {
     return (
@@ -24,6 +26,17 @@ export function ExportView({ loggedSpecies, language, tourId, onBack, onEndSessi
         language={language} 
         guideName={guideName} 
         onBack={() => setShowSandbox(false)} 
+      />
+    );
+  }
+
+  if (showPoster) {
+    return (
+      <PrintablePoster 
+        loggedSpecies={loggedSpecies} 
+        language={language} 
+        guideName={guideName} 
+        onClose={() => setShowPoster(false)} 
       />
     );
   }
@@ -103,11 +116,18 @@ export function ExportView({ loggedSpecies, language, tourId, onBack, onEndSessi
         </button>
 
         {/* DEV: SANDBOX TOGGLE */}
-        <button 
+<button 
           onClick={() => setShowSandbox(true)}
           className="w-full py-4 mt-4 border-2 border-[#C86A27]/50 rounded-xl font-bold text-[#C86A27] hover:bg-[#C86A27]/10 transition-all flex items-center justify-center"
         >
           🛠️ Enter Web Sandbox (Dev)
+        </button>
+
+        <button 
+          onClick={() => setShowPoster(true)}
+          className="w-full py-4 mt-3 border-2 border-emerald-500/50 rounded-xl font-bold text-emerald-500 hover:bg-emerald-500/10 transition-all flex items-center justify-center"
+        >
+          🖼️ Preview Printable Poster (Dev)
         </button>
         
       </div>
