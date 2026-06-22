@@ -1,4 +1,5 @@
 import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf, Trophy } from 'lucide-react';
+import { useState } from 'react';
 import { Species, Language } from '../types';
 
 interface SandboxProps {
@@ -9,33 +10,30 @@ interface SandboxProps {
 }
 
 export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName, onBack }: SandboxProps) {
+  const [flippedId, setFlippedId] = useState<string | null>(null);
+  
   const loggedSpecies = rawSpecies || [];
   const totalSpecies = loggedSpecies.length;
   
-// Fake data for the demo (Phase 2 will make this dynamic)
+  // Fake data for the demo (Phase 2 will make this dynamic)
   const mapKms = "8.5";
-  const guestName = "Explorer"; 
+  const guestName = "Explorer";
 
-  // --- 1. EXPEDITION TITLE LOGIC ---
+// --- 1. EXPEDITION TITLE LOGIC ---
   const monkeyNames = ["Squirrel Monkey", "Howler Monkey", "Spider Monkey", "White-faced Capuchin"];
   const loggedNames = loggedSpecies.map(s => s.nameEN);
   const hasGrandSlam = monkeyNames.every(monkey => loggedNames.includes(monkey));
 
   const birdCount = loggedSpecies.filter(s => s.category === 'Birds').length;
-  // Checking if they looked closely at the ground/small things
   const microCount = loggedSpecies.filter(s => s.section === 'Fascinating Flora' || s.section === 'The Forest Floor').length;
-  // Counting their highly rare finds
   const eliteCount = loggedSpecies.filter(s => s.tier === 1 || (s.rarityScore && s.rarityScore >= 90)).length;
+  const hasMythical = loggedSpecies.some(s => s.rarityScore && s.rarityScore >= 90);
 
   let expeditionRating = "Jungle Voyager";
   let ratingColor = "text-amber-400";
   let ratingBg = "bg-amber-500/10";
 
-  if (hasGrandSlam) {
-    expeditionRating = "Primate Grand Slam";
-    ratingColor = "text-yellow-400";
-    ratingBg = "bg-yellow-500/20";
-  } else if (eliteCount >= 2) {
+  if (eliteCount >= 2) {
     expeditionRating = "Elite Tracker";
     ratingColor = "text-purple-400";
     ratingBg = "bg-purple-500/10";
@@ -47,7 +45,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
     expeditionRating = "Micro-Explorer";
     ratingColor = "text-emerald-400";
     ratingBg = "bg-emerald-500/10";
-  } else if (totalSpecies <= 8) {
+  } else if (totalSpecies > 0 && totalSpecies <= 8) {
     expeditionRating = "Stealth Tracker";
     ratingColor = "text-stone-400";
     ratingBg = "bg-stone-500/10";
@@ -57,25 +55,19 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
     ratingBg = "bg-amber-500/10";
   }
 
-  // --- 2. BRAGGING RIGHTS MATH (Calculates their best stat) ---
-  let rarityStat = "Top 25% Overall";
-  const mammalCount = loggedSpecies.filter(s => s.category === 'Mammals').length;
-  
-  if (eliteCount >= 3) {
-    rarityStat = "Top 1% for Rare Finds";
-  } else if (hasGrandSlam) {
-    rarityStat = "Top 2% of Explorers";
-  } else if (eliteCount > 0) {
-    // Math tricks it into sounding highly specific (e.g., Top 12%, Top 9%)
-    rarityStat = `Top ${Math.max(2, 15 - (eliteCount * 3))}% for Rare Finds`;
-  } else if (mammalCount >= 5) {
-    rarityStat = `Top 8% in Mammal Sightings`;
-  } else if (birdCount >= 10) {
-    rarityStat = `Top 10% in Bird Sightings`;
-  } else if (totalSpecies > 0) {
-    rarityStat = `Top ${Math.max(10, 40 - totalSpecies)}% Overall`;
-  } else {
-    rarityStat = "Standard Rank";
+  // --- 2. BRAGGING RIGHTS MATH (Real Data Based!) ---
+  let rarityStat = "Standard Rank";
+  if (totalSpecies > 0) {
+    // 1. Sort by rarest first
+    const sortedRarity = [...loggedSpecies].sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0));
+    // 2. Take top 5 best finds to judge their luck
+    const topFinds = sortedRarity.slice(0, 5);
+    // 3. Average the rarity of their best finds
+    const avgTopRarity = topFinds.reduce((sum, s) => sum + (s.rarityScore || 10), 0) / topFinds.length;
+    // 4. Convert 0-100 rarity score into a top percentile (100 rarity = top 1%)
+    const percentile = Math.max(1, Math.round(100 - avgTopRarity));
+    
+    rarityStat = `Top ${percentile}% in Corcovado`;
   }
 
   // Group species by section, but FORCE Tier 1 into "Today's Highlights"
@@ -210,8 +202,8 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
    </div>
       </div>
 
-      {/* EXPEDITION BADGES ROW */}
-      {(hasGrandSlam || birdCount >= 10 || loggedSpecies.some(s => ["Baird's Tapir", "Collared Peccary", "Jaguar", "Puma"].includes(s.nameEN))) && (
+{/* EXPEDITION BADGES ROW */}
+      {(hasGrandSlam || birdCount >= 10 || loggedSpecies.some(s => ["Baird's Tapir", "Collared Peccary", "Jaguar", "Puma"].includes(s.nameEN)) || hasMythical) && (
         <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
           <h3 className="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Expedition Badges</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -245,6 +237,17 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 <div>
                   <p className="font-black text-emerald-400 leading-tight">Titan Tracker</p>
                   <p className="text-xs text-white/60 mt-1">Encountered Corcovado's heavyweights.</p>
+                </div>
+              </div>
+            )}
+            {hasMythical && (
+              <div className="bg-[#112217] border border-purple-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                <div className="bg-purple-500/10 p-3 rounded-full text-purple-400">
+                  <Leaf className="w-6 h-6" />
+                </div>
+                <div>
+                  <p className="font-black text-purple-400 leading-tight">Myth Seeker</p>
+                  <p className="text-xs text-white/60 mt-1">Logged a near-mythical rarity species!</p>
                 </div>
               </div>
             )}
@@ -288,60 +291,86 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </p>
               </div>
 
-{/* Special Layout for Highlights */}
+              {/* Special Layout for Highlights */}
 {sectionName === "Today's Highlights" ? (
   <div className="columns-1 sm:columns-2 gap-4 md:gap-6">
-    {speciesInSection.map((species, idx) => (
-      <div key={idx} className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col">
-        <div className="w-full relative overflow-hidden p-2 pb-0">
-          <img src={species.image} className="w-full h-auto object-cover rounded-2xl" />
-        <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
-            {language === 'EN' ? 'Highlight' : 'Destacado'}
+    {speciesInSection.map((species, idx) => {
+      const isFlipped = flippedId === species.id;
+      return (
+      <div 
+        key={idx} 
+        onClick={() => setFlippedId(isFlipped ? null : species.id!)}
+        className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col cursor-pointer transition-all duration-300"
+      >
+        {isFlipped ? (
+          <div className="p-8 flex flex-col justify-center items-center h-full min-h-[300px] bg-[#C86A27]/5">
+            <h3 className="text-2xl font-black text-[#C86A27] mb-4 text-center">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+            <p className="text-white/80 italic text-sm md:text-base leading-relaxed text-center">
+              {language === 'EN' ? (species.descEN || 'Description coming soon.') : (species.descES || 'Descripción en breve.')}
+            </p>
+            <p className="text-[#C86A27]/50 text-[10px] uppercase tracking-widest font-bold mt-6">Tap to flip</p>
           </div>
-        </div>
-        <div className="p-5 pt-4">
-          <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight">{language === 'EN' ? species.nameEN : species.nameES}</h3>
-          <p className="text-white/50 text-sm italic font-serif">{species.scientificName}</p>
-        </div>
+        ) : (
+          <>
+            <div className="w-full relative overflow-hidden p-2 pb-0">
+              <img src={species.image} className="w-full h-auto object-cover rounded-2xl" />
+            <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
+                {language === 'EN' ? 'Highlight' : 'Destacado'}
+              </div>
+            </div>
+            <div className="p-5 pt-4">
+              <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+              <p className="text-white/50 text-sm italic font-serif">{species.scientificName}</p>
+            </div>
+          </>
+        )}
       </div>
-    ))}
+    )})}
   </div>
 ) : (
   /* Standard Pinterest-Style Columns for others */
   <div className="columns-2 md:columns-3 gap-3 md:gap-6">
-    {speciesInSection.map((species, idx) => (
-      <div key={idx} className="break-inside-avoid mb-3 md:mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer shadow-lg">
-                    <div className="w-full relative overflow-hidden">
-                      <img 
-                        src={species.image} 
-                        alt={species.nameEN} 
-                        className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                    </div>
-                    
-                    {/* Species Info */}
-                    <div className="p-3 md:p-5">
-                      <h3 className="text-sm md:text-xl font-black text-white leading-tight mb-1 group-hover:text-emerald-400 transition-colors">
-                        {language === 'EN' ? species.nameEN : species.nameES}
-                      </h3>
-                      {/* Forced Scientific Name (with a fallback if empty!) */}
-                      <p className="text-white/50 text-[10px] md:text-sm italic mb-1 md:mb-3 font-serif">
-                        {species.scientificName ? species.scientificName : "Species scientifica"}
-                      </p>
-                      
-                  {species.tier === 1 && (
-                        <p className="text-white/60 text-[10px] md:text-sm leading-relaxed mt-2 border-t border-white/10 pt-2 hidden md:block">
-                          {language === 'EN' ? "A standout moment from today's journey." : "Un momento destacado del viaje de hoy."}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                ))}
-                
-              </div>
-            )}
+    {speciesInSection.map((species, idx) => {
+      const isFlipped = flippedId === species.id;
+      return (
+      <div 
+        key={idx} 
+        onClick={() => setFlippedId(isFlipped ? null : species.id!)}
+        className="break-inside-avoid mb-3 md:mb-6 bg-[#112217] border border-white/5 rounded-2xl overflow-hidden hover:border-emerald-500/30 transition-colors group cursor-pointer shadow-lg"
+      >
+        {isFlipped ? (
+          <div className="p-6 flex flex-col justify-center items-center h-full min-h-[200px] bg-emerald-500/5">
+            <h3 className="text-lg font-black text-emerald-400 mb-3 text-center">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+            <p className="text-white/80 italic text-xs md:text-sm leading-relaxed text-center">
+              {language === 'EN' ? (species.descEN || 'Description coming soon.') : (species.descES || 'Descripción en breve.')}
+            </p>
+            <p className="text-emerald-400/50 text-[10px] uppercase tracking-widest font-bold mt-4">Tap to flip</p>
+          </div>
+        ) : (
+          <>
+            <div className="w-full relative overflow-hidden">
+              <img 
+                src={species.image} 
+                alt={species.nameEN} 
+                className="w-full h-auto object-cover transform group-hover:scale-105 transition-transform duration-700"
+              />
             </div>
+            <div className="p-3 md:p-5">
+              <h3 className="text-sm md:text-xl font-black text-white leading-tight mb-1 group-hover:text-emerald-400 transition-colors">
+                {language === 'EN' ? species.nameEN : species.nameES}
+              </h3>
+              <p className="text-white/50 text-[10px] md:text-sm italic mb-1 md:mb-3 font-serif">
+                {species.scientificName ? species.scientificName : "Species scientifica"}
+              </p>
+            </div>
+          </>
+        )}
+      </div>
+    )})}
+  </div>
+)}
+            </div>
+
           );
         })}
       </div>
