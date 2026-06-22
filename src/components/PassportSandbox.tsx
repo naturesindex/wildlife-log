@@ -144,8 +144,10 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                 </div>
               </div>
 
-              {/* Rarity & Expedition Stat Row */}
-              <div className="flex flex-col sm:flex-row gap-6 mt-6 pt-6 border-t border-white/10">
+       {/* Rarity & Expedition Stat Row */}
+              <div className="flex flex-col gap-6 mt-6 pt-6 border-t border-white/10">
+                
+                {/* Top Row: Expedition Rating */}
                 <div className="flex items-start gap-4">
                   <div className={`${ratingBg} p-3 rounded-full ${ratingColor}`}>
                     <Trophy className="w-6 h-6" />
@@ -156,15 +158,12 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
                   </div>
                 </div>
 
-                <div className="flex items-start gap-4">
-                  <div className="bg-purple-500/10 p-3 rounded-full text-purple-400">
-                    <Sparkles className="w-6 h-6" />
-                  </div>
-                  <div>
-                    <p className="text-2xl md:text-3xl font-black text-purple-400">{rarityStat}</p>
-                    <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Rarity Score</p>
-                  </div>
+                {/* Bottom Row: Centered Rarity Score */}
+                <div className="flex flex-col items-center justify-center bg-purple-500/5 rounded-2xl p-5 border border-purple-500/20 shadow-inner mt-2">
+                  <p className="text-4xl md:text-5xl font-black text-purple-400 tracking-tight">{rarityStat}</p>
+                  <p className="text-xs text-purple-400/70 uppercase tracking-widest font-bold mt-2">Rarity Score</p>
                 </div>
+
               </div>
 
             </div>
@@ -210,17 +209,17 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
 
 {/* Special Layout for Highlights */}
 {sectionName === "Today's Highlights" ? (
-  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
+  <div className="columns-1 sm:columns-2 gap-4 md:gap-6">
     {speciesInSection.map((species, idx) => (
-      <div key={idx} className="bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col">
-        <div className="h-64 sm:h-80 w-full relative overflow-hidden p-2">
-          <img src={species.image} className="w-full h-full object-cover rounded-2xl" />
+      <div key={idx} className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col">
+        <div className="w-full relative overflow-hidden p-2 pb-0">
+          <img src={species.image} className="w-full h-auto object-cover rounded-2xl" />
           <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg">
             Elite Tier
           </div>
         </div>
-        <div className="p-5 pt-2">
-          <h3 className="text-2xl font-black text-white mb-1">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+        <div className="p-5 pt-4">
+          <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight">{language === 'EN' ? species.nameEN : species.nameES}</h3>
           <p className="text-white/50 text-sm italic font-serif">{species.scientificName}</p>
         </div>
       </div>
