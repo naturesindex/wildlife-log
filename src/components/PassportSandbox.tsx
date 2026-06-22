@@ -262,7 +262,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
 
           // Our new "Poetic Blurbs" dictionary!
           const descriptions: Record<string, {en: string, es: string}> = {
-            "Today's Highlights": { en: "The best moments from ${guestName}'s trek. Breathtaking encounters that made this expedition unforgettable.`, es: `Los mejores momentos de la caminata de ${guestName}. Encuentros impresionantes que hicieron esta expedición inolvidable.` },
+"Today's Highlights": { en: `The best moments from ${guestName}'s trek. Breathtaking encounters that made this expedition unforgettable.`, es: `Los mejores momentos de la caminata de ${guestName}. Encuentros impresionantes que hicieron esta expedición inolvidable.` },
             "The Canopy Crew": { en: "Life from the treetops. Looking up reveals a vibrant world of climbers and flyers.", es: "Vida desde las copas de los árboles. Mirar hacia arriba revela un mundo vibrante." },
             "The Forest Floor": { en: "The foundation of the jungle. A bustling metropolis of shadows, leaves, and stealth.", es: "Los cimientos de la selva. Una bulliciosa metrópolis de sombras, hojas y sigilo." },
             "Sea and Shore": { en: "Where the jungle meets the tide. A unique ecosystem of coastal wanderers.", es: "Donde la selva se encuentra con la marea. Un ecosistema único de vagabundos costeros." },
