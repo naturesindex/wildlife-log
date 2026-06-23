@@ -1,6 +1,7 @@
 import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf, Trophy, Map, Bug, Eye } from 'lucide-react';
 import { useState } from 'react';
 import { Species, Language } from '../types';
+import { PrintablePoster } from './PrintablePoster';
 
 interface SandboxProps {
   loggedSpecies: Species[];
@@ -11,7 +12,8 @@ interface SandboxProps {
 
 export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName, onBack }: SandboxProps) {
   const [flippedId, setFlippedId] = useState<string | null>(null);
-  const [mapFlipped, setMapFlipped] = useState(false);
+const [mapFlipped, setMapFlipped] = useState(false);
+  const [showPoster, setShowPoster] = useState(false);
   
   const loggedSpecies = rawSpecies || [];
   const totalSpecies = loggedSpecies.length;
@@ -90,7 +92,7 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
   }, {} as Record<string, Species[]>);
 
   // Preferred order for our chapters
-  const sectionOrder = [
+const sectionOrder = [
     "Today's Highlights", 
     "The Canopy Crew", 
     "The Forest Floor", 
@@ -99,17 +101,36 @@ export function PassportSandbox({ loggedSpecies: rawSpecies, language, guideName
     "Other Notables"
   ];
 
+  if (showPoster) {
+    return (
+      <PrintablePoster 
+        loggedSpecies={loggedSpecies} 
+        language={language} 
+        guideName={guideName} 
+        onBack={() => setShowPoster(false)} 
+      />
+    );
+  }
+
   return (
     <div className="min-h-screen bg-[#060c08] text-white font-sans selection:bg-[#C86A27]/30 pb-32">
       
       {/* Dev Toolbar */}
       <div className="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
-        <button 
-          onClick={onBack}
-          className="pointer-events-auto flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-all text-xs font-bold uppercase tracking-wider border border-white/10"
-        >
-          <ArrowLeft className="w-4 h-4" /> Exit Sandbox
-        </button>
+<div className="flex items-center gap-2">
+          <button 
+            onClick={onBack}
+            className="pointer-events-auto flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-all text-xs font-bold uppercase tracking-wider border border-white/10"
+          >
+            <ArrowLeft className="w-4 h-4" /> Exit Sandbox
+          </button>
+          <button 
+            onClick={() => setShowPoster(true)}
+            className="pointer-events-auto flex items-center gap-2 bg-[#C86A27]/20 backdrop-blur-md px-4 py-2 rounded-full text-[#C86A27] hover:bg-[#C86A27]/40 transition-all text-xs font-bold uppercase tracking-wider border border-[#C86A27]/50"
+          >
+            🖨️ View Poster
+          </button>
+        </div>
         <div className="bg-[#C86A27] px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(200,106,39,0.5)]">
           Editorial Preview
         </div>
