@@ -14,10 +14,10 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Filter to just Tier 1 and 2 to keep the poster looking premium and uncluttered
-  const premiumSpecies = loggedSpecies
-    .filter(s => s.tier === 1 || s.tier === 2)
-    .slice(0, 9); // Limit to a perfect 3x3 grid for the poster
+// Sort by rarity and take the top 24 to fill a dense 4x6 museum grid
+  const premiumSpecies = [...loggedSpecies]
+    .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0))
+    .slice(0, 24);
 
   const handleDownload = async () => {
     if (!posterRef.current) return;
@@ -53,7 +53,7 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
         </button>
       </div>
 
-      {/* THE POSTER CANVAS (Fixed Aspect Ratio 3:4 for 18x24" framing) */}
+{/* THE POSTER CANVAS (Fixed Aspect Ratio 3:4 for 18x24" framing) */}
       <div 
         ref={posterRef}
         className="bg-[#F9F6F0] relative overflow-hidden shadow-2xl"
@@ -63,33 +63,33 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
         <div className="absolute inset-4 border-[1px] border-[#2C3E35] opacity-20 pointer-events-none"></div>
         <div className="absolute inset-5 border-[3px] border-[#2C3E35] pointer-events-none"></div>
 
-        <div className="p-16 h-full flex flex-col">
+        <div className="p-12 h-full flex flex-col">
           {/* Header */}
-          <div className="text-center mb-12">
-            <h3 className="text-[#C86A27] font-bold tracking-[0.2em] text-sm uppercase mb-4">
-              Nature's Index Field Log
-            </h3>
-            <h1 className="text-5xl font-black text-[#2C3E35] uppercase tracking-wider font-serif mb-4">
+          <div className="text-center mb-8 border-b border-[#2C3E35]/20 pb-6 mt-4">
+            <h1 className="text-5xl font-black text-[#2C3E35] uppercase tracking-[0.15em] font-serif mb-2">
               Corcovado
             </h1>
-            <div className="flex items-center justify-center gap-4 text-[#2C3E35]/70 text-sm tracking-widest uppercase">
-              <span>{new Date().toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long', year: 'numeric' })}</span>
-              <span>•</span>
-              <span>Guide: {guideName}</span>
+            <h3 className="text-[#C86A27] font-bold tracking-[0.3em] text-lg uppercase mb-4">
+              National Park • Costa Rica
+            </h3>
+            <div className="text-[#2C3E35]/70 text-xs tracking-widest uppercase font-bold">
+              {language === 'EN' ? 'Expedition Date' : 'Fecha de Expedición'}: {new Date().toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long', day: 'numeric', year: 'numeric' })}
             </div>
           </div>
 
-          {/* Species Grid */}
-          <div className="grid grid-cols-3 gap-8 flex-1">
+          {/* Species Grid - 4 Columns, Dense Museum Style */}
+          <div className="grid grid-cols-4 gap-x-6 gap-y-6 flex-1 content-start px-2">
             {premiumSpecies.map((species) => (
               <div key={species.id} className="flex flex-col items-center">
-                <div className="w-full aspect-square mb-4 overflow-hidden rounded-sm border border-[#2C3E35]/10">
-                  <img src={species.image} alt={species.nameEN} className="w-full h-full object-cover grayscale-[20%] sepia-[10%]" />
+                {/* Polaroid Style Frame */}
+                <div className="w-full aspect-square mb-3 overflow-hidden rounded-sm border border-[#2C3E35]/20 bg-white p-1.5 pb-4 shadow-sm">
+                  <img src={species.image} alt={species.nameEN} className="w-full h-full object-cover grayscale-[15%] sepia-[10%]" />
                 </div>
-                <h4 className="font-bold text-[#2C3E35] text-center text-lg leading-tight mb-1">
+                {/* Clean text underneath - no clipping! */}
+                <h4 className="font-bold text-[#2C3E35] text-center text-xs leading-tight mb-1 uppercase tracking-wider px-1">
                   {language === 'EN' ? species.nameEN : species.nameES}
                 </h4>
-                <p className="italic text-[#2C3E35]/60 text-sm font-serif text-center">
+                <p className="italic text-[#2C3E35]/70 text-[10px] font-serif text-center leading-none">
                   {species.scientificName || "Species scientifica"}
                 </p>
               </div>
@@ -97,9 +97,9 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
           </div>
 
           {/* Footer Logo/Mark */}
-          <div className="mt-8 text-center border-t border-[#2C3E35]/10 pt-8">
-            <p className="text-[#2C3E35]/40 text-xs uppercase tracking-widest font-bold">
-              Verified Sighting Log • Osa Peninsula, Costa Rica
+          <div className="mt-6 text-center border-t border-[#2C3E35]/20 pt-6 pb-2">
+            <p className="text-[#2C3E35]/50 text-[10px] uppercase tracking-[0.2em] font-bold">
+              {language === 'EN' ? 'Official Sighting Log • Flora & Fauna' : 'Registro Oficial • Flora y Fauna'}
             </p>
           </div>
         </div>
