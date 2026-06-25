@@ -14,10 +14,10 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-// Sort by rarity and take the top 24 to fill a dense 4x6 museum grid
+// Sort by rarity and take the top 20 to fill a 5-column asymmetrical grid
   const premiumSpecies = [...loggedSpecies]
     .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0))
-    .slice(0, 24);
+    .slice(0, 20);
 
   const handleDownload = async () => {
     if (!posterRef.current) return;
@@ -77,19 +77,23 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
             </div>
           </div>
 
-          {/* Species Grid - 4 Columns, Dense Museum Style */}
-          <div className="grid grid-cols-4 gap-x-6 gap-y-6 flex-1 content-start px-2">
+{/* Species Gallery - Pinterest Asymmetrical Masonry Style */}
+          <div className="columns-5 gap-4 flex-1 px-2">
             {premiumSpecies.map((species) => (
-              <div key={species.id} className="flex flex-col items-center">
-                {/* Polaroid Style Frame */}
-                <div className="w-full aspect-square mb-3 overflow-hidden rounded-sm border border-[#2C3E35]/20 bg-white p-1.5 pb-4 shadow-sm">
-                  <img src={species.image} alt={species.nameEN} className="w-full h-full object-cover grayscale-[15%] sepia-[10%]" />
+              <div key={species.id} className="break-inside-avoid mb-6 flex flex-col items-center">
+                {/* Strict Border Frame - Natural Asymmetrical Height */}
+                <div className="w-full border-[1.5px] border-[#2C3E35]/80 bg-[#F9F6F0] p-1.5 pb-3 shadow-md mb-2">
+                  <img 
+                    src={species.image} 
+                    alt={species.nameEN} 
+                    className="w-full h-auto block grayscale-[15%] sepia-[10%]" 
+                  />
                 </div>
                 {/* Clean text underneath - no clipping! */}
-                <h4 className="font-bold text-[#2C3E35] text-center text-xs leading-tight mb-1 uppercase tracking-wider px-1">
+                <h4 className="font-bold text-[#2C3E35] text-center text-[9px] leading-tight mb-0.5 uppercase tracking-wider px-1">
                   {language === 'EN' ? species.nameEN : species.nameES}
                 </h4>
-                <p className="italic text-[#2C3E35]/70 text-[10px] font-serif text-center leading-none">
+                <p className="italic text-[#2C3E35]/80 text-[8px] font-serif text-center leading-none">
                   {species.scientificName || "Species scientifica"}
                 </p>
               </div>
