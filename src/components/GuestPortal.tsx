@@ -5,7 +5,7 @@ import { initialSpecies } from '../data/species';
 import { Species } from '../types';
 import { SocialStory } from './SocialStory'; // Reusing your fixed graphic component
 import { WildlifePassport } from './WildlifePassport';
-import { Download, Sparkles, Lock } from 'lucide-react';
+import { Download, Sparkles, Lock, Coffee, Map, BookOpen, MousePointerClick } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
 export function GuestPortal() {
@@ -99,21 +99,20 @@ export function GuestPortal() {
         </p>
       </div>
 
-      {/* 2. THE FREEBIE (TRAIL SNAPSHOT) */}
+{/* 2. THE FREEBIE (SOCIAL STORY) */}
       <div className="max-w-md mx-auto px-6 -mt-8 relative z-10">
         <div className="bg-white p-4 rounded-3xl shadow-2xl border border-stone-100">
           <div className="text-center mb-4 mt-2">
             <h3 className="text-xl font-bold text-stone-800 flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5 text-[#C86A27]" />
-              {language === 'EN' ? 'Free Trail Snapshot' : 'Instantánea del Sendero'}
+              {language === 'EN' ? 'Your Free Social Story' : 'Tu Historia Social Gratuita'}
             </h3>
             <p className="text-sm text-stone-500 mt-1">
-              {language === 'EN' ? 'Save and share this highlight to your story!' : '¡Guarda y comparte este resumen en tu historia!'}
+              {language === 'EN' ? 'A gift from us! Save and share your highlight.' : '¡Un regalo nuestro! Guarda y comparte tu resumen.'}
             </p>
           </div>
           
           <div className="rounded-2xl overflow-hidden shadow-inner bg-stone-100" ref={snapshotRef}>
-             {/* We render your existing component here! */}
             <SocialStory 
               loggedSpecies={loggedSpecies} 
               language={language} 
@@ -127,49 +126,101 @@ export function GuestPortal() {
             className="w-full mt-4 bg-stone-100 text-stone-700 font-bold py-4 rounded-xl flex items-center justify-center gap-2 hover:bg-stone-200 transition-colors"
           >
             <Download className="w-5 h-5" />
-            {language === 'EN' ? 'Download High-Res Graphic' : 'Descargar Gráfico'}
+            {language === 'EN' ? 'Download Graphic' : 'Descargar Gráfico'}
           </button>
         </div>
       </div>
 
-     {/* 3. THE PAYWALL / SALES PITCH */}
-      <div className="max-w-md mx-auto px-6 mt-12">
-        <div className="text-center mb-6">
-          <h2 className="text-3xl font-black text-[#162b1d] mb-3">
-            {language === 'EN' ? 'Unlock Your Full Digital Passport' : 'Desbloquea tu Pasaporte Digital'}
+     {/* 3. THE PREMIUM UPGRADE / FEATURES */}
+      <div className="max-w-md mx-auto px-6 mt-16">
+        <div className="text-center mb-10">
+          <h2 className="text-3xl font-black text-[#162b1d] mb-4 leading-tight">
+            {language === 'EN' ? 'Unlock Your Interactive Passport' : 'Desbloquea tu Pasaporte Interactivo'}
           </h2>
           <p className="text-stone-600 font-medium">
             {language === 'EN' 
-              ? `Get a beautiful, personalized digital logbook featuring all ${loggedSpecies.length} species you encountered today.` 
-              : `Obtén una hermosa bitácora digital personalizada con las ${loggedSpecies.length} especies que encontraste hoy.`}
+              ? `Get the complete, clickable digital documentary of your exact day.` 
+              : `Obtén el documental digital completo e interactivo de tu día exacto.`}
           </p>
+        </div>
+
+        {/* Features Breakdown */}
+        <div className="grid grid-cols-1 gap-4 mb-10">
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-100 flex items-start gap-4">
+            <div className="bg-[#C86A27]/10 p-3 rounded-xl text-[#C86A27]">
+              <MousePointerClick className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-bold text-stone-800">{language === 'EN' ? 'Interactive Encyclopedia' : 'Enciclopedia Interactiva'}</h4>
+              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'Tap any of your sighted species to reveal facts, rarity, and traits.' : 'Toca cualquier especie vista para revelar datos, rareza y características.'}</p>
+            </div>
+          </div>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-100 flex items-start gap-4">
+            <div className="bg-[#C86A27]/10 p-3 rounded-xl text-[#C86A27]">
+              <Map className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-bold text-stone-800">{language === 'EN' ? 'Expedition Map & Badges' : 'Mapa de Expedición y Insignias'}</h4>
+              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'A personalized topographic breakdown of your trek and achievements.' : 'Un desglose topográfico personalizado de tu caminata y logros.'}</p>
+            </div>
+          </div>
+          <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-100 flex items-start gap-4">
+            <div className="bg-[#C86A27]/10 p-3 rounded-xl text-[#C86A27]">
+              <BookOpen className="w-6 h-6" />
+            </div>
+            <div>
+              <h4 className="font-bold text-stone-800">{language === 'EN' ? 'Printable Museum Poster' : 'Póster de Museo Imprimible'}</h4>
+              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'Includes a high-res ID chart of your specific sightings.' : 'Incluye una tabla de identificación de alta resolución de tus avistamientos.'}</p>
+            </div>
+          </div>
         </div>
 
         {/* The REAL Blurred Preview Card */}
         <div 
           onClick={scrollToCheckout}
-          className="relative rounded-3xl overflow-hidden shadow-xl border border-stone-200 bg-white cursor-pointer group hover:shadow-2xl transition-all"
+          className="relative rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-white cursor-pointer group hover:shadow-3xl transition-all mb-12"
         >
+          <div className="bg-[#162b1d] py-3 text-center">
+             <span className="text-white/80 text-xs font-bold tracking-widest uppercase">{language === 'EN' ? 'Live Preview' : 'Vista Previa en Vivo'}</span>
+          </div>
           {/* Real component, heavily blurred and faded */}
-          <div className="relative h-[450px] overflow-hidden blur-[6px] opacity-60 select-none pointer-events-none transform scale-95 origin-top mt-4">
+          <div className="relative h-[400px] overflow-hidden blur-[5px] opacity-70 select-none pointer-events-none transform scale-95 origin-top mt-2">
              <WildlifePassport loggedSpecies={loggedSpecies} language={language} guideName={guideName} />
-             {/* Fade to white at the bottom */}
              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white z-10"></div>
           </div>
           
           {/* Overlay Lock */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/10 backdrop-blur-[1px] group-hover:bg-white/20 transition-colors">
-            <div className="bg-[#162b1d] text-white p-4 rounded-full shadow-2xl mb-4 transform group-hover:scale-110 transition-transform">
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-white/5 group-hover:bg-white/10 transition-colors">
+            <div className="bg-[#162b1d] text-white p-5 rounded-full shadow-2xl mb-4 transform group-hover:scale-110 transition-transform">
               <Lock className="w-8 h-8" />
             </div>
-            <span className="font-bold text-[#162b1d] text-lg tracking-wide uppercase bg-white/80 px-4 py-1 rounded-full">
+            <span className="font-bold text-[#162b1d] text-lg tracking-wide uppercase bg-white/90 px-6 py-2 rounded-full shadow-lg">
                {language === 'EN' ? 'Click to Unlock' : 'Clic para Desbloquear'}
             </span>
           </div>
         </div>
 
-        {/* 4. PERSONALIZATION & CHECKOUT */}
-        <div ref={checkoutRef} className="bg-white rounded-3xl p-6 shadow-xl border border-stone-100 mt-8 scroll-mt-6">
+        {/* 4. TIP THE GUIDE */}
+        <div className="bg-[#162b1d] rounded-3xl p-6 shadow-xl relative overflow-hidden mb-8 text-center text-white">
+           <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+             <Coffee className="w-24 h-24" />
+           </div>
+           <h3 className="text-xl font-bold mb-2 relative z-10">{language === 'EN' ? `Loved your trek with ${guideName}?` : `¿Te encantó tu caminata con ${guideName}?`}</h3>
+           <p className="text-emerald-400 text-sm mb-4 relative z-10">{language === 'EN' ? '100% of tips go directly to your guide.' : 'El 100% de las propinas van a tu guía.'}</p>
+           <div className="flex gap-2 relative z-10">
+              {['$5', '$10', '$20'].map(amt => (
+                <button key={amt} className="flex-1 bg-white/10 hover:bg-[#C86A27] transition-colors py-3 rounded-xl font-bold border border-white/20 hover:border-[#C86A27]">
+                  {amt}
+                </button>
+              ))}
+              <button className="flex-1 bg-white/10 hover:bg-white/20 transition-colors py-3 rounded-xl font-bold border border-white/20">
+                {language === 'EN' ? 'Custom' : 'Otro'}
+              </button>
+           </div>
+        </div>
+
+        {/* 5. PERSONALIZATION & CHECKOUT */}
+        <div ref={checkoutRef} className="bg-white rounded-3xl p-6 shadow-xl border border-stone-200 scroll-mt-6">
           <label className="block text-sm font-bold text-stone-700 mb-2 uppercase tracking-wider">
              {language === 'EN' ? 'Who is this passport for?' : '¿Para quién es este pasaporte?'}
           </label>
