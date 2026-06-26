@@ -10,76 +10,14 @@ interface PrintablePosterProps {
   onClose: () => void;
 }
 
-// Seeded pseudo-random number generator — same species set always produces same layout
-function seededRandom(seed: number) {
-  let s = seed;
-  return () => {
-    s = (s * 1664525 + 1013904223) & 0xffffffff;
-    return (s >>> 0) / 0xffffffff;
-  };
-}
-
-// Collision-aware scatter layout
-// Each species gets a cell in a loose grid, then is nudged by a seeded offset
-// so it reads as organic but never actually overlaps its neighbours.
-function buildLayout(count: number) {
-  const COLS = 5;
-  const ROWS = Math.ceil(count / COLS);
-
-  // Canvas inner dimensions (matches poster content area in px at screen res)
-  const W = 724; // 800px poster - 2*38px padding
-  const H = 850; // approx content area height
-
-  const cellW = W / COLS;
-  const cellH = H / ROWS;
-
-  const rand = seededRandom(count * 31 + 7);
-
-  return Array.from({ length: count }, (_, i) => {
-    const col = i % COLS;
-    const row = Math.floor(i / COLS);
-
-    // Base cell centre
-    const cx = cellW * col + cellW / 2;
-    const cy = cellH * row + cellH / 2;
-
-    // Nudge: up to ±22% of cell size, keeping species away from edges
-    const nudgeX = (rand() - 0.5) * cellW * 0.3;
-    const nudgeY = (rand() - 0.5) * cellH * 0.22;
-
-    // Size variation: alternate between small / medium / large
-    // Rarer species (lower index = higher rarity from our sort) get slightly larger images
-    const sizeVariants = [88, 78, 100, 72, 92];
-    const imgWidth = sizeVariants[i % sizeVariants.length];
-
-    // Tiny rotation for life — never more than ±2.5 deg, keeps text readable
-    const rotation = (rand() - 0.5) * 5;
-
-    return {
-      x: Math.max(40, Math.min(W - imgWidth - 40, cx + nudgeX - imgWidth / 2)),
-      y: Math.max(20, cy + nudgeY),
-      imgWidth,
-      rotation,
-    };
-  });
-}
-
 export function PrintablePoster({ loggedSpecies, language, guideName, onClose }: PrintablePosterProps) {
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  // Sort by rarity, cap at 20
+  // Sort by rarity desc, cap at 20
   const premiumSpecies = [...loggedSpecies]
     .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0))
     .slice(0, 20);
-
-  const layout = buildLayout(premiumSpecies.length);
-
-  // Compute total height needed so nothing clips
-  const contentH = Math.max(
-    860,
-    ...layout.map((l, i) => l.y + 90 + 32) // image bottom + label space
-  );
 
   const handleDownload = async () => {
     if (!posterRef.current) return;
@@ -102,6 +40,82 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
     { month: 'long', day: 'numeric', year: 'numeric' }
   );
 
+  // ── Column width for masonry ──
+  // 5 columns, 12px gap, inside 724px content area (800 - 2*38)
+  const COLS = 5;
+  const GAP = 12;
+  const CONTENT_W = 724;
+  const colWidth = Math.floor((CONTENT_W - GAP * (COLS - 1)) / COLS); // ≈ 132px
+
+  // ── Assign column widths by rarity tier ──
+  // tier 1 (top 4): span 2 cols → displayed at full double width
+  // tier 2 (next 8): span 1 col
+  // tier 3 (rest):  span 1 col, slightly shorter images via maxHeight
+  const getTier = (i: number) => {
+    if (i < 4) return 1;
+    if (i < 12) return 2;
+    return 3;
+  };
+
+  const getItemWidth = (i: number) => {
+    return getTier(i) === 1 ? colWidth * 2 + GAP : colWidth;
+  };
+
+  // ── Simple balanced masonry: track column heights, always place into shortest ──
+  // For tier-1 items we use a "shortest adjacent pair" strategy.
+  type LayoutItem = {
+    species: Species;
+    x: number;
+    y: number;
+    width: number;
+    tier: number;
+  };
+
+  const colHeights = Array(COLS).fill(0);
+
+  const getShortestCol = () => colHeights.indexOf(Math.min(...colHeights));
+
+  const getShortestAdjacentPair = () => {
+    let best = 0;
+    let bestH = Infinity;
+    for (let c = 0; c < COLS - 1; c++) {
+      const h = Math.max(colHeights[c], colHeights[c + 1]);
+      if (h < bestH) { bestH = h; best = c; }
+    }
+    return best;
+  };
+
+  const items: LayoutItem[] = premiumSpecies.map((species, i) => {
+    const tier = getTier(i);
+    const width = getItemWidth(i);
+
+    let col: number;
+    let y: number;
+
+    if (tier === 1) {
+      col = getShortestAdjacentPair();
+      y = Math.max(colHeights[col], colHeights[col + 1]);
+      // Estimate item height: double-wide image assumed ~0.65 aspect + 28px label
+      const estH = Math.round(width * 0.65) + 28 + GAP;
+      colHeights[col] = y + estH;
+      colHeights[col + 1] = y + estH;
+    } else {
+      col = getShortestCol();
+      y = colHeights[col];
+      // Estimate item height: single image ~0.75 aspect + 24px label
+      const estH = Math.round(width * 0.75) + 24 + GAP;
+      colHeights[col] = y + estH;
+    }
+
+    const x = col * (colWidth + GAP);
+
+    return { species, x, y, width, tier };
+  });
+
+  const totalContentH = Math.max(...colHeights);
+  // Poster height = header (~130px) + content + footer (~52px) + padding
+  const posterH = 130 + totalContentH + 52 + 40;
+
   return (
     <div className="min-h-screen bg-neutral-900 flex flex-col items-center py-10 px-4">
       {/* Controls */}
@@ -122,12 +136,12 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
         </button>
       </div>
 
-      {/* ── POSTER CANVAS ── 8.5 × 11 at 800px screen width */}
+      {/* ── POSTER CANVAS ── */}
       <div
         ref={posterRef}
         style={{
           width: '800px',
-          height: '1035px',
+          height: `${posterH}px`,
           backgroundColor: '#F9F6F0',
           position: 'relative',
           overflow: 'hidden',
@@ -135,35 +149,33 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
           boxShadow: '0 20px 60px rgba(0,0,0,0.4)',
         }}
       >
-        {/* Thin outer rule — just one, no double-border clutter */}
+        {/* Thin outer rule */}
         <div style={{
           position: 'absolute',
           inset: '14px',
-          border: '1px solid rgba(44,62,53,0.25)',
+          border: '1px solid rgba(44,62,53,0.22)',
           pointerEvents: 'none',
+          zIndex: 10,
         }} />
 
         {/* ── HEADER ── */}
         <div style={{
           textAlign: 'center',
-          paddingTop: '40px',
-          paddingBottom: '18px',
+          paddingTop: '38px',
+          paddingBottom: '16px',
           borderBottom: '1px solid rgba(44,62,53,0.15)',
           marginLeft: '38px',
           marginRight: '38px',
         }}>
           <div style={{
-            fontSize: '11px',
-            letterSpacing: '0.25em',
+            fontSize: '10px',
+            letterSpacing: '0.26em',
             color: '#C86A27',
-            fontFamily: "'Georgia', serif",
-            fontWeight: 400,
             textTransform: 'uppercase',
             marginBottom: '6px',
           }}>
             {language === 'EN' ? 'Expedition Sighting Log' : 'Registro de Avistamiento'}
           </div>
-
           <h1 style={{
             fontSize: '52px',
             fontWeight: 900,
@@ -171,27 +183,24 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
             letterSpacing: '0.12em',
             textTransform: 'uppercase',
             fontFamily: "'Georgia', serif",
-            margin: '0 0 2px 0',
+            margin: '0 0 3px 0',
             lineHeight: 1,
           }}>
             Corcovado
           </h1>
-
           <div style={{
-            fontSize: '13px',
+            fontSize: '12px',
             letterSpacing: '0.28em',
             color: '#2C3E35',
             textTransform: 'uppercase',
-            fontWeight: 400,
-            marginBottom: '10px',
+            marginBottom: '8px',
           }}>
             National Park &nbsp;·&nbsp; Costa Rica
           </div>
-
           <div style={{
-            fontSize: '9.5px',
+            fontSize: '8.5px',
             letterSpacing: '0.18em',
-            color: 'rgba(44,62,53,0.55)',
+            color: 'rgba(44,62,53,0.5)',
             textTransform: 'uppercase',
           }}>
             {language === 'EN' ? 'Expedition Date' : 'Fecha'}: {dateStr}
@@ -199,16 +208,15 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
           </div>
         </div>
 
-        {/* ── SPECIES SCATTER FIELD ── */}
+        {/* ── MASONRY GRID ── */}
         <div style={{
           position: 'absolute',
-          top: '138px',
+          top: '130px',
           left: '38px',
           right: '38px',
           bottom: '52px',
         }}>
-          {premiumSpecies.map((species, i) => {
-            const { x, y, imgWidth, rotation } = layout[i];
+          {items.map(({ species, x, y, width, tier }) => {
             const name = language === 'EN' ? species.nameEN : species.nameES;
             const sci = species.scientificName || 'Species scientifica';
 
@@ -219,13 +227,9 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
                   position: 'absolute',
                   left: `${x}px`,
                   top: `${y}px`,
-                  width: `${imgWidth}px`,
-                  transform: `rotate(${rotation}deg)`,
-                  transformOrigin: 'center top',
-                  textAlign: 'center',
+                  width: `${width}px`,
                 }}
               >
-                {/* Photo — no border, natural shadow */}
                 <img
                   src={species.image}
                   alt={name}
@@ -233,23 +237,20 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
                     width: '100%',
                     height: 'auto',
                     display: 'block',
-                    // Soft lift — light, not dramatic. Gives depth without a frame.
-                    filter: 'drop-shadow(0px 2px 6px rgba(0,0,0,0.22))',
-                    // Very slight warm tone to match the cream bg
                     filter: 'drop-shadow(0px 2px 6px rgba(0,0,0,0.22)) sepia(8%)',
+                    // Tier 3: cap image height so tiny portrait shots don't dominate
+                    ...(tier === 3 ? { maxHeight: '110px', objectFit: 'cover' } : {}),
                   }}
                 />
-
-                {/* Label block — tight, no box */}
-                <div style={{ marginTop: '5px', padding: '0 2px' }}>
+                <div style={{ marginTop: '4px' }}>
                   <div style={{
-                    fontSize: '7.5px',
+                    fontSize: tier === 1 ? '8.5px' : '7px',
                     fontWeight: 700,
                     color: '#1E2E25',
-                    letterSpacing: '0.12em',
+                    letterSpacing: '0.11em',
                     textTransform: 'uppercase',
-                    fontFamily: "'Arial Narrow', 'Arial', sans-serif",
-                    lineHeight: 1.2,
+                    fontFamily: "'Arial Narrow', Arial, sans-serif",
+                    lineHeight: 1.25,
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis',
@@ -257,9 +258,9 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
                     {name}
                   </div>
                   <div style={{
-                    fontSize: '6.5px',
+                    fontSize: tier === 1 ? '7.5px' : '6.5px',
                     fontStyle: 'italic',
-                    color: 'rgba(44,62,53,0.65)',
+                    color: 'rgba(44,62,53,0.62)',
                     fontFamily: "'Georgia', serif",
                     lineHeight: 1.2,
                     whiteSpace: 'nowrap',
@@ -285,14 +286,14 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
           textAlign: 'center',
         }}>
           <div style={{
-            fontSize: '8px',
+            fontSize: '7.5px',
             letterSpacing: '0.22em',
-            color: 'rgba(44,62,53,0.45)',
+            color: 'rgba(44,62,53,0.42)',
             textTransform: 'uppercase',
             fontFamily: "'Georgia', serif",
           }}>
             {language === 'EN'
-              ? "Nature's Index · Official Wildlife Sighting Log"
+              ? "Nature's Index · Official Wildlife Sighting Log · Flora & Fauna"
               : "Nature's Index · Registro Oficial de Fauna Silvestre"}
           </div>
         </div>
@@ -300,4 +301,5 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
     </div>
   );
 }
+
 
