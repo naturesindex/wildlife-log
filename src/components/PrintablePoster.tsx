@@ -10,13 +10,55 @@ interface PrintablePosterProps {
   onClose: () => void;
 }
 
+// Estimate aspect ratio from known photo orientations
+// Falls back to 1.0 (square) if unknown
+function estimateAspectRatio(species: Species): number {
+  // You can enrich this later with actual metadata
+  // For now we use a heuristic: rarityScore > 80 = tall wildlife shots
+  const score = species.rarityScore || 50;
+  if (score > 85) return 0.72; // tall portrait (bird on branch, sloth)
+  if (score > 70) return 1.1;  // slight landscape
+  return 0.9;                  // near-square default
+}
+
+const NUM_COLS = 4;
+const GAP = 7; // px between photos and columns
+
 export function PrintablePoster({ loggedSpecies, language, guideName, onClose }: PrintablePosterProps) {
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const premiumSpecies = [...loggedSpecies]
-    .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0))
-    .slice(0, 20);
+  const POSTER_W = 800;
+  const POSTER_H = 1066;
+  const PADDING = 28;
+  const HEADER_H = 118; // approx header + border
+  const FOOTER_H = 38;
+  const GRID_H = POSTER_H - PADDING * 2 - HEADER_H - FOOTER_H;
+  const COL_W = (POSTER_W - PADDING * 2 - GAP * (NUM_COLS - 1)) / NUM_COLS;
+
+  // Sort by rarity descending
+  const sorted = [...loggedSpecies]
+    .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0));
+
+  // Greedy column-fill: assign each species to the shortest column
+  const colHeights = Array(NUM_COLS).fill(0);
+  const columns: Species[][] = Array.from({ length: NUM_COLS }, () => []);
+
+  for (const species of sorted) {
+    const ar = estimateAspectRatio(species);
+    const imgH = COL_W / ar;
+    // Find shortest column
+    const minIdx = colHeights.indexOf(Math.min(...colHeights));
+    // Only add if it fits (with a small buffer)
+    if (colHeights[minIdx] + imgH + GAP <= GRID_H + 40) {
+      columns[minIdx].push(species);
+      colHeights[minIdx] += imgH + GAP;
+    }
+  }
+
+  // Scale factor: stretch all columns proportionally to fill GRID_H
+  // Each column gets its own scale so photos fill exactly
+  const colScales = colHeights.map(h => h > 0 ? GRID_H / h : 1);
 
   const handleDownload = async () => {
     if (!posterRef.current) return;
@@ -51,29 +93,42 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
         </button>
       </div>
 
-      {/* POSTER CANVAS — 3:4 ratio for 18×24" */}
+      {/* POSTER CANVAS */}
       <div
         ref={posterRef}
         style={{
-          width: '800px',
-          height: '1066px',
+          width: `${POSTER_W}px`,
+          height: `${POSTER_H}px`,
           backgroundColor: '#FAF7F2',
           position: 'relative',
           overflow: 'hidden',
           boxShadow: '0 25px 60px rgba(0,0,0,0.5)',
+          flexShrink: 0,
         }}
       >
-        {/* Thin outer border inset */}
+        {/* Inset border */}
         <div style={{
           position: 'absolute', inset: '10px',
           border: '1.5px solid rgba(44,62,53,0.18)',
           pointerEvents: 'none', zIndex: 10,
         }} />
 
-        <div style={{ padding: '28px 28px 20px 28px', height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <div style={{
+          padding: `${PADDING}px`,
+          height: '100%',
+          display: 'flex',
+          flexDirection: 'column',
+          boxSizing: 'border-box',
+        }}>
 
-          {/* ── HEADER ── */}
-          <div style={{ textAlign: 'center', marginBottom: '18px', paddingBottom: '14px', borderBottom: '1px solid rgba(44,62,53,0.15)' }}>
+          {/* HEADER */}
+          <div style={{
+            textAlign: 'center',
+            marginBottom: '14px',
+            paddingBottom: '12px',
+            borderBottom: '1px solid rgba(44,62,53,0.15)',
+            flexShrink: 0,
+          }}>
             <div style={{
               fontFamily: '"Georgia", "Times New Roman", serif',
               fontWeight: 900,
@@ -82,113 +137,134 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
               color: '#1C2B22',
               lineHeight: 1,
               textTransform: 'uppercase',
-              marginBottom: '6px',
+              marginBottom: '5px',
             }}>
               Corcovado
             </div>
             <div style={{
               fontFamily: '"Georgia", serif',
               fontWeight: 700,
-              fontSize: '15px',
+              fontSize: '14px',
               letterSpacing: '0.32em',
               color: '#C86A27',
               textTransform: 'uppercase',
-              marginBottom: '8px',
+              marginBottom: '6px',
             }}>
               National Park • Costa Rica
             </div>
             <div style={{
               fontFamily: 'sans-serif',
               fontWeight: 600,
-              fontSize: '11px',
+              fontSize: '10px',
               letterSpacing: '0.22em',
               color: 'rgba(44,62,53,0.55)',
               textTransform: 'uppercase',
             }}>
               {new Date().toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', {
-                month: 'long', day: 'numeric', year: 'numeric'
+                month: 'long', day: 'numeric', year: 'numeric',
               }).toUpperCase()}
             </div>
           </div>
 
-          {/* ── MASONRY GRID ── */}
+          {/* GRID — manual 4-column layout */}
           <div style={{
-            columns: '5',
-            columnGap: '6px',
+            display: 'flex',
+            flexDirection: 'row',
+            gap: `${GAP}px`,
             flex: 1,
             overflow: 'hidden',
           }}>
-            {premiumSpecies.map((species) => {
-              const label = language === 'EN' ? species.nameEN : species.nameES;
-              const sci = species.scientificName || '';
-              return (
-                <div
-                  key={species.id}
-                  style={{
-                    breakInside: 'avoid',
-                    marginBottom: '6px',
-                    position: 'relative',
-                    display: 'block',
-                  }}
-                >
-                  {/* Photo — natural aspect ratio, no forced height */}
-                  <img
-                    src={species.image}
-                    alt={label}
-                    style={{
-                      width: '100%',
-                      height: 'auto',
-                      display: 'block',
-                      filter: 'sepia(8%) saturate(105%)',
-                    }}
-                  />
-                  {/* Gradient scrim + label overlaid on photo */}
-                  <div style={{
-                    position: 'absolute',
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    background: 'linear-gradient(to top, rgba(20,30,24,0.78) 0%, rgba(20,30,24,0.0) 100%)',
-                    padding: '18px 6px 5px 6px',
-                  }}>
-                    <div style={{
-                      fontFamily: 'sans-serif',
-                      fontWeight: 700,
-                      fontSize: '7.5px',
-                      letterSpacing: '0.08em',
-                      color: '#FFFFFF',
-                      textTransform: 'uppercase',
-                      textAlign: 'center',
-                      lineHeight: 1.2,
-                      textShadow: '0 1px 3px rgba(0,0,0,0.6)',
-                    }}>
-                      {label}
-                    </div>
-                    {sci && (
+            {columns.map((col, colIdx) => (
+              <div
+                key={colIdx}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: `${GAP}px`,
+                  width: `${COL_W}px`,
+                  flexShrink: 0,
+                  height: `${GRID_H}px`,
+                  overflow: 'hidden',
+                }}
+              >
+                {col.map((species) => {
+                  const ar = estimateAspectRatio(species);
+                  const rawH = COL_W / ar;
+                  const scaledH = rawH * colScales[colIdx];
+                  const label = language === 'EN' ? species.nameEN : species.nameES;
+                  const sci = species.scientificName || '';
+                  return (
+                    <div
+                      key={species.id}
+                      style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: `${scaledH}px`,
+                        flexShrink: 0,
+                        overflow: 'hidden',
+                      }}
+                    >
+                      <img
+                        src={species.image}
+                        alt={label}
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          display: 'block',
+                          filter: 'sepia(6%) saturate(108%)',
+                        }}
+                      />
+                      {/* Gradient scrim + label */}
                       <div style={{
-                        fontFamily: '"Georgia", serif',
-                        fontStyle: 'italic',
-                        fontSize: '6.5px',
-                        color: 'rgba(255,255,255,0.75)',
-                        textAlign: 'center',
-                        lineHeight: 1.2,
-                        marginTop: '1px',
+                        position: 'absolute',
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        background: 'linear-gradient(to top, rgba(15,25,18,0.82) 0%, transparent 100%)',
+                        padding: '20px 6px 5px 6px',
                       }}>
-                        {sci}
+                        <div style={{
+                          fontFamily: 'sans-serif',
+                          fontWeight: 700,
+                          fontSize: '7px',
+                          letterSpacing: '0.08em',
+                          color: '#FFFFFF',
+                          textTransform: 'uppercase',
+                          textAlign: 'center',
+                          lineHeight: 1.2,
+                          textShadow: '0 1px 3px rgba(0,0,0,0.7)',
+                        }}>
+                          {label}
+                        </div>
+                        {sci && (
+                          <div style={{
+                            fontFamily: '"Georgia", serif',
+                            fontStyle: 'italic',
+                            fontSize: '6px',
+                            color: 'rgba(255,255,255,0.72)',
+                            textAlign: 'center',
+                            lineHeight: 1.2,
+                            marginTop: '1px',
+                          }}>
+                            {sci}
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                    </div>
+                  );
+                })}
+              </div>
+            ))}
           </div>
 
-          {/* ── FOOTER ── */}
+          {/* FOOTER */}
           <div style={{
-            marginTop: '12px',
-            paddingTop: '10px',
+            marginTop: '10px',
+            paddingTop: '8px',
             borderTop: '1px solid rgba(44,62,53,0.15)',
             textAlign: 'center',
+            flexShrink: 0,
           }}>
             <div style={{
               fontFamily: 'sans-serif',
@@ -210,6 +286,4 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
     </div>
   );
 }
-
-
 
