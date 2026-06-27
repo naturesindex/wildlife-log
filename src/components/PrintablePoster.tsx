@@ -48,8 +48,8 @@ const POSTER_W = 800;
     const imgH = COL_W / ar;
     // Find shortest column
     const minIdx = colHeights.indexOf(Math.min(...colHeights));
-    // Only add if it fits (with a small buffer)
-    if (colHeights[minIdx] + imgH + GAP <= GRID_H + 40) {
+  // Only add if it fits (increased buffer to fit more species!)
+    if (colHeights[minIdx] + imgH + GAP <= GRID_H + 120) {
       columns[minIdx].push(species);
       colHeights[minIdx] += imgH + GAP;
     }
@@ -111,7 +111,7 @@ const POSTER_W = 800;
           border: '1.5px solid rgba(44,62,53,0.18)',
           pointerEvents: 'none', zIndex: 10,
         }} />
-
+</div>
         <div style={{
           padding: `${PADDING}px`,
           height: '100%',
@@ -165,14 +165,31 @@ const POSTER_W = 800;
             </div>
           </div>
 
-          {/* GRID — manual 4-column layout */}
+{/* GRID — manual 4-column layout */}
           <div style={{
             display: 'flex',
-            flexDirection: 'row',
-            gap: `${GAP}px`,
+            alignItems: 'center', /* Vertically centers the whole grid block */
+            justifyContent: 'center',
             flex: 1,
             overflow: 'hidden',
           }}>
+            <div style={{
+              display: 'flex',
+              flexDirection: 'row',
+              gap: `${GAP}px`,
+              alignItems: 'flex-start', /* Keeps top straight */
+            }}>
+            {columns.map((col, colIdx) => (
+              <div
+                key={colIdx}
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: `${GAP}px`,
+                  width: `${COL_W}px`,
+                  flexShrink: 0,
+                }}
+              >
             {columns.map((col, colIdx) => (
               <div
                 key={colIdx}
