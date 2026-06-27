@@ -28,13 +28,11 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-  const POSTER_W = 800;
+ const POSTER_W = 800;
   const POSTER_H = 1066;
   const PADDING = 28;
   const HEADER_H = 118; // approx header + border
-  const FOOTER_H = 38;
-  const GRID_H = POSTER_H - PADDING * 2 - HEADER_H - FOOTER_H;
-  const COL_W = (POSTER_W - PADDING * 2 - GAP * (NUM_COLS - 1)) / NUM_COLS;
+  const GRID_H = POSTER_H - PADDING * 2 - HEADER_H;
 
   // Sort by rarity descending
   const sorted = [...loggedSpecies]
@@ -194,12 +192,12 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
                   const label = language === 'EN' ? species.nameEN : species.nameES;
                   const sci = species.scientificName || '';
                   return (
-                    <div
+<div
                       key={species.id}
                       style={{
                         position: 'relative',
                         width: '100%',
-                        height: `${scaledH}px`,
+                        height: 'auto',
                         flexShrink: 0,
                         overflow: 'hidden',
                       }}
@@ -209,8 +207,7 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
                         alt={label}
                         style={{
                           width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
+                          height: 'auto',
                           display: 'block',
                           filter: 'sepia(6%) saturate(108%)',
                         }}
@@ -257,33 +254,7 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
               </div>
             ))}
           </div>
-
-          {/* FOOTER */}
-          <div style={{
-            marginTop: '10px',
-            paddingTop: '8px',
-            borderTop: '1px solid rgba(44,62,53,0.15)',
-            textAlign: 'center',
-            flexShrink: 0,
-          }}>
-            <div style={{
-              fontFamily: 'sans-serif',
-              fontWeight: 700,
-              fontSize: '9px',
-              letterSpacing: '0.25em',
-              color: 'rgba(44,62,53,0.4)',
-              textTransform: 'uppercase',
-            }}>
-              {language === 'EN'
-                ? 'Official Sighting Log • Flora & Fauna'
-                : 'Registro Oficial • Flora y Fauna'}
-              {guideName && ` • ${guideName}`}
-            </div>
-          </div>
-
         </div>
-      </div>
-    </div>
   );
 }
 
