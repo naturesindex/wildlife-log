@@ -256,6 +256,7 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
           </div>
         </div>
              </div>
+          </div>
   );
 }
 
