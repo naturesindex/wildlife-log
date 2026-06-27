@@ -75,7 +75,7 @@ const POSTER_W = 800;
     }
   };
 
-  return (
+return (
     <div className="min-h-screen bg-neutral-900 flex flex-col items-center py-10 px-4">
       {/* Controls */}
       <div className="w-full max-w-[800px] flex justify-between items-center mb-8">
@@ -111,7 +111,7 @@ const POSTER_W = 800;
           border: '1.5px solid rgba(44,62,53,0.18)',
           pointerEvents: 'none', zIndex: 10,
         }} />
-</div>
+
         <div style={{
           padding: `${PADDING}px`,
           height: '100%',
@@ -165,20 +165,14 @@ const POSTER_W = 800;
             </div>
           </div>
 
-{/* GRID — manual 4-column layout */}
+          {/* GRID */}
           <div style={{
             display: 'flex',
-            alignItems: 'center', /* Vertically centers the whole grid block */
-            justifyContent: 'center',
+            flexDirection: 'row',
+            gap: `${GAP}px`,
             flex: 1,
             overflow: 'hidden',
           }}>
-            <div style={{
-              display: 'flex',
-              flexDirection: 'row',
-              gap: `${GAP}px`,
-              alignItems: 'flex-start', /* Keeps top straight */
-            }}>
             {columns.map((col, colIdx) => (
               <div
                 key={colIdx}
@@ -188,35 +182,17 @@ const POSTER_W = 800;
                   gap: `${GAP}px`,
                   width: `${COL_W}px`,
                   flexShrink: 0,
-                }}
-              >
-            {columns.map((col, colIdx) => (
-              <div
-                key={colIdx}
-                style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: `${GAP}px`,
-                  width: `${COL_W}px`,
-                  flexShrink: 0,
-                  height: `${GRID_H}px`,
-                  overflow: 'hidden',
                 }}
               >
                 {col.map((species) => {
-                  const ar = estimateAspectRatio(species);
-                  const rawH = COL_W / ar;
-                  const scaledH = rawH * colScales[colIdx];
                   const label = language === 'EN' ? species.nameEN : species.nameES;
                   const sci = species.scientificName || '';
                   return (
-<div
+                    <div
                       key={species.id}
                       style={{
                         position: 'relative',
                         width: '100%',
-                        height: 'auto',
-                        flexShrink: 0,
                         overflow: 'hidden',
                       }}
                     >
@@ -230,7 +206,6 @@ const POSTER_W = 800;
                           filter: 'sepia(6%) saturate(108%)',
                         }}
                       />
-                      {/* Gradient scrim + label */}
                       <div style={{
                         position: 'absolute',
                         bottom: 0,
@@ -247,7 +222,6 @@ const POSTER_W = 800;
                           color: '#FFFFFF',
                           textTransform: 'uppercase',
                           textAlign: 'center',
-                          lineHeight: 1.2,
                           textShadow: '0 1px 3px rgba(0,0,0,0.7)',
                         }}>
                           {label}
@@ -259,7 +233,6 @@ const POSTER_W = 800;
                             fontSize: '6px',
                             color: 'rgba(255,255,255,0.72)',
                             textAlign: 'center',
-                            lineHeight: 1.2,
                             marginTop: '1px',
                           }}>
                             {sci}
@@ -273,8 +246,6 @@ const POSTER_W = 800;
             ))}
           </div>
         </div>
-             </div>
-          </div>
+      </div>
+    </div>
   );
-}
-
