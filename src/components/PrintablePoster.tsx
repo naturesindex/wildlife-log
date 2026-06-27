@@ -28,11 +28,12 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
- const POSTER_W = 800;
+const POSTER_W = 800;
   const POSTER_H = 1066;
   const PADDING = 28;
   const HEADER_H = 118; // approx header + border
   const GRID_H = POSTER_H - PADDING * 2 - HEADER_H;
+  const COL_W = (POSTER_W - PADDING * 2 - GAP * (NUM_COLS - 1)) / NUM_COLS;
 
   // Sort by rarity descending
   const sorted = [...loggedSpecies]
