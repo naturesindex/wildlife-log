@@ -1,6 +1,6 @@
 import { ArrowLeft, Download } from 'lucide-react';
 import { useRef, useState } from 'react';
-import { toJpeg } from 'html-to-image';
+import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
 import { initialSpecies } from '../data/species';
 
@@ -72,13 +72,17 @@ for (const species of sorted) {
   // Each column gets its own scale so photos fill exactly
   const colScales = colHeights.map(h => h > 0 ? GRID_H / h : 1);
 
-  const handleDownload = async () => {
+const handleDownload = async () => {
     if (!posterRef.current) return;
     setIsDownloading(true);
     try {
-      const dataUrl = await toJpeg(posterRef.current, { quality: 1.0, pixelRatio: 4 });
+      // Switched to PNG and added cacheBust to prevent Cloudinary CORS fails
+      const dataUrl = await toPng(posterRef.current, { 
+        cacheBust: true, 
+        pixelRatio: 4 
+      });
       const link = document.createElement('a');
-      link.download = `Corcovado-Expedition-${new Date().toISOString().split('T')[0]}.jpg`;
+      link.download = `Corcovado-Poster-${new Date().toISOString().split('T')[0]}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
