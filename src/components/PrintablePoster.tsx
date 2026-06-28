@@ -52,9 +52,10 @@ for (const species of sorted) {
     const ar = estimateAspectRatio(species);
     const imgH = COL_W / ar;
     
-    // Define custom target heights for our 4 columns to create the "Diamond" shape
+   // Define custom target heights for our 4 columns to create the "Diamond" shape
     // Outer columns (0 and 3) stop early, inner columns (1 and 2) pack heavily
-    const targetHeights = [GRID_H + 50, GRID_H + 380, GRID_H + 380, GRID_H + 50];
+    // BUMPED UP: We made the math greedier so it grabs 1-2 more photos to fill those gaps!
+    const targetHeights = [GRID_H + 200, GRID_H + 530, GRID_H + 530, GRID_H + 200];
     
     // Calculate which column has the most space left to reach its specific target
     const spaceLeft = colHeights.map((h, i) => targetHeights[i] - h);
