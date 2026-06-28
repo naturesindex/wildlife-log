@@ -2,7 +2,6 @@ import { ArrowLeft, Download } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toJpeg } from 'html-to-image';
 import { Species, Language } from '../types';
-import { initialSpecies } from '../data/species';
 
 interface PrintablePosterProps {
   loggedSpecies: Species[];
@@ -36,13 +35,8 @@ const POSTER_W = 800;
   const GRID_H = POSTER_H - PADDING * 2 - HEADER_H;
   const COL_W = (POSTER_W - PADDING * 2 - GAP * (NUM_COLS - 1)) / NUM_COLS;
 
-// Pad with extra species so we ALWAYS fill the poster flawlessly
-  const seenIds = new Set(loggedSpecies.map(s => s.id));
-  const extras = initialSpecies.filter(s => !seenIds.has(s.id));
-  const allSpecies = [...loggedSpecies, ...extras];
-
   // Sort by rarity descending
-  const sorted = [...allSpecies]
+  const sorted = [...loggedSpecies]
     .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0));
 
   // Greedy column-fill: assign each species to the shortest column
@@ -52,14 +46,18 @@ const POSTER_W = 800;
   for (const species of sorted) {
     const ar = estimateAspectRatio(species);
     const imgH = COL_W / ar;
+    // Find shortest column
     const minIdx = colHeights.indexOf(Math.min(...colHeights));
-
-    // Strict check: Only add if it fits perfectly. This prevents cropping!
-    if (colHeights[minIdx] + imgH <= GRID_H) {
+  // Only add if it fits (increased buffer to fit more species!)
+    if (colHeights[minIdx] + imgH + GAP <= GRID_H + 120) {
       columns[minIdx].push(species);
       colHeights[minIdx] += imgH + GAP;
     }
   }
+
+  // Scale factor: stretch all columns proportionally to fill GRID_H
+  // Each column gets its own scale so photos fill exactly
+  const colScales = colHeights.map(h => h > 0 ? GRID_H / h : 1);
 
   const handleDownload = async () => {
     if (!posterRef.current) return;
@@ -175,14 +173,13 @@ return (
             flex: 1,
             overflow: 'hidden',
           }}>
-         {columns.map((col, colIdx) => (
+            {columns.map((col, colIdx) => (
               <div
                 key={colIdx}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  height: `${GRID_H}px`,
+                  gap: `${GAP}px`,
                   width: `${COL_W}px`,
                   flexShrink: 0,
                 }}
