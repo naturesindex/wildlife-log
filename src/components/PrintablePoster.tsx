@@ -48,13 +48,15 @@ const POSTER_W = 800;
   const colHeights = Array(NUM_COLS).fill(0);
   const columns: Species[][] = Array.from({ length: NUM_COLS }, () => []);
 
-  for (const species of sorted) {
+for (const species of sorted) {
     const ar = estimateAspectRatio(species);
     const imgH = COL_W / ar;
     // Find shortest column
     const minIdx = colHeights.indexOf(Math.min(...colHeights));
-  // Only add if it fits (increased buffer to fit more species!)
-    if (colHeights[minIdx] + imgH + GAP <= GRID_H + 120) {
+    
+    // Keep packing photos until the column intentionally overshoots the grid
+    // This forces the centered "glob" to push all the way to the top and bottom margins!
+    if (colHeights[minIdx] < GRID_H + 250) {
       columns[minIdx].push(species);
       colHeights[minIdx] += imgH + GAP;
     }
