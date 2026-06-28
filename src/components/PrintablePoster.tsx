@@ -173,12 +173,14 @@ return (
             flex: 1,
             overflow: 'hidden',
           }}>
-            {columns.map((col, colIdx) => (
+{columns.map((col, colIdx) => (
               <div
                 key={colIdx}
                 style={{
                   display: 'flex',
                   flexDirection: 'column',
+                  justifyContent: 'center',
+                  height: '100%',
                   gap: `${GAP}px`,
                   width: `${COL_W}px`,
                   flexShrink: 0,
