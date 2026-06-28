@@ -2,6 +2,7 @@ import { ArrowLeft, Download } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toJpeg } from 'html-to-image';
 import { Species, Language } from '../types';
+import { initialSpecies } from '../data/species';
 
 interface PrintablePosterProps {
   loggedSpecies: Species[];
@@ -35,10 +36,14 @@ const POSTER_W = 800;
   const GRID_H = POSTER_H - PADDING * 2 - HEADER_H;
   const COL_W = (POSTER_W - PADDING * 2 - GAP * (NUM_COLS - 1)) / NUM_COLS;
 
-  // Sort by rarity descending
-  const sorted = [...loggedSpecies]
-    .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0));
+ // Pad with extra species to make the glob as full and balanced as possible!
+  const seenIds = new Set(loggedSpecies.map(s => s.id));
+  const extras = initialSpecies.filter(s => !seenIds.has(s.id));
+  const allSpecies = [...loggedSpecies, ...extras];
 
+  // Sort by rarity descending
+  const sorted = [...allSpecies]
+    .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0));
   // Greedy column-fill: assign each species to the shortest column
   const colHeights = Array(NUM_COLS).fill(0);
   const columns: Species[][] = Array.from({ length: NUM_COLS }, () => []);
