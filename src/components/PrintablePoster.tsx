@@ -29,8 +29,8 @@ export function PrintablePoster({ loggedSpecies, language, guideName, onClose }:
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
-const POSTER_W = 800;
-  const POSTER_H = 1066;
+const POSTER_W = 850;
+  const POSTER_H = 1100;
   const PADDING = 28;
   const HEADER_H = 118; // approx header + border
   const GRID_H = POSTER_H - PADDING * 2 - HEADER_H;
@@ -51,14 +51,20 @@ const POSTER_W = 800;
 for (const species of sorted) {
     const ar = estimateAspectRatio(species);
     const imgH = COL_W / ar;
-    // Find shortest column
-    const minIdx = colHeights.indexOf(Math.min(...colHeights));
     
-    // Keep packing photos until the column intentionally overshoots the grid
-    // This forces the centered "glob" to push all the way to the top and bottom margins!
-    if (colHeights[minIdx] < GRID_H + 250) {
-      columns[minIdx].push(species);
-      colHeights[minIdx] += imgH + GAP;
+    // Define custom target heights for our 4 columns to create the "Diamond" shape
+    // Outer columns (0 and 3) stop early, inner columns (1 and 2) pack heavily
+    const targetHeights = [GRID_H + 50, GRID_H + 380, GRID_H + 380, GRID_H + 50];
+    
+    // Calculate which column has the most space left to reach its specific target
+    const spaceLeft = colHeights.map((h, i) => targetHeights[i] - h);
+    const maxSpace = Math.max(...spaceLeft);
+    
+    // If the column with the most space still needs photos, add one!
+    if (maxSpace > 0) {
+      const bestColIdx = spaceLeft.indexOf(maxSpace);
+      columns[bestColIdx].push(species);
+      colHeights[bestColIdx] += imgH + GAP;
     }
   }
 
