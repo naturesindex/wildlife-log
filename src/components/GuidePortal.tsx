@@ -581,8 +581,8 @@ if (showExport) {
             </p>
             <p className="text-stone-500 text-sm leading-relaxed">
               {language === 'EN' 
-                ? 'Tap the heart icon on your frequent sightings so you do not have to scroll for them every day!' 
-                : '¡Toca el icono del corazón en tus avistamientos frecuentes para no tener que buscarlos todos los días!'}
+                ? 'Tap the star icon on your frequent sightings so you do not have to scroll for them every day!' 
+                : '¡Toca el icono de estrella en tus avistamientos frecuentes para no tener que buscarlos todos los días!'}
             </p>
           </div>
         ) : (
