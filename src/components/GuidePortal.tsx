@@ -62,9 +62,9 @@ export function GuidePortal() {
 
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
 const [expeditionType, setExpeditionType] = useState('Sirena Station (Day Tour)');
-  const [showExpeditionModal, setShowExpeditionModal] = useState(false);
+const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const [activeFilter, setActiveFilter] = useState<ActiveFilter>(null);
+  const [activeFilter, setActiveFilter] = useState<ActiveFilter>('Favorites');
   const [isScrolled, setIsScrolled] = useState(false);
   const [showExport, setShowExport] = useState(false);
   
@@ -255,9 +255,13 @@ const [expeditionType, setExpeditionType] = useState('Sirena Station (Day Tour)'
         (s) =>
           fuzzyMatch(s.nameEN, searchQuery) ||
           fuzzyMatch(s.nameES, searchQuery) ||
-          fuzzyMatch(s.category, searchQuery)
+fuzzyMatch(s.category, searchQuery)
       );
     }
+
+    // Sort from least rare (lowest score) to most rare (highest score)
+    // Defaulting to 50 if they don't have a score yet
+    result = result.sort((a, b) => (a.rarityScore || 50) - (b.rarityScore || 50));
 
     return result;
   }, [species, activeFilter, searchQuery]);
@@ -565,15 +569,30 @@ if (showExport) {
         </button>
       </div>
 
-      <div className="max-w-lg mx-auto">
+<div className="max-w-lg mx-auto">
         <SearchBar value={searchQuery} onChange={setSearchQuery} language={language} />
         <CategoryTabs activeFilter={activeFilter} onChange={setActiveFilter} language={language} />
-        <SpeciesGrid
-          species={filteredSpecies}
-          language={language}
-          onToggleLog={toggleLog}
-          onToggleFavorite={toggleFavorite}
-        />
+        
+        {/* Empty Favorites Prompt */}
+        {activeFilter === 'Favorites' && filteredSpecies.length === 0 ? (
+          <div className="text-center py-16 px-6">
+            <p className="text-stone-400 font-semibold text-lg mb-2">
+              {language === 'EN' ? 'No favorites saved yet.' : 'Aún no hay favoritos guardados.'}
+            </p>
+            <p className="text-stone-500 text-sm leading-relaxed">
+              {language === 'EN' 
+                ? 'Tap the heart icon on your frequent sightings so you do not have to scroll for them every day!' 
+                : '¡Toca el icono del corazón en tus avistamientos frecuentes para no tener que buscarlos todos los días!'}
+            </p>
+          </div>
+        ) : (
+          <SpeciesGrid
+            species={filteredSpecies}
+            language={language}
+            onToggleLog={toggleLog}
+            onToggleFavorite={toggleFavorite}
+          />
+        )}
       </div>
 
     {/* Sticky Generate Passport button */}
