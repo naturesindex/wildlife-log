@@ -73,12 +73,7 @@ export function Header({
             : 'opacity-0 -translate-y-full pointer-events-none'
         }`}
       >
-        <div className="relative flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
-          <LanguageToggle language={language} onToggle={onLanguageToggle} />
-{/* Date perfectly centered via absolute positioning */}
-        <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-600 whitespace-nowrap capitalize">
-            {getFormattedDate(language)}
-          </span>
+<div className="relative flex items-center justify-between px-4 py-3 max-w-lg mx-auto">
          <div className="flex flex-col items-center justify-center w-16 h-16 rounded-full bg-white shadow-md border-2 border-[#C86A27]/10">
   <span className="text-black font-black text-lg leading-none">
     {loggedCount}
@@ -87,17 +82,18 @@ export function Header({
     {language === 'EN' ? 'LOGGED' : 'REGISTR.'}
   </span>
 </div>
+{/* Date perfectly centered via absolute positioning */}
+        <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-600 whitespace-nowrap capitalize">
+            {getFormattedDate(language)}
+          </span>
+          <LanguageToggle language={language} onToggle={onLanguageToggle} />
         </div>
       </div>
 
       {/* Full expanded header — always in normal flow */}
       <div className="px-4 pt-6 pb-2 max-w-lg mx-auto">
 {/* Top row */}
-        <div className="relative flex items-center justify-between mb-5">
-          <LanguageToggle language={language} onToggle={onLanguageToggle} />
-          <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-500 whitespace-nowrap capitalize">
-            {getFormattedDate(language)}
-          </span>
+<div className="relative flex items-center justify-between mb-5">
          <div className="flex flex-col items-center justify-center w-16 h-16 rounded-full bg-white shadow-md border-2 border-[#C86A27]/10">
   <span className="text-black font-black text-lg leading-none">
     {loggedCount}
@@ -106,6 +102,10 @@ export function Header({
     {language === 'EN' ? 'LOGGED' : 'REGISTR.'}
   </span>
 </div>
+          <span className="absolute left-1/2 -translate-x-1/2 text-sm font-semibold text-stone-500 whitespace-nowrap capitalize">
+            {getFormattedDate(language)}
+          </span>
+          <LanguageToggle language={language} onToggle={onLanguageToggle} />
         </div>
 
         {/* Title */}
