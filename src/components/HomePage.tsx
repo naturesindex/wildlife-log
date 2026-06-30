@@ -1,5 +1,50 @@
 import { ArrowRight, Map, Waves, Leaf, Compass, UserCircle, Share2, HeartHandshake, DollarSign, Globe, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
+import React from 'react';
+
+// --- ANIMATION COMPONENTS ---
+// This handles the 3D mouse tracking AND the infinite ambient float
+function TiltCard({ children, className, delay = 0 }: { children: React.ReactNode, className: string, delay?: number }) {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseX = e.clientX - rect.left;
+    const mouseY = e.clientY - rect.top;
+    const xPct = mouseX / width - 0.5;
+    const yPct = mouseY / height - 0.5;
+    x.set(xPct);
+    y.set(yPct);
+  };
+
+  const handleMouseLeave = () => {
+    x.set(0);
+    y.set(0);
+  };
+
+  return (
+    <motion.div
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
+      animate={{ y: [0, -12, 0] }}
+      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay }}
+      className={className}
+    >
+      <div style={{ transform: "translateZ(40px)" }} className="w-full h-full relative">
+        {children}
+      </div>
+    </motion.div>
+  );
+}
 
 export function HomePage() {
   const navigate = useNavigate();
@@ -21,45 +66,81 @@ export function HomePage() {
         </button>
       </nav>
 
-      {/* Hero Section - Asymmetrical */}
-      <main className="max-w-7xl mx-auto px-6 pt-12 md:pt-20 pb-20">
+{/* Hero Section - Animated & Asymmetrical */}
+      <main className="max-w-7xl mx-auto px-6 pt-12 md:pt-20 pb-20 overflow-hidden">
         <div className="grid md:grid-cols-2 gap-12 items-center">
+          
+          {/* Left Column: Typography */}
           <div className="space-y-8 z-10 relative">
-            <h1 className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
-              Log The Wild. <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">Your Tour. Documented.</span>
-            </h1>
-            <p className="text-xl text-slate-400 max-w-md leading-relaxed">
-              The wildlife logging tool for expedition guides. Log every sighting, generate guest highlights, and turn every tour into a shareable experience worth coming back for.
-            </p>
-            <div className="flex gap-4">
-              <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all">
-                Partner With Us <ArrowRight size={20} />
+            <motion.div 
+              initial="hidden" 
+              whileInView="show" 
+              viewport={{ once: true }}
+              variants={{
+                hidden: { opacity: 0 },
+                show: { opacity: 1, transition: { staggerChildren: 0.15 } }
+              }}
+              className="flex flex-col"
+            >
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
+                LOG THE WILD.
+              </motion.h1>
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase mt-2">
+                EVERY SIGHTING.
+              </motion.h1>
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-7xl font-black leading-[1] tracking-tighter uppercase mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
+                EVERY GUEST WOWED.
+              </motion.h1>
+            </motion.div>
+
+            <motion.p 
+              initial={{ opacity: 0 }} 
+              animate={{ opacity: 1 }} 
+              transition={{ delay: 0.6, duration: 1 }}
+              className="text-xl text-slate-400 max-w-md leading-relaxed"
+            >
+              The wildlife logging tool for expedition guides. Log every sighting, generate guest highlights, and turn every tour into something worth sharing.
+            </motion.p>
+            
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }} 
+              animate={{ opacity: 1, y: 0 }} 
+              transition={{ delay: 0.8 }}
+              className="flex gap-4"
+            >
+              <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
+                Bring It To Your Park <ArrowRight size={20} />
               </button>
-            </div>
+            </motion.div>
           </div>
           
-{/* Asymmetrical Image/Card Grid */}
-          <div className="relative h-[400px] md:h-[500px] mt-10 md:mt-0">
-            {/* Corcovado Card - Tilted Right */}
-            <div className="absolute top-0 right-0 w-3/4 h-3/4 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden transform rotate-3 hover:rotate-0 hover:z-50 hover:scale-105 transition-all duration-500 z-20 shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10"></div>
-              <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800&auto=format&fit=crop" alt="Jungle" className="w-full h-full object-cover opacity-60" />
-              <div className="absolute bottom-6 left-6 z-20">
-                <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">Wildlife Park Passport</div>
-                <div className="text-2xl font-bold text-white">Corcovado National Park</div>
-              </div>
-            </div>
+          {/* Right Column: 3D Floating Cards */}
+          <div className="relative h-[450px] md:h-[550px] mt-10 md:mt-0 perspective-[1000px]">
             
-            {/* Dive Log Card - Tilted Left & Overlapping */}
-            <div className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden transform -rotate-3 hover:rotate-0 hover:z-50 hover:scale-105 transition-all duration-500 shadow-2xl z-10">
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10"></div>
-              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop" alt="Diving" className="w-full h-full object-cover opacity-60" />
-               <div className="absolute bottom-6 left-6 z-20">
-                <div className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">Coming Soon</div>
-                <div className="text-xl font-bold text-white">Digital Dive Logs</div>
+            {/* Front Card - Jungle Passport (Offset delay 0) */}
+            <TiltCard className="absolute top-0 right-0 w-3/4 h-3/4 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden z-20 shadow-2xl">
+              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
+              <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800&auto=format&fit=crop" alt="Lush Jungle" className="w-full h-full object-cover opacity-70" />
+              <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
+                <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">
+                  Wildlife Park Logs
+                </div>
+                <div className="text-2xl font-bold text-white shadow-sm">Digital Passport</div>
               </div>
-            </div>
+            </TiltCard>
+            
+            {/* Back Card - Dive Log (Offset delay 1.5s so they float out of sync) */}
+            <TiltCard delay={1.5} className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-xl z-10">
+               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
+              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop" alt="Deep Ocean Dive" className="w-full h-full object-cover opacity-40 grayscale-[30%]" />
+               <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
+                <div className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-3 py-1 rounded-full mb-2 inline-block uppercase tracking-wider">
+                  Coming Soon
+                </div>
+                <div className="text-xl font-bold text-white/80">Digital Dive Logs</div>
+              </div>
+            </TiltCard>
+
           </div>
         </div>
       </main>
