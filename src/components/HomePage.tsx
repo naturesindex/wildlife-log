@@ -393,38 +393,38 @@ export function HomePage() {
         </div>
       </section>
 
-      {/* Request a Park CTA */}
+{/* Request a Park CTA */}
       <section className="py-32 px-6 relative overflow-hidden">
-         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
-         
-         <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.5 }}
-            className="max-w-2xl mx-auto text-center relative z-10"
-         >
-            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Want Nature's Index in your area?</h2>
-            <p className="text-xl text-slate-400 mb-2">We're partnering with tour operators and guide associations worldwide.</p>
-            <p className="text-sm text-slate-500 mb-10 font-medium tracking-wide uppercase">No commitment. We'll reach out with partnership details.</p>
-            
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <input 
-                type="text" 
-                placeholder="Enter your park or region..." 
-                className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-l-full sm:rounded-r-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2"
-              />
-              <input 
-                type="email" 
-                placeholder="Your email address..." 
-                className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2 sm:border-l-0"
-              />
-              <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-xl sm:rounded-l-none sm:rounded-r-full font-bold transition-all whitespace-nowrap">
-                Submit Request
-              </button>
-         </motion.div>
-           </section> {/* Closes Request a Park CTA */}
-    </div>
-    </div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+        
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-2xl mx-auto text-center relative z-10"
+        >
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Want Nature's Index in your area?</h2>
+          <p className="text-xl text-slate-400 mb-2">We're partnering with tour operators and guide associations worldwide.</p>
+          <p className="text-sm text-slate-500 mb-10 font-medium tracking-wide uppercase">No commitment. We'll reach out with partnership details.</p>
+          
+          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+            <input 
+              type="text" 
+              placeholder="Enter your park or region..." 
+              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-l-full sm:rounded-r-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2"
+            />
+            <input 
+              type="email" 
+              placeholder="Your email address..." 
+              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2 sm:border-l-0"
+            />
+            <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-xl sm:rounded-l-none sm:rounded-r-full font-bold transition-all whitespace-nowrap">
+              Submit Request
+            </button>
+          </div>
+        </motion.div>
+      </section>
+    </main>
   );
 }
