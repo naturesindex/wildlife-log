@@ -123,7 +123,7 @@ const operatorRef = useRef<HTMLElement>(null);
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-      <main className="relative max-w-7xl mx-auto px-6 pt-[450px] md:pt-[400px] pb-10 overflow-hidden min-h-[150vh] flex flex-col justify-start">
+      <main className="relative max-w-7xl mx-auto px-6 pt-[470px] md:pt-[400px] pb-5 overflow-hidden min-h-[150vh] flex flex-col justify-start">
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
           
@@ -155,7 +155,7 @@ const operatorRef = useRef<HTMLElement>(null);
               <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
                 Bring It To Your Park <ArrowRight size={20} />
               </button>
-              <button onClick={() => navigate('/products')} className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-8 py-4 rounded-full font-bold transition-all flex items-center justify-center">
+              <button onClick={() => navigate('/preview')} className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-8 py-4 rounded-full font-bold transition-all flex items-center justify-center">
                 Explore Product Preview
               </button>
             </motion.div>
