@@ -187,8 +187,10 @@ export function HomePage() {
                     </div>
                     <div className="text-xl font-bold text-white/80">Digital Dive Logs</div>
                 </div>
-                </TiltCard>
- </motion.div>
+</TiltCard>
+            </motion.div>
+          </div>
+        </div>
       </main>
 
       {/* HOW IT WORKS - Asymmetrical Timeline */}
