@@ -1,7 +1,7 @@
 import { ArrowRight, Map, Waves, Leaf, Compass, UserCircle, Sparkles, HeartHandshake, DollarSign, Globe, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
-import React from 'react';
+import { motion, useMotionValue, useSpring, useTransform, useScroll } from 'framer-motion';
+import React, { useRef } from 'react';
 
 // --- ANIMATION COMPONENTS ---
 // Ambient background particles (leaves/bubbles)
@@ -37,10 +37,8 @@ function AmbientParticles() {
 function TiltCard({ children, className, delay = 0 }: { children: React.ReactNode, className: string, delay?: number }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  // Cranked up the physics so the tilt is much more obvious
   const mouseXSpring = useSpring(x, { stiffness: 200, damping: 20 });
   const mouseYSpring = useSpring(y, { stiffness: 200, damping: 20 });
-  // Doubled the rotation angles from 12 to 25 degrees
   const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["25deg", "-25deg"]);
   const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-25deg", "25deg"]);
 
@@ -80,6 +78,30 @@ function TiltCard({ children, className, delay = 0 }: { children: React.ReactNod
 export function HomePage() {
   const navigate = useNavigate();
 
+  // --- SCROLL SCRUBBING SETUP ---
+  const { scrollY } = useScroll();
+
+  // 1. Hero Text & Cards (Tied to exact pixel scroll depth)
+  // "LOG THE WILD." stays fully visible at 0.
+  const line2Opacity = useTransform(scrollY, [50, 200], [0, 1]);
+  const line2Y = useTransform(scrollY, [50, 200], [30, 0]);
+
+  const line3Opacity = useTransform(scrollY, [150, 300], [0, 1]);
+  const line3Scale = useTransform(scrollY, [150, 300], [0.8, 1]);
+
+  const contentOpacity = useTransform(scrollY, [250, 400], [0, 1]);
+  const contentY = useTransform(scrollY, [250, 400], [20, 0]);
+
+  const cardsOpacity = useTransform(scrollY, [350, 550], [0, 1]);
+  const cardsY = useTransform(scrollY, [350, 550], [50, 0]);
+
+  // 2. Ragged Paintbrush Underlines (Tied to section progress)
+  const howItWorksRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 85%", "center center"] });
+
+  const operatorRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: operatorProgress } = useScroll({ target: operatorRef, offset: ["start 85%", "center center"] });
+
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30">
       {/* Navbar */}
@@ -102,64 +124,42 @@ export function HomePage() {
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-20">
           
-{/* Left Column: Typography - Revel Sequentialy with Scroll */}
+{/* Left Column: Typography - Tied to Scroll Scrubbing */}
           <div className="space-y-8 z-10 relative">
-            <motion.div 
-              initial="hidden" 
-              whileInView="show" 
-              viewport={{ once: true, amount: 0.2 }}
-              variants={{
-                hidden: { opacity: 0 },
-                show: { opacity: 1, transition: { staggerChildren: 0.4 } } 
-              }}
-              className="flex flex-col"
-            >
-              {/* Added scale: 0.9 to 1 to create the "grow on scroll" effect */}
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
+            <div className="flex flex-col">
+              {/* Line 1 is always visible */}
+              <motion.h1 className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
                 LOG THE WILD.
               </motion.h1>
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-6xl md:text-7xl font-black text-slate-400 leading-[1] tracking-tighter uppercase mt-2">
+              {/* Line 2 scrubs in */}
+              <motion.h1 style={{ opacity: line2Opacity, y: line2Y }} className="text-6xl md:text-7xl font-black text-slate-400 leading-[1] tracking-tighter uppercase mt-2">
                 EVERY SIGHTING.
               </motion.h1>
-              {/* WOWED is now massive, colored in your brand orange/amber, and dropshadowed */}
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter uppercase mt-4 text-transparent bg-clip-text bg-gradient-to-br from-[#C86A27] via-amber-500 to-yellow-600 drop-shadow-2xl">
+              {/* Line 3 scrubs in and scales */}
+              <motion.h1 style={{ opacity: line3Opacity, scale: line3Scale }} className="text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter uppercase mt-4 text-transparent bg-clip-text bg-gradient-to-br from-[#C86A27] via-amber-500 to-yellow-600 drop-shadow-2xl origin-left">
                 EVERY GUEST WOWED.
               </motion.h1>
-            </motion.div>
+            </div>
 
             <motion.p 
-              initial={{ opacity: 0 }} 
-              whileInView={{ opacity: 1 }} 
-              viewport={{ once: true, amount: 0.8 }}
-              transition={{ delay: 0.6, duration: 1 }}
+              style={{ opacity: contentOpacity, y: contentY }}
               className="text-xl text-slate-400 max-w-md leading-relaxed"
             >
               The wildlife logging tool for expedition guides. Log every sighting, generate guest highlights, and turn every tour into something worth sharing.
             </motion.p>
             
-            <motion.div 
-              initial={{ opacity: 0, y: 10 }} 
-              whileInView={{ opacity: 1, y: 0 }} 
-              viewport={{ once: true, amount: 0.8 }}
-              transition={{ delay: 0.9 }}
-              className="flex gap-4"
-            >
+            <motion.div style={{ opacity: contentOpacity, y: contentY }} className="flex gap-4">
               <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
                 Bring It To Your Park <ArrowRight size={20} />
               </button>
             </motion.div>
           </div>
           
-          {/* Right Column: 3D Floating Cards - Revel Sequentialy with Scroll */}
+          {/* Right Column: 3D Floating Cards - Tied to Scroll Scrubbing */}
           <div className="relative h-[450px] md:h-[550px] mt-10 md:mt-0 perspective-[1200px]">
-            {/* Front Card - Jungle Passport (Offset delay 0) */}
-            <motion.div
-                initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, amount: 0.9 }}
-                transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
-            >
-                <TiltCard className="absolute top-0 right-0 w-3/4 h-3/4 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden z-20 shadow-2xl">
+            <motion.div style={{ opacity: cardsOpacity, y: cardsY }} className="absolute inset-0">
+              {/* Front Card - Jungle Passport */}
+              <TiltCard className="absolute top-0 right-0 w-3/4 h-3/4 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden z-20 shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
                 <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800&auto=format&fit=crop" alt="Lush Jungle" className="w-full h-full object-cover opacity-70" />
                 <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
@@ -168,17 +168,10 @@ export function HomePage() {
                     </div>
                     <div className="text-2xl font-bold text-white shadow-sm">Wildlife Park Logs</div>
                 </div>
-                </TiltCard>
-            </motion.div>
-            
-            {/* Back Card - Dive Log (Offset delay 1.5s so they float out of sync) */}
-            <motion.div
-                initial={{ opacity: 0, y: 50, scale: 0.9 }}
-                whileInView={{ opacity: 1, y: 0, scale: 1 }}
-                viewport={{ once: true, amount: 0.9 }}
-                transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
-            >
-                <TiltCard delay={1.5} className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-xl z-10">
+              </TiltCard>
+              
+              {/* Back Card - Dive Log */}
+              <TiltCard delay={1.5} className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-xl z-10">
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
                 <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop" alt="Deep Ocean Dive" className="w-full h-full object-cover opacity-40 grayscale-[30%]" />
                     <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
@@ -187,35 +180,33 @@ export function HomePage() {
                     </div>
                     <div className="text-xl font-bold text-white/80">Digital Dive Logs</div>
                 </div>
-</TiltCard>
+              </TiltCard>
             </motion.div>
           </div>
         </div>
       </main>
 
-      {/* HOW IT WORKS - Asymmetrical Timeline */}
-      <section className="py-32 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden relative">
+{/* HOW IT WORKS - Asymmetrical Timeline */}
+      <section ref={howItWorksRef} className="py-32 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           
-          <motion.div 
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: "-100px" }}
-            className="mb-24 relative inline-block"
-          >
+          <div className="mb-24 relative inline-block">
             <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight relative z-10">
               How It Works
             </h2>
-  {/* Underline Draw-on Effect - Ragged Paintbrush */}
-            <motion.div 
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
-              className="absolute -bottom-2 left-0 w-full h-3 bg-blue-600/70 -z-0 origin-left filter blur-[1.5px]"
-              style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px", transform: "rotate(-1.5deg)" }}
-            />
-          </motion.div>
+            {/* Drawn Ragged Brush Underline - Scrubbed */}
+            <svg className="absolute -bottom-3 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
+              <motion.path 
+                d="M 5,10 Q 30,14 60,8 T 120,12 T 180,6 T 205,10" 
+                stroke="#2563eb" 
+                strokeWidth="6" 
+                fill="none" 
+                strokeLinecap="round" 
+                style={{ pathLength: howProgress }} 
+                className="drop-shadow-lg"
+              />
+            </svg>
+          </div>
 
           <div className="flex flex-col gap-16 md:gap-0 relative">
             {/* Connecting Background Line (Desktop only) */}
@@ -252,29 +243,27 @@ export function HomePage() {
       </section>
 
       {/* WHY OPERATORS CARE - The B2B Pitch */}
-      <section className="py-24 bg-slate-950 border-t border-slate-800 overflow-hidden">
+      <section ref={operatorRef} className="py-24 bg-slate-950 border-t border-slate-800 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="mb-16 relative inline-block"
-          >
+          <div className="mb-16 relative inline-block">
             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight whitespace-nowrap relative z-10">
               The ultimate tool for tour operators.
             </h2>
-   {/* Underline Draw-on Effect - Ragged Paintbrush */}
-            <motion.div 
-              initial={{ scaleX: 0 }}
-              whileInView={{ scaleX: 1 }}
-              viewport={{ once: true, amount: 0.5 }}
-              transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
-              className="absolute -bottom-2 left-0 w-full h-3 bg-blue-600/70 -z-0 origin-left filter blur-[1.5px]"
-              style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px", transform: "rotate(-1.5deg)" }}
-            />
-          </motion.div>
+            {/* Drawn Ragged Brush Underline - Scrubbed */}
+            <svg className="absolute -bottom-3 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 300 20" preserveAspectRatio="none">
+              <motion.path 
+                d="M 5,10 Q 40,6 90,12 T 180,8 T 270,14 T 305,10" 
+                stroke="#2563eb" 
+                strokeWidth="6" 
+                fill="none" 
+                strokeLinecap="round" 
+                style={{ pathLength: operatorProgress }} 
+                className="drop-shadow-lg"
+              />
+            </svg>
+          </div>
           
-{/* Operator Benefits - Floating Asymmetrical Bubbles */}
+          {/* Operator Benefits - Floating Asymmetrical Bubbles */}
           <div className="grid md:grid-cols-2 gap-8 mt-10">
             
             {/* Benefit 1 - The Guest Wow Factor */}
