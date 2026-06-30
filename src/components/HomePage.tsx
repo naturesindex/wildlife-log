@@ -218,30 +218,30 @@ const operatorRef = useRef<HTMLElement>(null);
             {/* Connecting Background Line (Desktop only) */}
             <div className="hidden md:block absolute left-[4.5rem] top-10 bottom-10 w-[2px] bg-gradient-to-b from-blue-500/50 via-slate-700/50 to-transparent -z-10" />
 
-            {/* Step 1 - Left Aligned */}
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-8 items-start md:w-2/3">
-              <div className="w-20 h-20 shrink-0 bg-slate-950 border-2 border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-3xl font-black shadow-[0_0_30px_rgba(59,130,246,0.2)]">1</div>
-              <div className="pt-4">
-                <h3 className="text-2xl font-bold text-white mb-4">Guide Logs Sightings</h3>
-                <p className="text-lg text-slate-400 leading-relaxed text-left">Guides log species in real time through a fast, mobile-friendly portal, built for the trail, not the office.</p>
+{/* Step 1 - Left Aligned */}
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-slate-950 border-2 border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-[0_0_30px_rgba(59,130,246,0.2)]">1</div>
+              <div className="pt-2 md:pt-4">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">Guide Logs Sightings</h3>
+                <p className="text-base md:text-lg text-slate-400 leading-relaxed text-left">Guides log species in real time through a fast, mobile-friendly portal, built for the trail, not the office.</p>
               </div>
             </motion.div>
 
-            {/* Step 2 - Offset Right */}
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-8 items-start md:w-2/3 md:ml-auto md:mt-20">
-              <div className="w-20 h-20 shrink-0 bg-slate-950 border-2 border-[#C86A27]/30 text-[#C86A27] rounded-full flex items-center justify-center text-3xl font-black shadow-[0_0_30px_rgba(200,106,39,0.2)] order-1 md:order-2">2</div>
-              <div className="pt-4 order-2 md:order-1 md:text-right">
-                <h3 className="text-2xl font-bold text-white mb-4">Guest Receives Link</h3>
-                <p className="text-lg text-slate-400 leading-relaxed md:text-right text-left">At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport.</p>
+            {/* Step 2 - Offset Right on Both Mobile & Desktop */}
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-slate-950 border-2 border-[#C86A27]/30 text-[#C86A27] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-[0_0_30px_rgba(200,106,39,0.2)] order-1 md:order-2">2</div>
+              <div className="pt-2 md:pt-4 order-2 md:order-1 text-right">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">Guest Receives Link</h3>
+                <p className="text-base md:text-lg text-slate-400 leading-relaxed text-right">At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport.</p>
               </div>
             </motion.div>
 
             {/* Step 3 - Offset Further Left */}
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-8 items-start md:w-2/3 md:mt-20">
-              <div className="w-20 h-20 shrink-0 bg-slate-950 border-2 border-emerald-500/30 text-emerald-400 rounded-full flex items-center justify-center text-3xl font-black shadow-[0_0_30px_rgba(16,185,129,0.2)]">3</div>
-              <div className="pt-4">
-                <h3 className="text-2xl font-bold text-white mb-4">The Ripple Effect</h3>
-                <p className="text-lg text-slate-400 leading-relaxed text-left">Guests share their adventure. Guides earn recognition and tips. Operators get content, data, and loyalty, all without lifting a finger.</p>
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 mt-12 md:mt-20">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-slate-950 border-2 border-emerald-500/30 text-emerald-400 rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-[0_0_30px_rgba(16,185,129,0.2)]">3</div>
+              <div className="pt-2 md:pt-4">
+                <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">The Ripple Effect</h3>
+                <p className="text-base md:text-lg text-slate-400 leading-relaxed text-left">Guests share their adventure. Guides earn recognition and tips. Operators get content, data, and loyalty, all without lifting a finger.</p>
               </div>
             </motion.div>
           </div>
@@ -251,8 +251,8 @@ const operatorRef = useRef<HTMLElement>(null);
       {/* WHY OPERATORS CARE - The B2B Pitch */}
       <section ref={operatorRef} className="py-24 bg-slate-950 border-t border-slate-800 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="mb-16 relative inline-block">
-            <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight whitespace-nowrap relative z-10">
+<div className="mb-16 relative inline-block max-w-full">
+            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight leading-tight relative z-10">
               The ultimate tool for tour operators.
             </h2>
             {/* Drawn Ragged Brush Underline - Scrubbed */}
@@ -269,74 +269,74 @@ const operatorRef = useRef<HTMLElement>(null);
             </svg>
           </div>
           
-{/* Operator Benefits - Floating Asymmetrical Bubbles */}
-          <div className="grid md:grid-cols-2 gap-8 mt-10">
+          {/* Operator Benefits - Floating Asymmetrical Bubbles */}
+          <div className="grid md:grid-cols-2 gap-6 md:gap-8 mt-10">
             
-            {/* Benefit 1 - The Guest Wow Factor */}
+            {/* Benefit 1 - Left Aligned on Mobile */}
             <motion.div 
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.1 } }}
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(59, 130, 246, 0.2)", border: "1px solid rgba(59, 130, 246, 0.4)" }}
-                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-tr-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
+                className="w-[92%] md:w-full bg-slate-900/80 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] rounded-tr-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
               <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
                 <Sparkles className="text-blue-500" size={280} />
               </div>
               <div className="relative z-10">
-                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">The Guest Wow Factor</h3>
-                <p className="text-lg text-slate-400 max-w-sm">Your guests leave with something shareable and personal. They post it. They tag you. Free marketing, zero behavioral change from your operation.</p>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">The Guest Wow Factor</h3>
+                <p className="text-base md:text-lg text-slate-400 max-w-sm">Your guests leave with something shareable and personal. They post it. They tag you. Free marketing, zero behavioral change from your operation.</p>
               </div>
             </motion.div>
 
-            {/* Benefit 2 - The Tip Mechanic */}
+            {/* Benefit 2 - Right Aligned on Mobile */}
             <motion.div 
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.2, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1.2 } }}
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(200, 106, 39, 0.2)", border: "1px solid rgba(200, 106, 39, 0.4)" }}
-                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-tl-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
+                className="w-[92%] ml-auto md:w-full md:ml-0 md:mt-12 bg-slate-900/80 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] rounded-tl-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
               <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
                 <HeartHandshake className="text-[#C86A27]" size={280} />
               </div>
               <div className="relative z-10">
-                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">The Tip Mechanic</h3>
-                <p className="text-lg text-slate-400 max-w-sm">Guides are incentivized to log more and better. The integrated tip flow improves the product quality automatically while rewarding your best staff.</p>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">The Tip Mechanic</h3>
+                <p className="text-base md:text-lg text-slate-400 max-w-sm">Guides are incentivized to log more and better. The integrated tip flow improves the product quality automatically while rewarding your best staff.</p>
               </div>
             </motion.div>
 
-            {/* Benefit 3 - Passive Upsell Revenue */}
+            {/* Benefit 3 - Left Aligned on Mobile */}
             <motion.div 
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.3, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 2.3 } }}
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(16, 185, 129, 0.2)", border: "1px solid rgba(16, 185, 129, 0.4)" }}
-                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-bl-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
+                className="w-[92%] md:w-full md:-mt-12 bg-slate-900/80 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] rounded-bl-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
               <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
                 <DollarSign className="text-emerald-500" size={280} />
               </div>
               <div className="relative z-10">
-                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">Passive Upsell Revenue</h3>
-                <p className="text-lg text-slate-400 max-w-sm">Generate passive income per tour with no fulfillment work. Even a small percentage of guests buying premium adds up quickly.</p>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">Passive Upsell Revenue</h3>
+                <p className="text-base md:text-lg text-slate-400 max-w-sm">Generate passive income per tour with no fulfillment work. Even a small percentage of guests buying premium adds up quickly.</p>
               </div>
             </motion.div>
 
-            {/* Benefit 4 - Bilingual by Design */}
+            {/* Benefit 4 - Right Aligned on Mobile */}
             <motion.div 
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.4, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 3.4 } }}
                 whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(167, 139, 250, 0.2)", border: "1px solid rgba(167, 139, 250, 0.4)" }}
-                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-br-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
+                className="w-[92%] ml-auto md:w-full bg-slate-900/80 p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] rounded-br-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
               <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
                 <Globe className="text-purple-400" size={280} />
               </div>
               <div className="relative z-10">
-                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">Bilingual by Design</h3>
-                <p className="text-lg text-slate-400 max-w-sm">Built for international guides and guests. Currently English and Español, with more languages coming soon.</p>
+                <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">Bilingual by Design</h3>
+                <p className="text-base md:text-lg text-slate-400 max-w-sm">Built for international guides and guests. Currently English and Español, with more languages coming soon.</p>
               </div>
             </motion.div>
           </div>
