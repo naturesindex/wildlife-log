@@ -1,4 +1,4 @@
-import { ArrowRight, Map, Waves, Leaf, Compass, UserCircle, Share2, HeartHandshake, DollarSign, Globe, BarChart3 } from 'lucide-react';
+import { ArrowRight, Map, Waves, Leaf, Compass, UserCircle, Sparkles, HeartHandshake, DollarSign, Globe, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import React from 'react';
