@@ -423,7 +423,8 @@ export function HomePage() {
                 Submit Request
               </button>
          </motion.div>
-      </section>
+           </section> {/* Closes Request a Park CTA */}
+    </div>
     </div>
   );
 }
