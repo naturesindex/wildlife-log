@@ -188,11 +188,10 @@ export function HomePage() {
                     <div className="text-xl font-bold text-white/80">Digital Dive Logs</div>
                 </div>
                 </TiltCard>
-            </motion.div>
-        </div>
+ </motion.div>
       </main>
 
-{/* HOW IT WORKS - Asymmetrical Timeline */}
+      {/* HOW IT WORKS - Asymmetrical Timeline */}
       <section className="py-32 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           
@@ -423,7 +422,6 @@ export function HomePage() {
               <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-xl sm:rounded-l-none sm:rounded-r-full font-bold transition-all whitespace-nowrap">
                 Submit Request
               </button>
-            </div>
          </motion.div>
       </section>
     </div>
