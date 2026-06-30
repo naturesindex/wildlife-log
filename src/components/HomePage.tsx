@@ -427,6 +427,6 @@ export function HomePage() {
           </div>
         </motion.div>
       </section>
-    </main>
+    </div>
   );
 }
