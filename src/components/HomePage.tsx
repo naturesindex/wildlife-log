@@ -429,13 +429,15 @@ const operatorRef = useRef<HTMLElement>(null);
 <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-400/20 blur-[120px] rounded-full pointer-events-none"></div>
         
 <motion.div 
-      initial={{ opacity: 0, scale: 0.9 }}
-      whileInView={{ opacity: 1, scale: 1 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.5 }}
-      className=\"max-w-4xl mx-auto text-center relative z-10\"
-    >
-      <h2 className=\"text-4xl md:text-5xl font-black text-white mb-4 tracking-tight\">Bring Nature's Index To Your Park.</h2>
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.5 }}
+          className="max-w-4xl mx-auto text-center relative z-10"
+        >
+          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+            Bring Nature's Index To Your Park.
+          </h2>
       <p className=\"text-xl text-slate-300 mb-10 font-medium\">No commitment. We'll reach out with partnership details.</p>
       
       {submitStatus === 'success' ? (
