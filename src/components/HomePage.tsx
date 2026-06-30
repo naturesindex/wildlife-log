@@ -146,72 +146,91 @@ export function HomePage() {
       </main>
 
 {/* HOW IT WORKS - 3 Dead Simple Steps */}
-      <section className="py-20 bg-slate-900/50 border-t border-slate-800/50">
+      <section className="py-24 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className="text-center mb-16"
+          >
             <h2 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">How It Works</h2>
             <p className="text-slate-400">Three dead simple steps to elevate your expedition.</p>
-          </div>
+          </motion.div>
+
           <div className="grid md:grid-cols-3 gap-8 text-center">
-            <div className="p-6">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-6">
               <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl font-black">1</span>
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Guide Logs Sightings</h3>
-              <p className="text-slate-400">Your guides log what they see during the tour using our streamlined portal.</p>
-            </div>
-            <div className="p-6 relative">
+              <p className="text-slate-400">Guides log species in real time through a fast, mobile-friendly portal, built for the trail, not the office.</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="p-6 relative">
               <div className="hidden md:block absolute top-1/4 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-slate-700 to-transparent -z-10"></div>
               <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl font-black">2</span>
               </div>
               <h3 className="text-xl font-bold text-white mb-3">Guest Receives Link</h3>
-              <p className="text-slate-400">Guests get a personalized link containing their free social story, tipping options, and passport upsell.</p>
-            </div>
-            <div className="p-6">
+              <p className="text-slate-400">At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport.</p>
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} className="p-6">
               <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
                 <span className="text-2xl font-black">3</span>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Everyone Wins</h3>
-              <p className="text-slate-400">Guests share the adventure, guides earn better tips, and operators grow effortlessly.</p>
-            </div>
+              <h3 className="text-xl font-bold text-white mb-3">The Ripple Effect</h3>
+              <p className="text-slate-400">Guests share their adventure. Guides earn recognition and tips. Operators get content, data, and loyalty, all without lifting a finger.</p>
+            </motion.div>
           </div>
         </div>
       </section>
 
       {/* WHY OPERATORS CARE - The B2B Pitch */}
-      <section className="py-24 bg-slate-950 border-t border-slate-800">
+      <section className="py-24 bg-slate-950 border-t border-slate-800 overflow-hidden">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-3xl md:text-5xl font-black text-white mb-16 tracking-tight max-w-2xl">The ultimate tool for elite operators.</h2>
+          <motion.h2 
+            initial={{ opacity: 0, x: -20 }}
+            whileInView={{ opacity: 1, x: 0 }}
+            viewport={{ once: true }}
+            className="text-3xl md:text-5xl font-black text-white mb-16 tracking-tight max-w-2xl"
+          >
+            The ultimate tool for tour operators.
+          </motion.h2>
+          
           <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
-            <div className="flex gap-4">
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="flex gap-4">
               <div className="mt-1"><Share2 className="text-blue-500" size={28} /></div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">The Guest Wow Factor</h3>
                 <p className="text-slate-400">Your guests leave with something shareable and personal. They post it. They tag you. That's free marketing requiring zero behavior change from your operation.</p>
               </div>
-            </div>
-            <div className="flex gap-4">
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="flex gap-4">
               <div className="mt-1"><HeartHandshake className="text-[#C86A27]" size={28} /></div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">The Tip Mechanic</h3>
                 <p className="text-slate-400">Guides are incentivized to log more and better. The integrated tip flow improves the product quality automatically while rewarding your best staff.</p>
               </div>
-            </div>
-            <div className="flex gap-4">
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="flex gap-4">
               <div className="mt-1"><DollarSign className="text-emerald-500" size={28} /></div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">Passive Upsell Revenue</h3>
                 <p className="text-slate-400">Generate passive income per tour with no fulfillment work. Even a small percentage of guests buying the premium passport adds up across a season.</p>
               </div>
-            </div>
-            <div className="flex gap-4">
+            </motion.div>
+
+            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="flex gap-4">
               <div className="mt-1"><Globe className="text-purple-400" size={28} /></div>
               <div>
                 <h3 className="text-xl font-bold text-white mb-2">Bilingual by Design</h3>
-                <p className="text-slate-400">Built for international tourism. Outputs generate flawlessly in both English and Spanish to accommodate your diverse guest lists.</p>
+                <p className="text-slate-400">Built for international guides and guests. Currently English and Español, with more languages coming.</p>
               </div>
-            </div>
+            </motion.div>
           </div>
         </div>
       </section>
@@ -219,44 +238,59 @@ export function HomePage() {
       {/* Mission / 3 Cards Section */}
       <section className="bg-slate-900 py-24 border-y border-slate-800">
         <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-8">
-          <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-slate-700 transition-colors group">
+          <motion.div whileHover={{ y: -5 }} className="bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-slate-700 transition-colors group">
             <Map className="text-blue-500 mb-6 group-hover:scale-110 transition-transform" size={40} />
             <h3 className="text-2xl font-bold text-white mb-3">Expanding Parks</h3>
             <p className="text-slate-400 leading-relaxed">Scaling the Nature's Index ecosystem to parks and reserves worldwide. Give your guides the ultimate logging tool and your guests a souvenir worth keeping.</p>
-          </div>
-          <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-slate-700 transition-colors group">
+          </motion.div>
+          
+          <motion.div whileHover={{ y: -5 }} className="bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-slate-700 transition-colors group">
             <Waves className="text-blue-500 mb-6 group-hover:scale-110 transition-transform" size={40} />
             <div className="inline-block bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full mb-3 uppercase tracking-wider">Coming Soon</div>
             <h3 className="text-2xl font-bold text-white mb-3">Ocean Bound</h3>
             <p className="text-slate-400 leading-relaxed">Taking the Index underwater. Dive guides will be able to log marine life and generate beautiful shareable dive profiles for every guest.</p>
-          </div>
-          <div className="bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-slate-700 transition-colors group">
+          </motion.div>
+
+          <motion.div whileHover={{ y: -5 }} className="bg-slate-950 p-8 rounded-3xl border border-slate-800 hover:border-slate-700 transition-colors group">
             <BarChart3 className="text-blue-500 mb-6 group-hover:scale-110 transition-transform" size={40} />
-            <div className="inline-block bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full mb-3 uppercase tracking-wider">Coming Soon (v2)</div>
+            <div className="inline-block bg-blue-500/20 text-blue-400 text-[10px] font-bold px-2 py-0.5 rounded-full mb-3 uppercase tracking-wider">Coming Soon</div>
             <h3 className="text-2xl font-bold text-white mb-3">Expedition Stats</h3>
             <p className="text-slate-400 leading-relaxed">Every tour builds your operation's species record. We're building guide performance insights and species trend tracking so your operation gets smarter over time.</p>
-          </div>
+          </motion.div>
         </div>
       </section>
 
       {/* Request a Park CTA */}
       <section className="py-32 px-6 relative overflow-hidden">
-         {/* Subtle background glow */}
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
          
-         <div className="max-w-2xl mx-auto text-center relative z-10">
-<h2 className="text-4xl md:text-5xl font-black text-white mb-6 tracking-tight">Want Nature's Index in your area?</h2>
-            <p className="text-xl text-slate-400 mb-10">We're partnering with tour operators and guide associations worldwide. Get on the list.</p>            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+         <motion.div 
+            initial={{ opacity: 0, scale: 0.9 }}
+            whileInView={{ opacity: 1, scale: 1 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+            className="max-w-2xl mx-auto text-center relative z-10"
+         >
+            <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Want Nature's Index in your area?</h2>
+            <p className="text-xl text-slate-400 mb-2">We're partnering with tour operators and guide associations worldwide.</p>
+            <p className="text-sm text-slate-500 mb-10 font-medium tracking-wide uppercase">No commitment. We'll reach out with partnership details.</p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <input 
                 type="text" 
                 placeholder="Enter your park or region..." 
-                className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-full outline-none focus:border-blue-500 transition-colors w-full sm:w-auto flex-1 max-w-md"
+                className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-l-full sm:rounded-r-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2"
               />
-              <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-full font-bold transition-all">
+              <input 
+                type="email" 
+                placeholder="Your email address..." 
+                className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2 sm:border-l-0"
+              />
+              <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-xl sm:rounded-l-none sm:rounded-r-full font-bold transition-all whitespace-nowrap">
                 Submit Request
               </button>
             </div>
-         </div>
+         </motion.div>
       </section>
     </div>
   );
