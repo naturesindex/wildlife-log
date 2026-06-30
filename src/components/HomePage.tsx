@@ -123,9 +123,9 @@ export function HomePage() {
               <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800&auto=format&fit=crop" alt="Lush Jungle" className="w-full h-full object-cover opacity-70" />
               <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
                 <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">
-                  Wildlife Park Logs
+                  Active
                 </div>
-                <div className="text-2xl font-bold text-white shadow-sm">Digital Passport</div>
+                <div className="text-2xl font-bold text-white shadow-sm">Wildlife Park Logs</div>
               </div>
             </TiltCard>
             
