@@ -123,7 +123,7 @@ const operatorRef = useRef<HTMLElement>(null);
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-      <main className="relative max-w-7xl mx-auto px-6 pt-[470px] md:pt-[400px] pb-5 overflow-hidden min-h-[150vh] flex flex-col justify-start">
+      <main className="relative max-w-7xl mx-auto px-6 pt-[550px] md:pt-[500px] pb-2 overflow-hidden min-h-[150vh] flex flex-col justify-start">
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
           
