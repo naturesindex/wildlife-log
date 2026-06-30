@@ -426,52 +426,52 @@ const operatorRef = useRef<HTMLElement>(null);
 
 {/* Request a Park CTA */}
 <section className="py-32 px-6 relative overflow-hidden">
-<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-400/20 blur-[120px] rounded-full pointer-events-none"></div>
-        
-<motion.div 
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto text-center relative z-10"
+  <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-400/20 blur-[120px] rounded-full pointer-events-none"></div>
+
+  <motion.div 
+    initial={{ opacity: 0, y: 20 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true }}
+    transition={{ duration: 0.5 }}
+    className="max-w-4xl mx-auto text-center relative z-10"
+  >
+    <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
+      Bring Nature's Index To Your Park.
+    </h2>
+    <p className="text-xl text-slate-300 mb-10 font-medium">No commitment. We'll reach out with partnership details.</p>
+
+    {submitStatus === 'success' ? (
+      <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-6 py-4 rounded-2xl font-bold inline-block">
+        Request received! We'll be in touch soon.
+      </div>
+    ) : (
+      <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
+        <input 
+          type="text" 
+          value={parkName}
+          onChange={(e) => setParkName(e.target.value)}
+          placeholder="Enter your park or region..." 
+          className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-400 transition-colors w-full sm:w-1/3"
+        />
+        <input 
+          type="email" 
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="Your email address..." 
+          className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-400 transition-colors w-full sm:w-1/3"
+        />
+        <button 
+          onClick={handleSubmit}
+          disabled={isSubmitting}
+          className="bg-blue-500 text-white hover:bg-blue-400 px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap w-full sm:w-auto shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(96,165,250,0.6)] disabled:opacity-50"
         >
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">
-            Bring Nature's Index To Your Park.
-          </h2>
-      <p className=\"text-xl text-slate-300 mb-10 font-medium\">No commitment. We'll reach out with partnership details.</p>
-      
-      {submitStatus === 'success' ? (
-        <div className=\"bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-6 py-4 rounded-2xl font-bold inline-block\">
-          Request received! We'll be in touch soon.
-        </div>
-      ) : (
-        <div className=\"flex flex-col sm:flex-row gap-4 justify-center items-center\">
-          <input 
-            type=\"text\" 
-            value={parkName}
-            onChange={(e) => setParkName(e.target.value)}
-            placeholder=\"Enter your park or region...\" 
-            className=\"bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-400 transition-colors w-full sm:w-1/3\"
-          />
-          <input 
-            type=\"email\" 
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder=\"Your email address...\" 
-            className=\"bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-400 transition-colors w-full sm:w-1/3\"
-          />
-          <button 
-            onClick={handleSubmit}
-            disabled={isSubmitting}
-            className=\"bg-blue-500 text-white hover:bg-blue-400 px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap w-full sm:w-auto shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(96,165,250,0.6)] disabled:opacity-50\"
-          >
-            {isSubmitting ? 'Sending...' : 'Submit Request'}
-          </button>
-        </div>
-      )}
-      {submitStatus === 'error' && <p className=\"text-red-400 mt-4 font-bold\">Oops! Something went wrong. Try again.</p>}
-    </motion.div>
-  </section>
+          {isSubmitting ? 'Sending...' : 'Submit Request'}
+        </button>
+      </div>
+    )}
+    {submitStatus === 'error' && <p className="text-red-400 mt-4 font-bold">Oops! Something went wrong. Try again.</p>}
+  </motion.div>
+</section>
     </div>
   );
 }
