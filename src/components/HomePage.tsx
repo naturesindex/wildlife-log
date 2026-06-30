@@ -99,8 +99,11 @@ export function HomePage() {
   const howItWorksRef = useRef<HTMLElement>(null);
   const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 85%", "center center"] });
 
-  const operatorRef = useRef<HTMLElement>(null);
+const operatorRef = useRef<HTMLElement>(null);
   const { scrollYProgress: operatorProgress } = useScroll({ target: operatorRef, offset: ["start 85%", "center center"] });
+
+  const futureRef = useRef<HTMLElement>(null);
+  const { scrollYProgress: futureProgress } = useScroll({ target: futureRef, offset: ["start 85%", "center center"] });
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30">
@@ -120,11 +123,11 @@ export function HomePage() {
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-      <main className="relative max-w-7xl mx-auto px-6 pt-32 pb-40 overflow-hidden min-h-[130vh] flex flex-col justify-start">
+      <main className="relative max-w-7xl mx-auto px-6 pt-64 md:pt-80 pb-40 overflow-hidden min-h-[150vh] flex flex-col justify-start">
         <AmbientParticles />
-        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-20">
+        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
           
-{/* Left Column: Typography - Tied to Scroll Scrubbing */}
+          {/* Left Column: Typography - Tied to Scroll Scrubbing */}
           <div className="space-y-8 z-10 relative">
             <div className="flex flex-col">
               {/* Line 1 is always visible */}
@@ -148,9 +151,12 @@ export function HomePage() {
               The wildlife logging tool for expedition guides. Log every sighting, generate guest highlights, and turn every tour into something worth sharing.
             </motion.p>
             
-            <motion.div style={{ opacity: contentOpacity, y: contentY }} className="flex gap-4">
-              <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
+<motion.div style={{ opacity: contentOpacity, y: contentY }} className="flex flex-col sm:flex-row gap-4">
+              <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
                 Bring It To Your Park <ArrowRight size={20} />
+              </button>
+              <button onClick={() => navigate('/products')} className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-8 py-4 rounded-full font-bold transition-all flex items-center justify-center">
+                Explore Product Preview
               </button>
             </motion.div>
           </div>
@@ -263,7 +269,7 @@ export function HomePage() {
             </svg>
           </div>
           
-          {/* Operator Benefits - Floating Asymmetrical Bubbles */}
+{/* Operator Benefits - Floating Asymmetrical Bubbles */}
           <div className="grid md:grid-cols-2 gap-8 mt-10">
             
             {/* Benefit 1 - The Guest Wow Factor */}
@@ -271,13 +277,13 @@ export function HomePage() {
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.1 } }}
-                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(59, 130, 246, 0.4)", border: "1px solid rgba(59, 130, 246, 0.5)" }}
-                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(59, 130, 246, 0.2)", border: "1px solid rgba(59, 130, 246, 0.4)" }}
+                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-tr-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
-              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Sparkles className="text-blue-500 absolute -top-10 -right-10" size={200} />
+              <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
+                <Sparkles className="text-blue-500" size={280} />
               </div>
-              <div className="relative z-10 pt-4">
+              <div className="relative z-10">
                 <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">The Guest Wow Factor</h3>
                 <p className="text-lg text-slate-400 max-w-sm">Your guests leave with something shareable and personal. They post it. They tag you. Free marketing, zero behavioral change from your operation.</p>
               </div>
@@ -288,13 +294,13 @@ export function HomePage() {
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.2, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1.2 } }}
-                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(200, 106, 39, 0.4)", border: "1px solid rgba(200, 106, 39, 0.5)" }}
-                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(200, 106, 39, 0.2)", border: "1px solid rgba(200, 106, 39, 0.4)" }}
+                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-tl-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
-              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
-                <HeartHandshake className="text-[#C86A27] absolute -top-10 -right-10" size={200} />
+              <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
+                <HeartHandshake className="text-[#C86A27]" size={280} />
               </div>
-              <div className="relative z-10 pt-4">
+              <div className="relative z-10">
                 <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">The Tip Mechanic</h3>
                 <p className="text-lg text-slate-400 max-w-sm">Guides are incentivized to log more and better. The integrated tip flow improves the product quality automatically while rewarding your best staff.</p>
               </div>
@@ -305,13 +311,13 @@ export function HomePage() {
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.3, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 2.3 } }}
-                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(16, 185, 129, 0.4)", border: "1px solid rgba(16, 185, 129, 0.5)" }}
-                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(16, 185, 129, 0.2)", border: "1px solid rgba(16, 185, 129, 0.4)" }}
+                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-bl-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
-              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
-                <DollarSign className="text-emerald-500 absolute -top-10 -right-10" size={200} />
+              <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
+                <DollarSign className="text-emerald-500" size={280} />
               </div>
-              <div className="relative z-10 pt-4">
+              <div className="relative z-10">
                 <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">Passive Upsell Revenue</h3>
                 <p className="text-lg text-slate-400 max-w-sm">Generate passive income per tour with no fulfillment work. Even a small percentage of guests buying premium adds up quickly.</p>
               </div>
@@ -322,13 +328,13 @@ export function HomePage() {
                 whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
                 viewport={{ once: true, amount: 0.3 }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.4, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 3.4 } }}
-                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(167, 139, 250, 0.4)", border: "1px solid rgba(167, 139, 250, 0.5)" }}
-                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(167, 139, 250, 0.2)", border: "1px solid rgba(167, 139, 250, 0.4)" }}
+                className="bg-slate-900/80 p-10 rounded-[3rem] rounded-br-xl border border-slate-800 transition-colors group relative overflow-hidden h-[300px] flex flex-col justify-center"
             >
-              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
-                <Globe className="text-purple-400 absolute -top-10 -right-10" size={200} />
+              <div className="absolute inset-0 z-0 opacity-5 group-hover:opacity-10 transition-opacity flex items-center justify-center pointer-events-none">
+                <Globe className="text-purple-400" size={280} />
               </div>
-              <div className="relative z-10 pt-4">
+              <div className="relative z-10">
                 <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">Bilingual by Design</h3>
                 <p className="text-lg text-slate-400 max-w-sm">Built for international guides and guests. Currently English and Español, with more languages coming soon.</p>
               </div>
@@ -338,26 +344,32 @@ export function HomePage() {
       </section>
 
 {/* THE FUTURE - COMING SOON SECTION */}
-      <section className="bg-slate-900 py-32 border-y border-slate-800 relative overflow-hidden">
+      <section ref={futureRef} className="bg-slate-900 py-32 border-y border-slate-800 relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           
-          <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false }} className="text-center mb-20">
+          <div className="text-center mb-24">
             <div className="inline-block bg-blue-500/20 text-blue-400 text-sm font-bold px-4 py-1.5 rounded-full mb-6 uppercase tracking-widest border border-blue-500/30">
               Coming Soon
             </div>
             <br/>
-            <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight relative inline-block">
-              The Future of the Index
-              <motion.div 
-                initial={{ scaleX: 0 }} 
-                whileInView={{ scaleX: 1 }} 
-                viewport={{ once: false, margin: "-50px" }} 
-                transition={{ duration: 1.2, ease: "easeInOut" }} 
-                className="absolute -bottom-2 left-0 w-full h-2 bg-blue-500/50 -z-0 origin-left" 
-                style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px", transform: "rotate(-1deg)" }} 
-              />
-            </h2>
-          </motion.div>
+            <div className="relative inline-block">
+              <h2 className="text-4xl md:text-6xl font-black text-white tracking-tight relative z-10">
+                The Future of the Index
+              </h2>
+              {/* Drawn Ragged Brush Underline - Scrubbed */}
+              <svg className="absolute -bottom-2 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 250 20" preserveAspectRatio="none">
+                <motion.path 
+                  d="M 5,10 Q 40,14 80,8 T 160,12 T 245,10" 
+                  stroke="#3b82f6" 
+                  strokeWidth="5" 
+                  fill="none" 
+                  strokeLinecap="round" 
+                  style={{ pathLength: futureProgress }} 
+                  className="drop-shadow-lg"
+                />
+              </svg>
+            </div>
+          </div>
 
           <div className="grid md:grid-cols-3 gap-8">
             {/* Expanding Parks */}
@@ -384,7 +396,7 @@ export function HomePage() {
         </div>
       </section>
 
-{/* Request a Park CTA */}
+      {/* Request a Park CTA */}
       <section className="py-32 px-6 relative overflow-hidden">
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
         
@@ -393,24 +405,24 @@ export function HomePage() {
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.5 }}
-          className="max-w-2xl mx-auto text-center relative z-10"
+          className="max-w-4xl mx-auto text-center relative z-10"
         >
           <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Want Nature's Index in your area?</h2>
           <p className="text-xl text-slate-400 mb-2">We're partnering with tour operators and guide associations worldwide.</p>
           <p className="text-sm text-slate-500 mb-10 font-medium tracking-wide uppercase">No commitment. We'll reach out with partnership details.</p>
           
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <input 
               type="text" 
               placeholder="Enter your park or region..." 
-              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-l-full sm:rounded-r-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2"
+              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-500 transition-colors w-full sm:w-1/3"
             />
             <input 
               type="email" 
               placeholder="Your email address..." 
-              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-xl sm:rounded-none outline-none focus:border-blue-500 transition-colors w-full sm:w-1/2 sm:border-l-0"
+              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-500 transition-colors w-full sm:w-1/3"
             />
-            <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-xl sm:rounded-l-none sm:rounded-r-full font-bold transition-all whitespace-nowrap">
+            <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap w-full sm:w-auto shadow-lg shadow-blue-600/20">
               Submit Request
             </button>
           </div>
