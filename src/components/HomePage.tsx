@@ -4,14 +4,45 @@ import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import React from 'react';
 
 // --- ANIMATION COMPONENTS ---
+// Ambient background particles (leaves/bubbles)
+function AmbientParticles() {
+  return (
+    <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
+      {[...Array(15)].map((_, i) => (
+        <motion.div
+          key={i}
+          className="absolute w-2 h-2 bg-emerald-500/20 rounded-full blur-[1px]"
+          initial={{
+            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
+            y: (typeof window !== 'undefined' ? window.innerHeight : 800) + 100,
+            opacity: Math.random() * 0.5 + 0.1
+          }}
+          animate={{
+            y: -100,
+            x: `+=${Math.random() * 100 - 50}`
+          }}
+          transition={{
+            duration: Math.random() * 15 + 15,
+            repeat: Infinity,
+            ease: "linear",
+            delay: Math.random() * 10
+          }}
+        />
+      ))}
+    </div>
+  );
+}
+
 // This handles the 3D mouse tracking AND the infinite ambient float
 function TiltCard({ children, className, delay = 0 }: { children: React.ReactNode, className: string, delay?: number }) {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
-  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["12deg", "-12deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-12deg", "12deg"]);
+  // Cranked up the physics so the tilt is much more obvious
+  const mouseXSpring = useSpring(x, { stiffness: 200, damping: 20 });
+  const mouseYSpring = useSpring(y, { stiffness: 200, damping: 20 });
+  // Doubled the rotation angles from 12 to 25 degrees
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["25deg", "-25deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-25deg", "25deg"]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
@@ -35,11 +66,11 @@ function TiltCard({ children, className, delay = 0 }: { children: React.ReactNod
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
       style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
-      animate={{ y: [0, -12, 0] }}
-      transition={{ repeat: Infinity, duration: 4, ease: "easeInOut", delay }}
+      animate={{ y: [0, -15, 0] }}
+      transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay }}
       className={className}
     >
-      <div style={{ transform: "translateZ(40px)" }} className="w-full h-full relative">
+      <div style={{ transform: "translateZ(50px)" }} className="w-full h-full relative">
         {children}
       </div>
     </motion.div>
@@ -67,8 +98,9 @@ export function HomePage() {
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-      <main className="max-w-7xl mx-auto px-6 pt-12 md:pt-20 pb-20 overflow-hidden">
-        <div className="grid md:grid-cols-2 gap-12 items-center">
+      <main className="relative max-w-7xl mx-auto px-6 pt-12 md:pt-20 pb-20 overflow-hidden min-h-[90vh] flex items-center">
+        <AmbientParticles />
+        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10">
           
           {/* Left Column: Typography */}
           <div className="space-y-8 z-10 relative">
@@ -78,25 +110,28 @@ export function HomePage() {
               viewport={{ once: true }}
               variants={{
                 hidden: { opacity: 0 },
-                show: { opacity: 1, transition: { staggerChildren: 0.15 } }
+                // Slowed down the stagger from 0.15 to 0.4 for drama
+                show: { opacity: 1, transition: { staggerChildren: 0.4 } } 
               }}
               className="flex flex-col"
             >
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
+              {/* Added scale: 0.9 to 1 to create the "grow on scroll" effect */}
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
                 LOG THE WILD.
               </motion.h1>
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase mt-2">
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase mt-2">
                 EVERY SIGHTING.
               </motion.h1>
-              <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-7xl font-black leading-[1] tracking-tighter uppercase mt-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">
-                EVERY GUEST WOWED.
+              {/* WOWED is now massive, colored in your brand orange/amber, and dropshadowed */}
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter uppercase mt-4 text-transparent bg-clip-text bg-gradient-to-br from-[#C86A27] via-amber-500 to-yellow-600 drop-shadow-2xl">
+                WOWED.
               </motion.h1>
             </motion.div>
 
             <motion.p 
               initial={{ opacity: 0 }} 
               animate={{ opacity: 1 }} 
-              transition={{ delay: 0.6, duration: 1 }}
+              transition={{ delay: 1.2, duration: 1 }}
               className="text-xl text-slate-400 max-w-md leading-relaxed"
             >
               The wildlife logging tool for expedition guides. Log every sighting, generate guest highlights, and turn every tour into something worth sharing.
@@ -105,7 +140,7 @@ export function HomePage() {
             <motion.div 
               initial={{ opacity: 0, y: 10 }} 
               animate={{ opacity: 1, y: 0 }} 
-              transition={{ delay: 0.8 }}
+              transition={{ delay: 1.5 }}
               className="flex gap-4"
             >
               <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
@@ -115,8 +150,7 @@ export function HomePage() {
           </div>
           
           {/* Right Column: 3D Floating Cards */}
-          <div className="relative h-[450px] md:h-[550px] mt-10 md:mt-0 perspective-[1000px]">
-            
+          <div className="relative h-[450px] md:h-[550px] mt-10 md:mt-0 perspective-[1200px]">
             {/* Front Card - Jungle Passport (Offset delay 0) */}
             <TiltCard className="absolute top-0 right-0 w-3/4 h-3/4 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden z-20 shadow-2xl">
               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
@@ -140,48 +174,62 @@ export function HomePage() {
                 <div className="text-xl font-bold text-white/80">Digital Dive Logs</div>
               </div>
             </TiltCard>
-
           </div>
         </div>
       </main>
 
-{/* HOW IT WORKS - 3 Dead Simple Steps */}
-      <section className="py-24 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-6">
+      {/* HOW IT WORKS - Asymmetrical Timeline */}
+      <section className="py-32 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden relative">
+        <div className="max-w-7xl mx-auto px-6 relative z-10">
+          
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: "-100px" }}
-            className="text-center mb-16"
+            className="mb-24 relative inline-block"
           >
-            <h2 className="text-3xl md:text-4xl font-black text-white mb-4 tracking-tight">How It Works</h2>
-            <p className="text-slate-400">Three dead simple steps to elevate your expedition.</p>
+            <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight relative z-10">
+              How It Works
+            </h2>
+            {/* Underline Draw-on Effect */}
+            <motion.div 
+              initial={{ scaleX: 0 }}
+              whileInView={{ scaleX: 1 }}
+              viewport={{ once: true, margin: "-100px" }}
+              transition={{ duration: 1, delay: 0.2, ease: "circOut" }}
+              className="absolute -bottom-2 left-0 w-full h-3 bg-blue-600/50 -z-0 origin-left rounded-full"
+            />
           </motion.div>
 
-          <div className="grid md:grid-cols-3 gap-8 text-center">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="p-6">
-              <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl font-black">1</span>
+          <div className="flex flex-col gap-16 md:gap-0 relative">
+            {/* Connecting Background Line (Desktop only) */}
+            <div className="hidden md:block absolute left-[4.5rem] top-10 bottom-10 w-[2px] bg-gradient-to-b from-blue-500/50 via-slate-700/50 to-transparent -z-10" />
+
+            {/* Step 1 - Left Aligned */}
+            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-8 items-start md:w-2/3">
+              <div className="w-20 h-20 shrink-0 bg-slate-950 border-2 border-blue-500/30 text-blue-400 rounded-full flex items-center justify-center text-3xl font-black shadow-[0_0_30px_rgba(59,130,246,0.2)]">1</div>
+              <div className="pt-4">
+                <h3 className="text-2xl font-bold text-white mb-4">Guide Logs Sightings</h3>
+                <p className="text-lg text-slate-400 leading-relaxed text-left">Guides log species in real time through a fast, mobile-friendly portal, built for the trail, not the office.</p>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Guide Logs Sightings</h3>
-              <p className="text-slate-400">Guides log species in real time through a fast, mobile-friendly portal, built for the trail, not the office.</p>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="p-6 relative">
-              <div className="hidden md:block absolute top-1/4 left-0 w-full h-[2px] bg-gradient-to-r from-transparent via-slate-700 to-transparent -z-10"></div>
-              <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl font-black">2</span>
+            {/* Step 2 - Offset Right */}
+            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-8 items-start md:w-2/3 md:ml-auto md:mt-20">
+              <div className="w-20 h-20 shrink-0 bg-slate-950 border-2 border-[#C86A27]/30 text-[#C86A27] rounded-full flex items-center justify-center text-3xl font-black shadow-[0_0_30px_rgba(200,106,39,0.2)] order-1 md:order-2">2</div>
+              <div className="pt-4 order-2 md:order-1 md:text-right">
+                <h3 className="text-2xl font-bold text-white mb-4">Guest Receives Link</h3>
+                <p className="text-lg text-slate-400 leading-relaxed md:text-right text-left">At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport.</p>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">Guest Receives Link</h3>
-              <p className="text-slate-400">At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport.</p>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.5 }} className="p-6">
-              <div className="w-16 h-16 bg-blue-500/10 text-blue-400 rounded-2xl flex items-center justify-center mx-auto mb-6">
-                <span className="text-2xl font-black">3</span>
+            {/* Step 3 - Offset Further Left */}
+            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-8 items-start md:w-2/3 md:mt-20">
+              <div className="w-20 h-20 shrink-0 bg-slate-950 border-2 border-emerald-500/30 text-emerald-400 rounded-full flex items-center justify-center text-3xl font-black shadow-[0_0_30px_rgba(16,185,129,0.2)]">3</div>
+              <div className="pt-4">
+                <h3 className="text-2xl font-bold text-white mb-4">The Ripple Effect</h3>
+                <p className="text-lg text-slate-400 leading-relaxed text-left">Guests share their adventure. Guides earn recognition and tips. Operators get content, data, and loyalty, all without lifting a finger.</p>
               </div>
-              <h3 className="text-xl font-bold text-white mb-3">The Ripple Effect</h3>
-              <p className="text-slate-400">Guests share their adventure. Guides earn recognition and tips. Operators get content, data, and loyalty, all without lifting a finger.</p>
             </motion.div>
           </div>
         </div>
