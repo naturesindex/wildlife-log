@@ -1,7 +1,8 @@
 import { ArrowRight, Map, Waves, Leaf, Compass, UserCircle, Sparkles, HeartHandshake, DollarSign, Globe, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useMotionValue, useSpring, useTransform, useScroll } from 'framer-motion';
-import React, { useRef } from 'react';
+import React, { useRef, useState } from 'react';
+import { supabase } from '../supabase';
 
 // --- ANIMATION COMPONENTS ---
 // Ambient background particles (leaves/bubbles)
@@ -76,7 +77,26 @@ function TiltCard({ children, className, delay = 0 }: { children: React.ReactNod
 }
 
 export function HomePage() {
-  const navigate = useNavigate();
+const navigate = useNavigate();
+const [parkName, setParkName] = useState('');
+const [email, setEmail] = useState('');
+const [isSubmitting, setIsSubmitting] = useState(false);
+const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
+
+const handleSubmit = async () => {
+if (!parkName || !email) return;
+setIsSubmitting(true);
+const { error } = await supabase
+.from('contact_requests')
+.insert([{ park_name: parkName, email: email }]);
+setIsSubmitting(false);
+if (error) setSubmitStatus('error');
+else {
+setSubmitStatus('success');
+setParkName('');
+setEmail('');
+}
+};
 
   // --- SCROLL SCRUBBING SETUP ---
   const { scrollY } = useScroll();
@@ -123,7 +143,7 @@ const operatorRef = useRef<HTMLElement>(null);
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-      <main className="relative max-w-7xl mx-auto px-6 pt-[550px] md:pt-[500px] pb-2 overflow-hidden min-h-[150vh] flex flex-col justify-start">
+<main className="relative max-w-7xl mx-auto px-6 pt-[60vh] md:pt-[450px] pb-2 overflow-hidden min-h-[150vh] flex flex-col justify-start">
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
           
@@ -204,7 +224,7 @@ const operatorRef = useRef<HTMLElement>(null);
             <svg className="absolute -bottom-3 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
               <motion.path 
                 d="M 5,10 Q 30,14 60,8 T 120,12 T 180,6 T 205,10" 
-                stroke="#2563eb" 
+                stroke="#60a5fa" 
                 strokeWidth="6" 
                 fill="none" 
                 strokeLinecap="round" 
@@ -227,12 +247,20 @@ const operatorRef = useRef<HTMLElement>(null);
               </div>
             </motion.div>
 
-            {/* Step 2 - Offset Right on Both Mobile & Desktop */}
-            <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20">
-              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-slate-950 border-2 border-[#C86A27]/30 text-[#C86A27] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-[0_0_30px_rgba(200,106,39,0.2)] order-1 md:order-2">2</div>
-              <div className="pt-2 md:pt-4 order-2 md:order-1 text-right">
+          {/* Step 2 - Offset Right on Both Mobile & Desktop */}
+            <motion.div 
+              initial={{ opacity: 0, x: 30 }} 
+              whileInView={{ opacity: 1, x: 0 }} 
+              viewport={{ once: true, margin: "-100px" }} 
+              transition={{ duration: 0.6 }} 
+              className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20 justify-end"
+            >
+              <div className="pt-2 md:pt-4 text-right">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">Guest Receives Link</h3>
                 <p className="text-base md:text-lg text-slate-400 leading-relaxed text-right">At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport.</p>
+              </div>
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-slate-950 border-2 border-[#C86A27]/30 text-[#C86A27] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-[0_0_30px_rgba(200,106,39,0.2)]">
+                2
               </div>
             </motion.div>
 
@@ -396,38 +424,52 @@ const operatorRef = useRef<HTMLElement>(null);
         </div>
       </section>
 
-      {/* Request a Park CTA */}
-      <section className="py-32 px-6 relative overflow-hidden">
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+{/* Request a Park CTA */}
+<section className="py-32 px-6 relative overflow-hidden">
+<div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-400/20 blur-[120px] rounded-full pointer-events-none"></div>
         
-        <motion.div 
-          initial={{ opacity: 0, scale: 0.9 }}
-          whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.5 }}
-          className="max-w-4xl mx-auto text-center relative z-10"
-        >
-          <h2 className="text-4xl md:text-5xl font-black text-white mb-4 tracking-tight">Want Nature's Index in your area?</h2>
-          <p className="text-xl text-slate-400 mb-2">We're partnering with tour operators and guide associations worldwide.</p>
-          <p className="text-sm text-slate-500 mb-10 font-medium tracking-wide uppercase">No commitment. We'll reach out with partnership details.</p>
-          
-          <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-            <input 
-              type="text" 
-              placeholder="Enter your park or region..." 
-              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-500 transition-colors w-full sm:w-1/3"
-            />
-            <input 
-              type="email" 
-              placeholder="Your email address..." 
-              className="bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-500 transition-colors w-full sm:w-1/3"
-            />
-            <button className="bg-blue-600 text-white hover:bg-blue-500 px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap w-full sm:w-auto shadow-lg shadow-blue-600/20">
-              Submit Request
-            </button>
-          </div>
-        </motion.div>
-      </section>
+<motion.div 
+      initial={{ opacity: 0, scale: 0.9 }}
+      whileInView={{ opacity: 1, scale: 1 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.5 }}
+      className=\"max-w-4xl mx-auto text-center relative z-10\"
+    >
+      <h2 className=\"text-4xl md:text-5xl font-black text-white mb-4 tracking-tight\">Bring Nature's Index To Your Park.</h2>
+      <p className=\"text-xl text-slate-300 mb-10 font-medium\">No commitment. We'll reach out with partnership details.</p>
+      
+      {submitStatus === 'success' ? (
+        <div className=\"bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-6 py-4 rounded-2xl font-bold inline-block\">
+          Request received! We'll be in touch soon.
+        </div>
+      ) : (
+        <div className=\"flex flex-col sm:flex-row gap-4 justify-center items-center\">
+          <input 
+            type=\"text\" 
+            value={parkName}
+            onChange={(e) => setParkName(e.target.value)}
+            placeholder=\"Enter your park or region...\" 
+            className=\"bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-400 transition-colors w-full sm:w-1/3\"
+          />
+          <input 
+            type=\"email\" 
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder=\"Your email address...\" 
+            className=\"bg-slate-900 border border-slate-700 text-white px-6 py-4 rounded-2xl outline-none focus:border-blue-400 transition-colors w-full sm:w-1/3\"
+          />
+          <button 
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className=\"bg-blue-500 text-white hover:bg-blue-400 px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap w-full sm:w-auto shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(96,165,250,0.6)] disabled:opacity-50\"
+          >
+            {isSubmitting ? 'Sending...' : 'Submit Request'}
+          </button>
+        </div>
+      )}
+      {submitStatus === 'error' && <p className=\"text-red-400 mt-4 font-bold\">Oops! Something went wrong. Try again.</p>}
+    </motion.div>
+  </section>
     </div>
   );
 }
