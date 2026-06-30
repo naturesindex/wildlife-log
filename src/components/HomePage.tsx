@@ -102,46 +102,47 @@ export function HomePage() {
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-20">
           
-          {/* Left Column: Typography (Scroll-triggered stagger) */}
+{/* Left Column: Typography - Revel Sequentialy with Scroll */}
           <div className="space-y-8 z-10 relative">
-            <div className="flex flex-col gap-4">
-              {/* 1. Log the wild */}
-              <motion.h1 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-10% 0px" }} transition={{ duration: 0.6 }} className="text-5xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
+            <motion.div 
+              initial="hidden" 
+              whileInView="show" 
+              viewport={{ once: true, amount: 0.2 }}
+              variants={{
+                hidden: { opacity: 0 },
+                show: { opacity: 1, transition: { staggerChildren: 0.4 } } 
+              }}
+              className="flex flex-col"
+            >
+              {/* Added scale: 0.9 to 1 to create the "grow on scroll" effect */}
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
                 LOG THE WILD.
               </motion.h1>
-              
-              {/* 2. Every Sighting */}
-              <motion.h1 initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-25% 0px" }} transition={{ duration: 0.6 }} className="text-5xl md:text-7xl font-black text-slate-400 leading-[1] tracking-tighter uppercase">
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-6xl md:text-7xl font-black text-slate-400 leading-[1] tracking-tighter uppercase mt-2">
                 EVERY SIGHTING.
               </motion.h1>
-              
-              {/* 3. Every Guest Wowed */}
-              <motion.div initial={{ opacity: 0, y: 40 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: false, margin: "-40% 0px" }} transition={{ duration: 0.6 }} className="flex flex-col mt-2">
-                <h1 className="text-5xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase mb-2">
-                  EVERY GUEST
-                </h1>
-                <h1 className="text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter uppercase text-transparent bg-clip-text bg-gradient-to-br from-[#C86A27] via-amber-500 to-yellow-600 drop-shadow-2xl">
-                  WOWED.
-                </h1>
-              </motion.div>
-            </div>
+              {/* WOWED is now massive, colored in your brand orange/amber, and dropshadowed */}
+              <motion.h1 variants={{ hidden: { opacity: 0, y: 30, scale: 0.9 }, show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.8, ease: "easeOut" } } }} className="text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter uppercase mt-4 text-transparent bg-clip-text bg-gradient-to-br from-[#C86A27] via-amber-500 to-yellow-600 drop-shadow-2xl">
+                EVERY GUEST WOWED.
+              </motion.h1>
+            </motion.div>
 
             <motion.p 
               initial={{ opacity: 0 }} 
               whileInView={{ opacity: 1 }} 
-              viewport={{ once: false, margin: "-45% 0px" }}
-              transition={{ duration: 0.8 }}
+              viewport={{ once: true, amount: 0.8 }}
+              transition={{ delay: 0.6, duration: 1 }}
               className="text-xl text-slate-400 max-w-md leading-relaxed"
             >
               The wildlife logging tool for expedition guides. Log every sighting, generate guest highlights, and turn every tour into something worth sharing.
             </motion.p>
             
             <motion.div 
-              initial={{ opacity: 0, scale: 0.9 }} 
-              whileInView={{ opacity: 1, scale: 1 }} 
-              viewport={{ once: false, margin: "-50% 0px" }}
-              transition={{ duration: 0.6 }}
-              className="flex gap-4 pt-4"
+              initial={{ opacity: 0, y: 10 }} 
+              whileInView={{ opacity: 1, y: 0 }} 
+              viewport={{ once: true, amount: 0.8 }}
+              transition={{ delay: 0.9 }}
+              className="flex gap-4"
             >
               <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
                 Bring It To Your Park <ArrowRight size={20} />
@@ -149,38 +150,45 @@ export function HomePage() {
             </motion.div>
           </div>
           
-          {/* Right Column: 3D Floating Cards (Reveals last) */}
-          <motion.div 
-            initial={{ opacity: 0, x: 50 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: false, margin: "-55% 0px" }}
-            transition={{ duration: 1 }}
-            className="relative h-[450px] md:h-[550px] mt-10 md:mt-0 perspective-[1200px]"
-          >
-            {/* Front Card - Jungle Passport */}
-            <TiltCard className="absolute top-0 right-0 w-3/4 h-3/4 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden z-20 shadow-2xl">
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
-              <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800&auto=format&fit=crop" alt="Lush Jungle" className="w-full h-full object-cover opacity-70" />
-              <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
-                <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">
-                  Active
+          {/* Right Column: 3D Floating Cards - Revel Sequentialy with Scroll */}
+          <div className="relative h-[450px] md:h-[550px] mt-10 md:mt-0 perspective-[1200px]">
+            {/* Front Card - Jungle Passport (Offset delay 0) */}
+            <motion.div
+                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.9 }}
+                transition={{ delay: 1.2, duration: 0.8, ease: "easeOut" }}
+            >
+                <TiltCard className="absolute top-0 right-0 w-3/4 h-3/4 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden z-20 shadow-2xl">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
+                <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800&auto=format&fit=crop" alt="Lush Jungle" className="w-full h-full object-cover opacity-70" />
+                <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
+                    <div className="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">
+                    Active
+                    </div>
+                    <div className="text-2xl font-bold text-white shadow-sm">Wildlife Park Logs</div>
                 </div>
-                <div className="text-2xl font-bold text-white shadow-sm">Wildlife Park Logs</div>
-              </div>
-            </TiltCard>
+                </TiltCard>
+            </motion.div>
             
-            {/* Back Card - Dive Log */}
-            <TiltCard delay={1.5} className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-xl z-10">
-               <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
-              <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop" alt="Deep Ocean Dive" className="w-full h-full object-cover opacity-40 grayscale-[30%]" />
-               <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
-                <div className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-3 py-1 rounded-full mb-2 inline-block uppercase tracking-wider">
-                  Coming Soon
+            {/* Back Card - Dive Log (Offset delay 1.5s so they float out of sync) */}
+            <motion.div
+                initial={{ opacity: 0, y: 50, scale: 0.9 }}
+                whileInView={{ opacity: 1, y: 0, scale: 1 }}
+                viewport={{ once: true, amount: 0.9 }}
+                transition={{ delay: 1.5, duration: 0.8, ease: "easeOut" }}
+            >
+                <TiltCard delay={1.5} className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-slate-800 rounded-3xl border border-slate-700 overflow-hidden shadow-xl z-10">
+                <div className="absolute inset-0 bg-gradient-to-t from-slate-950/90 via-slate-900/20 to-transparent z-10 pointer-events-none"></div>
+                <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop" alt="Deep Ocean Dive" className="w-full h-full object-cover opacity-40 grayscale-[30%]" />
+                    <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
+                    <div className="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] font-bold px-3 py-1 rounded-full mb-2 inline-block uppercase tracking-wider">
+                    Coming Soon
+                    </div>
+                    <div className="text-xl font-bold text-white/80">Digital Dive Logs</div>
                 </div>
-                <div className="text-xl font-bold text-white/80">Digital Dive Logs</div>
-              </div>
-            </TiltCard>
-          </motion.div>
+                </TiltCard>
+            </motion.div>
         </div>
       </main>
 
@@ -197,14 +205,14 @@ export function HomePage() {
             <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight relative z-10">
               How It Works
             </h2>
-            {/* Underline Draw-on Effect - Rough Pencil */}
+  {/* Underline Draw-on Effect - Ragged Paintbrush */}
             <motion.div 
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
-              viewport={{ once: false, margin: "-100px" }}
-              transition={{ duration: 1.2, ease: "easeInOut" }}
-              className="absolute -bottom-2 left-0 w-full h-2 bg-blue-600/70 -z-0 origin-left"
-              style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px", transform: "rotate(-1deg)" }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
+              className="absolute -bottom-2 left-0 w-full h-3 bg-blue-600/70 -z-0 origin-left filter blur-[1.5px]"
+              style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px", transform: "rotate(-1.5deg)" }}
             />
           </motion.div>
 
@@ -254,47 +262,85 @@ export function HomePage() {
             <h2 className="text-3xl md:text-5xl font-black text-white tracking-tight whitespace-nowrap relative z-10">
               The ultimate tool for tour operators.
             </h2>
-            {/* Underline Draw-on Effect - Rough Pencil */}
+   {/* Underline Draw-on Effect - Ragged Paintbrush */}
             <motion.div 
               initial={{ scaleX: 0 }}
               whileInView={{ scaleX: 1 }}
-              viewport={{ once: false, margin: "-50px" }}
-              transition={{ duration: 1.2, ease: "easeInOut", delay: 0.2 }}
-              className="absolute -bottom-1 left-0 w-full h-2 bg-[#C86A27]/70 -z-0 origin-left"
-              style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px", transform: "rotate(1deg)" }}
+              viewport={{ once: true, amount: 0.5 }}
+              transition={{ duration: 1.5, delay: 0.3, ease: "easeInOut" }}
+              className="absolute -bottom-2 left-0 w-full h-3 bg-blue-600/70 -z-0 origin-left filter blur-[1.5px]"
+              style={{ borderRadius: "255px 15px 225px 15px/15px 225px 15px 255px", transform: "rotate(-1.5deg)" }}
             />
           </motion.div>
           
-          <div className="grid md:grid-cols-2 gap-x-12 gap-y-10">
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.1 }} className="flex gap-4">
-              <div className="mt-1"><Share2 className="text-blue-500" size={28} /></div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">The Guest Wow Factor</h3>
-                <p className="text-slate-400">Your guests leave with something shareable and personal. They post it. They tag you. That's free marketing requiring zero behavior change from your operation.</p>
+{/* Operator Benefits - Floating Asymmetrical Bubbles */}
+          <div className="grid md:grid-cols-2 gap-8 mt-10">
+            
+            {/* Benefit 1 - The Guest Wow Factor */}
+            <motion.div 
+                whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut", y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 0.1 } }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(59, 130, 246, 0.4)", border: "1px solid rgba(59, 130, 246, 0.5)" }}
+                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+            >
+              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Sparkles className="text-blue-500 absolute -top-10 -right-10" size={200} />
+              </div>
+              <div className="relative z-10 pt-4">
+                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">The Guest Wow Factor</h3>
+                <p className="text-lg text-slate-400 max-w-sm">Your guests leave with something shareable and personal. They post it. They tag you. Free marketing, zero behavioral change from your operation.</p>
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.2 }} className="flex gap-4">
-              <div className="mt-1"><HeartHandshake className="text-[#C86A27]" size={28} /></div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">The Tip Mechanic</h3>
-                <p className="text-slate-400">Guides are incentivized to log more and better. The integrated tip flow improves the product quality automatically while rewarding your best staff.</p>
+            {/* Benefit 2 - The Tip Mechanic */}
+            <motion.div 
+                whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1.2 } }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(200, 106, 39, 0.4)", border: "1px solid rgba(200, 106, 39, 0.5)" }}
+                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+            >
+              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <HeartHandshake className="text-[#C86A27] absolute -top-10 -right-10" size={200} />
+              </div>
+              <div className="relative z-10 pt-4">
+                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">The Tip Mechanic</h3>
+                <p className="text-lg text-slate-400 max-w-sm">Guides are incentivized to log more and better. The integrated tip flow improves the product quality automatically while rewarding your best staff.</p>
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.3 }} className="flex gap-4">
-              <div className="mt-1"><DollarSign className="text-emerald-500" size={28} /></div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Passive Upsell Revenue</h3>
-                <p className="text-slate-400">Generate passive income per tour with no fulfillment work. Even a small percentage of guests buying the premium passport adds up across a season.</p>
+            {/* Benefit 3 - Passive Upsell Revenue */}
+            <motion.div 
+                whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.3, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 2.3 } }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(16, 185, 129, 0.4)", border: "1px solid rgba(16, 185, 129, 0.5)" }}
+                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+            >
+              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <DollarSign className="text-emerald-500 absolute -top-10 -right-10" size={200} />
+              </div>
+              <div className="relative z-10 pt-4">
+                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">Passive Upsell Revenue</h3>
+                <p className="text-lg text-slate-400 max-w-sm">Generate passive income per tour with no fulfillment work. Even a small percentage of guests buying premium adds up quickly.</p>
               </div>
             </motion.div>
 
-            <motion.div initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: 0.4 }} className="flex gap-4">
-              <div className="mt-1"><Globe className="text-purple-400" size={28} /></div>
-              <div>
-                <h3 className="text-xl font-bold text-white mb-2">Bilingual by Design</h3>
-                <p className="text-slate-400">Built for international guides and guests. Currently English and Español, with more languages coming.</p>
+            {/* Benefit 4 - Bilingual by Design */}
+            <motion.div 
+                whileInView={{ opacity: 1, scale: 1, y: [0, -10, 0] }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.4, y: { repeat: Infinity, duration: 5, ease: "easeInOut", delay: 3.4 } }}
+                whileHover={{ scale: 1.05, boxShadow: "0 0 30px rgba(167, 139, 250, 0.4)", border: "1px solid rgba(167, 139, 250, 0.5)" }}
+                className="bg-slate-900 p-8 rounded-3xl border border-slate-800 transition-colors group relative overflow-hidden h-[280px]"
+            >
+              <div className="absolute inset-0 z-0 opacity-10 group-hover:opacity-20 transition-opacity">
+                <Globe className="text-purple-400 absolute -top-10 -right-10" size={200} />
+              </div>
+              <div className="relative z-10 pt-4">
+                <h3 className="text-3xl font-black text-white mb-3 tracking-tighter">Bilingual by Design</h3>
+                <p className="text-lg text-slate-400 max-w-sm">Built for international guides and guests. Currently English and Español, with more languages coming soon.</p>
               </div>
             </motion.div>
           </div>
