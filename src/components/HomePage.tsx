@@ -190,6 +190,7 @@ export function HomePage() {
                 </TiltCard>
             </motion.div>
         </div>
+          </div>
       </main>
 
 {/* HOW IT WORKS - Asymmetrical Timeline */}
