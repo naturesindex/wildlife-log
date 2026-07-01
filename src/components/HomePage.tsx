@@ -142,9 +142,9 @@ const operatorRef = useRef<HTMLElement>(null);
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-<main className="relative max-w-7xl mx-auto px-6 pb-2 h-dvh flex flex-col justify-end md:justify-center">
+<main className="relative max-w-7xl mx-auto px-6 pb-2 min-h-dvh flex flex-col">
         <AmbientParticles />
-        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
+        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-auto pt-10 pb-16 md:my-auto md:pb-0">
           
           {/* Left Column: Typography - Tied to Scroll Scrubbing */}
           <div className="space-y-8 z-10 relative">
