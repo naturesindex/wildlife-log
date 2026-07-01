@@ -126,9 +126,8 @@ const operatorRef = useRef<HTMLElement>(null);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30">
-<div className="min-h-screen flex flex-col">
-      {/* Navbar */}
-      <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
+{/* Navbar */}
+      <nav className="absolute top-0 left-0 right-0 z-30 p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="text-2xl font-black tracking-tighter text-white flex items-center gap-2">
           <Leaf className="text-[#C86A27]" />
           <span className="text-[#C86A27]">NATURE'S INDEX</span>
@@ -143,7 +142,7 @@ const operatorRef = useRef<HTMLElement>(null);
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-<main className="relative max-w-7xl mx-auto px-6 pb-2 overflow-hidden flex-1 flex flex-col justify-end md:justify-center">
+<main className="relative max-w-7xl mx-auto px-6 pb-2 h-dvh flex flex-col justify-end md:justify-center">
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
           
@@ -211,7 +210,6 @@ const operatorRef = useRef<HTMLElement>(null);
           </div>
         </div>
       </main>
-      </div>
 
 {/* HOW IT WORKS - Asymmetrical Timeline */}
       <section ref={howItWorksRef} className="py-32 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden relative">
