@@ -9,23 +9,22 @@ import { supabase } from '../supabase';
 function AmbientParticles() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      {[...Array(12)].map((_, i) => (
+      {[...Array(15)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-4 h-4 bg-emerald-400/60 rounded-tl-full rounded-br-full rounded-tr-sm rounded-bl-sm"
+          className="absolute w-2 h-2 bg-emerald-500/20 rounded-full blur-[1px]"
           style={{ left: `${Math.random() * 100}%` }}
-          initial={{ y: -50, rotate: Math.random() * 360, opacity: 0 }}
-        animate={{
+          initial={{ y: -50, rotate: 0, opacity: 0 }}
+          animate={{
             y: '110vh',
-            rotate: Math.random() * 360 + 360,
-            x: [0, 30, -30, 0],
-            opacity: [0, 0.35, 0.35, 0],
+            x: [0, 40, -40, 0],
+            opacity: [0, 0.15, 0.15, 0],
           }}
           transition={{
-            duration: Math.random() * 15 + 25,
+            duration: Math.random() * 20 + 30,
             repeat: Infinity,
             ease: "linear",
-            delay: Math.random() * 6 + 2,
+            delay: Math.random() * 10,
           }}
         />
       ))}
@@ -97,22 +96,21 @@ setEmail('');
 }
 };
 
-  // --- SCROLL SCRUBBING SETUP ---
+// --- SCROLL SCRUBBING SETUP ---
   const { scrollY } = useScroll();
 
-  // 1. Hero Text & Cards (Tied to exact pixel scroll depth)
-  // "LOG THE WILD." stays fully visible at 0.
-  const line2Opacity = useTransform(scrollY, [50, 200], [0, 1]);
-  const line2Y = useTransform(scrollY, [50, 200], [30, 0]);
+  // 1. Hero Text & Cards (Smoothed starting points to prevent jumps)
+  const line2Opacity = useTransform(scrollY, [0, 150], [0, 1]);
+  const line2Y = useTransform(scrollY, [0, 150], [20, 0]);
 
-  const line3Opacity = useTransform(scrollY, [150, 300], [0, 1]);
-  const line3Scale = useTransform(scrollY, [150, 300], [0.8, 1]);
+  const line3Opacity = useTransform(scrollY, [100, 250], [0, 1]);
+  const line3Scale = useTransform(scrollY, [100, 250], [0.9, 1]);
 
-  const contentOpacity = useTransform(scrollY, [250, 400], [0, 1]);
-  const contentY = useTransform(scrollY, [250, 400], [20, 0]);
+  const contentOpacity = useTransform(scrollY, [200, 350], [0, 1]);
+  const contentY = useTransform(scrollY, [200, 350], [20, 0]);
 
-  const cardsOpacity = useTransform(scrollY, [350, 550], [0, 1]);
-  const cardsY = useTransform(scrollY, [350, 550], [50, 0]);
+  const cardsOpacity = useTransform(scrollY, [300, 500], [0, 1]);
+  const cardsY = useTransform(scrollY, [300, 500], [30, 0]);
 
   // 2. Ragged Paintbrush Underlines (Tied to section progress)
   const howItWorksRef = useRef<HTMLElement>(null);
@@ -171,7 +169,7 @@ const operatorRef = useRef<HTMLElement>(null);
             </motion.p>
             
 <motion.div style={{ opacity: contentOpacity, y: contentY }} className="flex flex-col sm:flex-row gap-4">
-              <button className="bg-blue-600 hover:bg-blue-500 text-white px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(37,99,235,0.3)] hover:shadow-[0_0_30px_rgba(37,99,235,0.5)]">
+              <button onClick={() => document.getElementById('contact-form')?.scrollIntoView({ behavior: 'smooth' })} className="bg-[#C86A27] hover:bg-[#b05a1f] text-white px-8 py-4 rounded-full font-bold flex items-center justify-center gap-2 transition-all shadow-[0_0_20px_rgba(200,106,39,0.3)] hover:shadow-[0_0_30px_rgba(200,106,39,0.5)]">
                 Bring It To Your Park <ArrowRight size={20} />
               </button>
               <button onClick={() => navigate('/preview')} className="bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 px-8 py-4 rounded-full font-bold transition-all flex items-center justify-center">
@@ -223,7 +221,7 @@ const operatorRef = useRef<HTMLElement>(null);
             <svg className="absolute -bottom-3 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
               <motion.path 
                 d="M 5,10 Q 30,14 60,8 T 120,12 T 180,6 T 205,10" 
-                stroke="#60a5fa" 
+                stroke="#2563eb" 
                 strokeWidth="6" 
                 fill="none" 
                 strokeLinecap="round" 
@@ -386,9 +384,9 @@ const operatorRef = useRef<HTMLElement>(null);
               {/* Drawn Ragged Brush Underline - Scrubbed */}
               <svg className="absolute -bottom-2 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 250 20" preserveAspectRatio="none">
                 <motion.path 
-                  d="M 5,10 Q 40,14 80,8 T 160,12 T 245,10" 
-                  stroke="#3b82f6" 
-                  strokeWidth="5" 
+d="M 5,10 Q 40,14 80,8 T 160,12 T 235,10 Q 250,5 240,18" 
+                  stroke="#2563eb"
+                  strokeWidth="6" 
                   fill="none" 
                   strokeLinecap="round" 
                   style={{ pathLength: futureProgress }} 
@@ -424,7 +422,7 @@ const operatorRef = useRef<HTMLElement>(null);
       </section>
 
 {/* Request a Park CTA */}
-<section className="py-32 px-6 relative overflow-hidden">
+<section id="contact-form" className="py-32 px-6 relative overflow-hidden">
   <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full max-w-4xl h-full bg-blue-400/20 blur-[120px] rounded-full pointer-events-none"></div>
 
   <motion.div 
@@ -462,7 +460,7 @@ const operatorRef = useRef<HTMLElement>(null);
         <button 
           onClick={handleSubmit}
           disabled={isSubmitting}
-          className="bg-blue-500 text-white hover:bg-blue-400 px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap w-full sm:w-auto shadow-[0_0_20px_rgba(59,130,246,0.4)] hover:shadow-[0_0_30px_rgba(96,165,250,0.6)] disabled:opacity-50"
+          className="bg-[#C86A27] text-white hover:bg-[#b05a1f] px-8 py-4 rounded-2xl font-bold transition-all whitespace-nowrap w-full sm:w-auto shadow-[0_0_20px_rgba(200,106,39,0.4)] hover:shadow-[0_0_30px_rgba(200,106,39,0.6)] disabled:opacity-50"
         >
           {isSubmitting ? 'Sending...' : 'Submit Request'}
         </button>
