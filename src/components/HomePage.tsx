@@ -9,24 +9,23 @@ import { supabase } from '../supabase';
 function AmbientParticles() {
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      {[...Array(15)].map((_, i) => (
+      {[...Array(12)].map((_, i) => (
         <motion.div
           key={i}
-          className="absolute w-2 h-2 bg-emerald-500/20 rounded-full blur-[1px]"
-          initial={{
-            x: Math.random() * (typeof window !== 'undefined' ? window.innerWidth : 1000),
-            y: (typeof window !== 'undefined' ? window.innerHeight : 800) + 100,
-            opacity: Math.random() * 0.5 + 0.1
-          }}
+          className="absolute w-4 h-4 bg-emerald-400/60 rounded-tl-full rounded-br-full rounded-tr-sm rounded-bl-sm"
+          style={{ left: `${Math.random() * 100}%` }}
+          initial={{ y: -50, rotate: Math.random() * 360, opacity: 0 }}
           animate={{
-            y: -100,
-            x: `+=${Math.random() * 100 - 50}`
+            y: '110vh',
+            rotate: Math.random() * 360 + 360,
+            x: [0, 30, -30, 0],
+            opacity: [0, 0.7, 0.7, 0],
           }}
           transition={{
-            duration: Math.random() * 15 + 15,
+            duration: Math.random() * 8 + 12,
             repeat: Infinity,
             ease: "linear",
-            delay: Math.random() * 10
+            delay: Math.random() * 10,
           }}
         />
       ))}
@@ -143,7 +142,7 @@ const operatorRef = useRef<HTMLElement>(null);
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-<main className="relative max-w-7xl mx-auto px-6 pt-[60vh] md:pt-[450px] pb-2 overflow-hidden min-h-[150vh] flex flex-col justify-start">
+<main className="relative max-w-7xl mx-auto px-6 min-h-[100dvh] pb-2 overflow-hidden flex flex-col justify-end md:justify-center">
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
           
@@ -151,15 +150,15 @@ const operatorRef = useRef<HTMLElement>(null);
           <div className="space-y-8 z-10 relative">
             <div className="flex flex-col">
               {/* Line 1 is always visible */}
-              <motion.h1 className="text-6xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
+              <motion.h1 className="text-4xl sm:text-5xl md:text-7xl font-black text-white leading-[1] tracking-tighter uppercase">
                 LOG THE WILD.
               </motion.h1>
               {/* Line 2 scrubs in */}
-              <motion.h1 style={{ opacity: line2Opacity, y: line2Y }} className="text-6xl md:text-7xl font-black text-slate-400 leading-[1] tracking-tighter uppercase mt-2">
+              <motion.h1 style={{ opacity: line2Opacity, y: line2Y }} className="text-4xl sm:text-5xl md:text-7xl font-black text-slate-400 leading-[1] tracking-tighter uppercase mt-2">
                 EVERY SIGHTING.
               </motion.h1>
               {/* Line 3 scrubs in and scales */}
-              <motion.h1 style={{ opacity: line3Opacity, scale: line3Scale }} className="text-7xl md:text-9xl font-black leading-[0.9] tracking-tighter uppercase mt-4 text-transparent bg-clip-text bg-gradient-to-br from-[#C86A27] via-amber-500 to-yellow-600 drop-shadow-2xl origin-left">
+              <motion.h1 style={{ opacity: line3Opacity, scale: line3Scale }} className="text-5xl sm:text-6xl md:text-9xl font-black leading-[0.9] tracking-tighter uppercase mt-4 text-transparent bg-clip-text bg-gradient-to-br from-[#C86A27] via-amber-500 to-yellow-600 drop-shadow-2xl origin-left">
                 EVERY GUEST WOWED.
               </motion.h1>
             </div>
