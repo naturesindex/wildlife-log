@@ -15,17 +15,17 @@ function AmbientParticles() {
           className="absolute w-4 h-4 bg-emerald-400/60 rounded-tl-full rounded-br-full rounded-tr-sm rounded-bl-sm"
           style={{ left: `${Math.random() * 100}%` }}
           initial={{ y: -50, rotate: Math.random() * 360, opacity: 0 }}
-          animate={{
+        animate={{
             y: '110vh',
             rotate: Math.random() * 360 + 360,
             x: [0, 30, -30, 0],
-            opacity: [0, 0.7, 0.7, 0],
+            opacity: [0, 0.35, 0.35, 0],
           }}
           transition={{
-            duration: Math.random() * 8 + 12,
+            duration: Math.random() * 15 + 25,
             repeat: Infinity,
             ease: "linear",
-            delay: Math.random() * 10,
+            delay: Math.random() * 6 + 2,
           }}
         />
       ))}
@@ -126,8 +126,9 @@ const operatorRef = useRef<HTMLElement>(null);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-200 font-sans selection:bg-blue-500/30">
+<div className="min-h-screen flex flex-col">
       {/* Navbar */}
-      <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto">
+      <nav className="p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="text-2xl font-black tracking-tighter text-white flex items-center gap-2">
           <Leaf className="text-[#C86A27]" />
           <span className="text-[#C86A27]">NATURE'S INDEX</span>
@@ -142,7 +143,7 @@ const operatorRef = useRef<HTMLElement>(null);
       </nav>
 
 {/* Hero Section - Animated & Asymmetrical */}
-<main className="relative max-w-7xl mx-auto px-6 min-h-[100dvh] pb-2 overflow-hidden flex flex-col justify-end md:justify-center">
+<main className="relative max-w-7xl mx-auto px-6 pb-2 overflow-hidden flex-1 flex flex-col justify-end md:justify-center">
         <AmbientParticles />
         <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 mt-10">
           
