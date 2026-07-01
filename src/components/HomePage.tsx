@@ -144,7 +144,7 @@ const operatorRef = useRef<HTMLElement>(null);
 {/* Hero Section - Animated & Asymmetrical */}
 <main className="relative max-w-7xl mx-auto px-6 pb-16 overflow-hidden">
         <AmbientParticles />
-        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 pt-[calc(100dvh-320px)] md:pt-[calc(100dvh-420px)]">
+        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 pt-[calc(100dvh-120px)] md:pt-[calc(100dvh-220px)]">
           
           {/* Left Column: Typography - Tied to Scroll Scrubbing */}
           <div className="space-y-8 z-10 relative">
