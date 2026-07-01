@@ -210,6 +210,7 @@ const operatorRef = useRef<HTMLElement>(null);
             </motion.div>
           </div>
         </div>
+        </div>
       </main>
 
 {/* HOW IT WORKS - Asymmetrical Timeline */}
