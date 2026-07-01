@@ -210,8 +210,8 @@ const operatorRef = useRef<HTMLElement>(null);
             </motion.div>
           </div>
         </div>
-        </div>
       </main>
+      </div>
 
 {/* HOW IT WORKS - Asymmetrical Timeline */}
       <section ref={howItWorksRef} className="py-32 bg-slate-900/50 border-t border-slate-800/50 overflow-hidden relative">
