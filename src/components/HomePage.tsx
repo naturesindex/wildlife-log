@@ -109,8 +109,8 @@ setEmail('');
   const contentOpacity = useTransform(heroProg, [0.25, 0.4], [0, 1]);
   const contentY = useTransform(heroProg, [0.25, 0.4], [20, 0]);
 
-  const cardsOpacity = useTransform(heroProg, [0.35, 0.55], [0, 1]);
-  const cardsY = useTransform(heroProg, [0.35, 0.55], [30, 0]);
+const cardsOpacity = useTransform(heroProg, [0.25, 0.45], [0, 1]);
+  const cardsY = useTransform(heroProg, [0.25, 0.45], [30, 0]);
 
 const howItWorksRef = useRef<HTMLElement>(null);
   // Changed "center center" to "start 40%" so it finishes drawing while still lower on the screen
@@ -310,9 +310,12 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 animate={{ borderRadius: ["40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%"] }}
-                transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 0 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-[92%] md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm transition-colors relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center cursor-pointer"
+                transition={{ 
+                  borderRadius: { duration: 8, repeat: Infinity, ease: "easeInOut" },
+                  opacity: { duration: 0.6 },
+                  y: { duration: 0.6 }
+                }}
+                className="w-[92%] md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'The Guest Wow Factor' : 'El Factor Sorpresa'}</h3>
@@ -326,9 +329,12 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 animate={{ borderRadius: ["50% 50% 30% 70% / 60% 40% 60% 40%", "30% 70% 50% 50% / 40% 60% 40% 60%", "50% 50% 30% 70% / 60% 40% 60% 40%"] }}
-                transition={{ duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-[92%] ml-auto md:w-full md:ml-0 md:mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm transition-colors relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center cursor-pointer"
+                transition={{ 
+                  borderRadius: { duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
+                  opacity: { duration: 0.6 },
+                  y: { duration: 0.6 }
+                }}
+                className="w-[92%] ml-auto md:w-full md:ml-0 md:mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'The Tip Mechanic' : 'Mecánica de Propinas'}</h3>
@@ -342,9 +348,12 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 animate={{ borderRadius: ["70% 30% 60% 40% / 50% 60% 40% 50%", "40% 60% 40% 60% / 60% 40% 60% 40%", "70% 30% 60% 40% / 50% 60% 40% 50%"] }}
-                transition={{ duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-[92%] md:w-full md:-mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm transition-colors relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center cursor-pointer"
+                transition={{ 
+                  borderRadius: { duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 },
+                  opacity: { duration: 0.6 },
+                  y: { duration: 0.6 }
+                }}
+                className="w-[92%] md:w-full md:-mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'Passive Upsell Revenue' : 'Ingresos Pasivos'}</h3>
@@ -358,9 +367,12 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
                 animate={{ borderRadius: ["30% 70% 40% 60% / 40% 50% 50% 60%", "60% 40% 70% 30% / 50% 40% 60% 50%", "30% 70% 40% 60% / 40% 50% 50% 60%"] }}
-                transition={{ duration: 8.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
-                whileTap={{ scale: 0.98 }}
-                className="w-[92%] ml-auto md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm transition-colors relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center cursor-pointer"
+                transition={{ 
+                  borderRadius: { duration: 8.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 },
+                  opacity: { duration: 0.6 },
+                  y: { duration: 0.6 }
+                }}
+                className="w-[92%] ml-auto md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'Bilingual by Design' : 'Bilingüe por Diseño'}</h3>
