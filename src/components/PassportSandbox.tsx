@@ -1,7 +1,26 @@
 import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf, Trophy, Map, Bug, Eye } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion } from 'framer-motion';
 import { Species, Language } from '../types';
 import { PrintablePoster } from './PrintablePoster';
+
+// Custom Hook for counting up numbers smoothly!
+function useCountUp(end: number, duration: number = 2500) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (end === 0) return;
+    let startTimestamp: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const ease = 1 - Math.pow(1 - progress, 4); // Smooth deceleration
+      setCount(Math.floor(ease * end));
+      if (progress < 1) window.requestAnimationFrame(step);
+    };
+    window.requestAnimationFrame(step);
+  }, [end, duration]);
+  return count;
+}
 
 interface SandboxProps {
   loggedSpecies: Species[];
@@ -68,20 +87,23 @@ const [mapFlipped, setMapFlipped] = useState(false);
     ratingBg = "bg-amber-500/10";
   }
 
-  // --- 2. BRAGGING RIGHTS MATH (Real Data Based!) ---
-  let rarityStat = "Standard Rank";
+// --- 2. BRAGGING RIGHTS MATH (Real Data Based!) ---
+  let targetPercentile = 100;
   if (totalSpecies > 0) {
-    // 1. Sort by rarest first
     const sortedRarity = [...loggedSpecies].sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0));
-    // 2. Take top 5 best finds to judge their luck
     const topFinds = sortedRarity.slice(0, 5);
-    // 3. Average the rarity of their best finds
     const avgTopRarity = topFinds.reduce((sum, s) => sum + (s.rarityScore || 10), 0) / topFinds.length;
-    // 4. Convert 0-100 rarity score into a top percentile (100 rarity = top 1%)
-    const percentile = Math.max(1, Math.round(100 - avgTopRarity));
-    
-    rarityStat = `Top ${percentile}% in Corcovado`;
+    targetPercentile = Math.max(1, Math.round(100 - avgTopRarity));
   }
+
+  // Fire up the animation hooks!
+  const animatedSpeciesCount = useCountUp(totalSpecies);
+  const animatedPercentile = useCountUp(targetPercentile);
+  
+  let rarityStat = totalSpecies > 0 ? `Top ${animatedPercentile}% in Corcovado` : "Standard Rank";
+  
+  // Badge Check: Gentle Giant
+  const hasTapir = loggedSpecies.some(s => s.id === 'bairds-tapir' || s.nameEN.includes('Tapir'));
 
   // Group species by section, but FORCE Tier 1 into "Today's Highlights"
   const groupedSpecies = loggedSpecies.reduce((acc, species) => {
@@ -136,22 +158,29 @@ const sectionOrder = [
         </div>
       </div>
 
-      {/* Hero Cover */}
+{/* Hero Cover */}
       <div className="relative pt-32 pb-16 px-6 overflow-hidden flex flex-col items-center text-center">
-        <div className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-        <div className="absolute top-20 left-0 w-[600px] h-[600px] bg-[#C86A27]/5 rounded-full blur-3xl -translate-x-1/2"></div>
+        <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }} className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
+        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, ease: "easeOut", delay: 0.2 }} className="absolute top-20 left-0 w-[600px] h-[600px] bg-[#C86A27]/5 rounded-full blur-3xl -translate-x-1/2" />
 
-        <div className="max-w-3xl mx-auto relative z-10">
-          <p className="text-[#C86A27] font-bold tracking-[0.2em] text-sm mb-6 flex items-center justify-center gap-2">
+        <motion.div 
+          initial="hidden" animate="show"
+          variants={{
+            hidden: { opacity: 0 },
+            show: { opacity: 1, transition: { staggerChildren: 0.2 } }
+          }}
+          className="max-w-3xl mx-auto relative z-10"
+        >
+          <motion.p variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-[#C86A27] font-bold tracking-[0.2em] text-sm mb-6 flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4" /> VOLUME I • OFFICIAL SOUVENIR
-          </p>
-<h1 className="text-5xl md:text-7xl font-black text-white leading-none mb-8">
+          </motion.p>
+<motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-5xl md:text-7xl font-black text-white leading-none mb-8">
   {guestName}'s <br className="md:hidden" />
   <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Expedition</span>
-</h1>
+</motion.h1>
           
           {/* The Personal Story Block */}
-          <div className="bg-[#112217]/60 backdrop-blur-sm border border-emerald-500/10 rounded-3xl p-8 md:p-10 text-left shadow-2xl relative overflow-hidden">
+          <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1, transition: { duration: 0.6 } } }} className="bg-[#112217]/60 backdrop-blur-sm border border-emerald-500/10 rounded-3xl p-8 md:p-10 text-left shadow-2xl relative overflow-hidden">
             <Leaf className="absolute -bottom-6 -right-6 w-32 h-32 text-emerald-900/20" />
             <p className="text-xl md:text-2xl text-white font-light leading-relaxed mb-4">
               {language === 'EN' ? `Dear ${guestName},` : `Estimado ${guestName},`}
@@ -160,9 +189,9 @@ const sectionOrder = [
               {language === 'EN' 
                 ? `Today, you set foot in one of the most biodiverse places on Earth. Containing 2.5% of the planet's biodiversity, Corcovado National Park is a living, breathing jungle. Guided by ${guideName}, you kept your eyes peeled for the big and the small, traversing ancient trails and uncovering the secrets of the rainforest.`
                 : `Hoy, pusiste un pie en uno de los lugares más biodiversos de la Tierra. Conteniendo el 2.5% de la biodiversidad del planeta, el Parque Nacional Corcovado es una selva viva. Guiado por ${guideName}, mantuviste los ojos bien abiertos para lo grande y lo pequeño, recorriendo senderos antiguos.`}
-            </p>
-          </div>
-        </div>
+</p>
+          </motion.div>
+        </motion.div>
       </div>
 
       {/* Map & Expedition Stats */}
@@ -212,12 +241,12 @@ const sectionOrder = [
                 </div>
               </div>
 
-              <div className="flex items-start gap-4">
+<div className="flex items-start gap-4">
                 <div className="bg-[#C86A27]/10 p-3 rounded-full text-[#C86A27]">
                   <Camera className="w-6 h-6" />
                 </div>
                 <div>
-                  <p className="text-3xl font-black text-white">{totalSpecies} <span className="text-lg text-white/50 font-normal">species</span></p>
+                  <p className="text-3xl font-black text-white">{animatedSpeciesCount} <span className="text-lg text-white/50 font-normal">species</span></p>
                   <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Unique Discoveries</p>
                 </div>
               </div>
@@ -255,8 +284,8 @@ const sectionOrder = [
         const repAmphibCount = loggedSpecies.filter(s => s.category === 'Reptiles' || s.category === 'Amphibians').length;
         const insectCount = loggedSpecies.filter(s => s.category === 'Insects').length;
         
-        // Only show badge row if they unlocked at least one
-        if (!hasGrandSlam && birdCount < 10 && !hasMythical && repAmphibCount < 2 && insectCount < 3) return null;
+// Only show badge row if they unlocked at least one
+        if (!hasGrandSlam && birdCount < 10 && !hasMythical && repAmphibCount < 2 && insectCount < 3 && !hasTapir) return null;
 
         return (
           <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
@@ -304,6 +333,15 @@ const sectionOrder = [
                   <div>
                     <p className="font-black text-purple-400 leading-tight">Myth Seeker</p>
                     <p className="text-xs text-white/60 mt-1">Logged a near-mythical rarity species!</p>
+                  </div>
+                </div>
+            )}
+              {hasTapir && (
+                <div className="bg-[#112217] border border-stone-400/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <div className="bg-stone-500/10 p-3 rounded-full text-stone-300"><Footprints className="w-6 h-6" /></div>
+                  <div>
+                    <p className="font-black text-stone-300 leading-tight">Gentle Giant</p>
+                    <p className="text-xs text-white/60 mt-1">Spotted Corcovado's legendary Tapir!</p>
                   </div>
                 </div>
               )}
