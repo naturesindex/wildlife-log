@@ -266,65 +266,75 @@ return (
         // Badge Math
         const repAmphibCount = loggedSpecies.filter(s => s.category === 'Reptiles' || s.category === 'Amphibians').length;
         const insectCount = loggedSpecies.filter(s => s.category === 'Insects').length;
+        const hasSloth = loggedSpecies.some(s => s.nameEN.toLowerCase().includes('sloth') || s.nameES.toLowerCase().includes('perezoso'));
         
-// Only show badge row if they unlocked at least one
-        if (!hasGrandSlam && birdCount < 10 && !hasMythical && repAmphibCount < 2 && insectCount < 3 && !hasTapir) return null;
+        // Only show badge row if they unlocked at least one
+        if (!hasGrandSlam && birdCount < 10 && !hasMythical && repAmphibCount < 2 && insectCount < 3 && !hasTapir && !hasSloth) return null;
 
         return (
           <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
             <h3 className="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Expedition Badges</h3>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {hasGrandSlam && (
-                <div className="bg-[#112217] border border-yellow-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <img src="PASTE_GRAND_SLAM_URL_HERE" alt="Grand Slam" className="w-12 h-12 object-contain drop-shadow-lg" />
+                <div className="bg-[#112217] border border-[#FE654F]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109116/monkey.png" alt="Grand Slam" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
-                    <p className="font-black text-yellow-400 leading-tight">Primate Grand Slam</p>
+                    <p className="font-black text-[#FE654F] leading-tight">Primate Grand Slam</p>
                     <p className="text-xs text-white/60 mt-1">Spotted all 4 Corcovado monkeys!</p>
                   </div>
                 </div>
               )}
               {birdCount >= 10 && (
-                <div className="bg-[#112217] border border-sky-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <img src="PASTE_EAGLE_EYE_URL_HERE" alt="Eagle Eye" className="w-12 h-12 object-contain drop-shadow-lg" />
+                <div className="bg-[#112217] border border-[#5DD9C1]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109116/Eagle.png" alt="Eagle Eye" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
-                    <p className="font-black text-sky-400 leading-tight">Eagle Eye</p>
+                    <p className="font-black text-[#5DD9C1] leading-tight">Eagle Eye</p>
                     <p className="text-xs text-white/60 mt-1">Logged over 10 different bird species.</p>
                   </div>
                 </div>
               )}
               {repAmphibCount >= 2 && (
-                <div className="bg-[#112217] border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <img src="PASTE_JUNGLE_NINJA_URL_HERE" alt="Jungle Ninja" className="w-12 h-12 object-contain drop-shadow-lg" />
+                <div className="bg-[#112217] border border-[#7da7d9]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109128/ninja.png" alt="Jungle Ninja" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
-                    <p className="font-black text-emerald-400 leading-tight">Jungle Ninja</p>
+                    <p className="font-black text-[#7da7d9] leading-tight">Jungle Ninja</p>
                     <p className="text-xs text-white/60 mt-1">Found elusive reptiles & amphibians.</p>
                   </div>
                 </div>
               )}
               {insectCount >= 3 && (
-                <div className="bg-[#112217] border border-stone-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <img src="PASTE_MACRO_MASTER_URL_HERE" alt="Macro Master" className="w-12 h-12 object-contain drop-shadow-lg" />
+                <div className="bg-[#112217] border border-[#F7D08A]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109120/Macro.png" alt="Bug Whisperer" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
-                    <p className="font-black text-stone-400 leading-tight">Macro Master</p>
+                    <p className="font-black text-[#F7D08A] leading-tight">Bug Whisperer</p>
                     <p className="text-xs text-white/60 mt-1">Investigated the tiny giants of the floor.</p>
                   </div>
                 </div>
               )}
               {hasMythical && (
-                <div className="bg-[#112217] border border-purple-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <img src="PASTE_MYTH_SEEKER_URL_HERE" alt="Myth Seeker" className="w-12 h-12 object-contain drop-shadow-lg" />
+                <div className="bg-[#112217] border border-[#36213E]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109119/Mystic.png" alt="Myth Seeker" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
-                    <p className="font-black text-purple-400 leading-tight">Myth Seeker</p>
+                    <p className="font-black text-[#36213E] leading-tight">Myth Seeker</p>
                     <p className="text-xs text-white/60 mt-1">Logged a near-mythical rarity species!</p>
                   </div>
                 </div>
             )}
               {hasTapir && (
-                <div className="bg-[#112217] border border-stone-400/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <img src="PASTE_GENTLE_GIANT_URL_HERE" alt="Gentle Giant" className="w-12 h-12 object-contain drop-shadow-lg" />
+                <div className="bg-[#112217] border border-[#716A5C]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109115/tapir_-_Copy.png" alt="Gentle Giant" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
-                    <p className="font-black text-stone-300 leading-tight">Gentle Giant</p>
+                    <p className="font-black text-[#716A5C] leading-tight">Gentle Giant</p>
                     <p className="text-xs text-white/60 mt-1">Spotted Corcovado's legendary Tapir!</p>
+                  </div>
+                </div>
+              )}
+              {hasSloth && (
+                <div className="bg-[#112217] border border-[#8F2D56]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109122/slow_-_Copy.png" alt="Slow & Steady" className="w-12 h-12 object-contain drop-shadow-lg" />
+                  <div>
+                    <p className="font-black text-[#8F2D56] leading-tight">Slow & Steady</p>
+                    <p className="text-xs text-white/60 mt-1">Spotted one of the canopy's most relaxed residents.</p>
                   </div>
                 </div>
               )}
