@@ -262,9 +262,8 @@ return (
       </div>
 
 {/* EXPEDITION BADGES ROW */}
-      {(() => {
-        // Badge Math
-        const repAmphibCount = loggedSpecies.filter(s => s.category === 'Reptiles' || s.category === 'Amphibians').length;
+// Badge Math - Adjusted category string to perfectly match the database!
+        const repAmphibCount = loggedSpecies.filter(s => s.category === 'Reptiles & Amphibians' || s.category === 'Reptiles' || s.category === 'Amphibians').length;
         const insectCount = loggedSpecies.filter(s => s.category === 'Insects').length;
         const hasSloth = loggedSpecies.some(s => s.nameEN.toLowerCase().includes('sloth') || s.nameES.toLowerCase().includes('perezoso'));
         
