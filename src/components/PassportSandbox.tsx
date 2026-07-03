@@ -5,7 +5,7 @@ import { Species, Language } from '../types';
 import { PrintablePoster } from './PrintablePoster';
 
 // Custom Hook for counting up (or down) numbers smoothly!
-function useCountUp(end: number, start: number = 0, duration: number = 4000) {
+function useCountUp(end: number, start: number = 0, duration: number = 4000, isFloat: boolean = false) {
   const [count, setCount] = useState(start);
   useEffect(() => {
     if (end === start) return;
@@ -14,12 +14,12 @@ function useCountUp(end: number, start: number = 0, duration: number = 4000) {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       const ease = 1 - Math.pow(1 - progress, 4); // Smooth deceleration
-      setCount(Math.floor(start + (end - start) * ease));
+      setCount(start + (end - start) * ease);
       if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
   }, [end, start, duration]);
-  return count;
+  return isFloat ? count.toFixed(1) : Math.floor(count);
 }
 
 interface SandboxProps {
@@ -99,6 +99,7 @@ const [mapFlipped, setMapFlipped] = useState(false);
 // Fire up the animation hooks! (4 seconds long, rarity ticks down from 100)
   const animatedSpeciesCount = useCountUp(totalSpecies, 0, 4000);
   const animatedPercentile = useCountUp(targetPercentile, 100, 4000);
+  const animatedKms = useCountUp(parseFloat(activeTrek.kms), 0, 4000, true);
   
   let rarityStat = totalSpecies > 0 ? `Top ${animatedPercentile}% in Corcovado` : "Standard Rank";
   
@@ -124,56 +125,60 @@ const sectionOrder = [
   ];
 
 return (
-    <div className="min-h-screen bg-[#060c08] text-white font-sans selection:bg-[#C86A27]/30 pb-32 select-none">
-      
-      {/* Dev Toolbar */}
-      <div className="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
-        <div className="flex items-center gap-2">
-          <button 
-            onClick={onBack}
-            className="pointer-events-auto flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-all text-xs font-bold uppercase tracking-wider border border-white/10"
-          >
-            <ArrowLeft className="w-4 h-4" /> Exit Sandbox
-          </button>
-        </div>
-        <div className="bg-[#C86A27] px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(200,106,39,0.5)]">
-          Editorial Preview
-        </div>
-      </div>
+  <div className="min-h-screen bg-[#060c08] text-white font-sans selection:bg-[#F0803C]/30 pb-32 select-none cursor-default relative overflow-hidden"
+       style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E")` }}>
 
-      {/* Hero Cover */}
-      <div className="relative pt-32 pb-16 px-6 overflow-hidden flex flex-col items-center text-center">
-        <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }} className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
-        <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, ease: "easeOut", delay: 0.2 }} className="absolute top-20 left-0 w-[600px] h-[600px] bg-[#C86A27]/5 rounded-full blur-3xl -translate-x-1/2" />
+    {/* Ambient Vines & Colors (Swaying) */}
+    <motion.div animate={{ rotate: [-2, 2, -2] }} transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }} className="absolute -top-10 -left-10 w-64 h-96 bg-[#230C0F]/40 blur-3xl rounded-full pointer-events-none z-0" />
+    <motion.div animate={{ rotate: [2, -2, 2] }} transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }} className="absolute top-1/4 -right-12 w-48 h-80 bg-[#A0AF84]/10 blur-3xl rounded-full pointer-events-none z-0" />
+    <motion.div animate={{ y: [-10, 10, -10] }} transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }} className="absolute bottom-1/3 -left-20 w-72 h-72 bg-[#337CA0]/10 blur-3xl rounded-full pointer-events-none z-0" />
 
-        <motion.div 
-          initial="hidden" animate="show"
-          variants={{
-            hidden: { opacity: 0 },
-            show: { opacity: 1, transition: { staggerChildren: 0.2 } }
-          }}
-          className="max-w-3xl mx-auto relative z-10"
+    {/* Dev Toolbar */}
+    <div className="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
+      <div className="flex items-center gap-2">
+        <button 
+          onClick={onBack}
+          className="pointer-events-auto flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/70 hover:text-white hover:bg-[#337CA0]/40 transition-all text-xs font-bold uppercase tracking-wider border border-white/10"
         >
-          <motion.p variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-[#C86A27] font-bold tracking-[0.2em] text-sm mb-6 flex items-center justify-center gap-2">
-            <Sparkles className="w-4 h-4" /> VOLUME I • OFFICIAL SOUVENIR
-          </motion.p>
-<motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-8xl font-black text-white leading-[0.85] tracking-tighter mb-8">
-  {guestName}'s <br className="md:hidden" />
-  <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Expedition</span>
-</motion.h1>
-          
-          {/* The Personal Story Block */}
-          <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1, transition: { duration: 0.6 } } }} className="bg-[#112217]/60 backdrop-blur-sm border border-emerald-500/10 rounded-3xl p-8 md:p-10 text-left shadow-2xl relative overflow-hidden">
-            <Leaf className="absolute -bottom-6 -right-6 w-32 h-32 text-emerald-900/20" />
-            <p className="text-xl md:text-2xl text-white font-light leading-relaxed mb-4">
-              {language === 'EN' ? `Dear ${guestName},` : `Estimado ${guestName},`}
-            </p>
-            <p className="text-white/70 md:text-lg leading-relaxed font-light">
-              {language === 'EN' 
-                ? `Today, you set foot in one of the most biodiverse places on Earth. Containing 2.5% of the planet's biodiversity, Corcovado National Park is a living, breathing jungle. Guided by ${guideName}, you kept your eyes peeled for the big and the small, traversing ancient trails and uncovering the secrets of the rainforest.`
-                : `Hoy, pusiste un pie en uno de los lugares más biodiversos de la Tierra. Conteniendo el 2.5% de la biodiversidad del planeta, el Parque Nacional Corcovado es una selva viva. Guiado por ${guideName}, mantuviste los ojos bien abiertos para lo grande y lo pequeño, recorriendo senderos antiguos.`}
-</p>
-          </motion.div>
+          <ArrowLeft className="w-4 h-4" /> Exit Sandbox
+        </button>
+      </div>
+      <div className="bg-[#F0803C] px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(240,128,60,0.5)]">
+        Editorial Preview
+      </div>
+    </div>
+
+    {/* Hero Cover */}
+    <div className="relative pt-32 pb-16 px-6 overflow-hidden flex flex-col items-start text-left max-w-5xl mx-auto">
+      <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, ease: "easeOut", delay: 0.2 }} className="absolute top-20 right-0 w-[600px] h-[600px] bg-[#F0803C]/5 rounded-full blur-3xl translate-x-1/3 z-0" />
+
+      <motion.div 
+        initial="hidden" animate="show"
+        variants={{
+          hidden: { opacity: 0 },
+          show: { opacity: 1, transition: { staggerChildren: 0.2 } }
+        }}
+        className="relative z-10 w-full"
+      >
+        <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-7xl md:text-9xl font-black text-[#A0AF84] leading-[0.85] tracking-tighter mb-4 ml-0 md:-ml-4 transform -rotate-2">
+          Nature's<br/>Index
+        </motion.h1>
+        <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-4xl md:text-5xl font-bold text-white mb-10 pl-8 md:pl-24 italic">
+          {guestName}'s <span className="text-[#F0803C]">Expedition</span>
+        </motion.h2>
+        
+        {/* The Personal Story Block */}
+        <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1, transition: { duration: 0.6 } } }} className="bg-[#230C0F]/60 backdrop-blur-md border border-[#423E28]/50 rounded-3xl p-8 md:p-10 text-left shadow-2xl relative overflow-hidden max-w-3xl ml-auto">
+          <Leaf className="absolute -bottom-6 -right-6 w-32 h-32 text-[#A0AF84]/20 transform rotate-12" />
+          <p className="text-xl md:text-2xl text-white font-light leading-relaxed mb-4">
+            {language === 'EN' ? `Dear ${guestName},` : `Estimado ${guestName},`}
+          </p>
+          <p className="text-white/80 md:text-lg leading-relaxed font-light relative z-10">
+            {language === 'EN' 
+              ? `Today, you set foot in one of the most biodiverse places on Earth. Containing 2.5% of the planet's biodiversity, Corcovado National Park is a living, breathing jungle. Guided by ${guideName}, you kept your eyes peeled for the big and the small, traversing ancient trails and uncovering the secrets of the rainforest.`
+              : `Hoy, pusiste un pie en uno de los lugares más biodiversos de la Tierra. Conteniendo el 2.5% de la biodiversidad del planeta, el Parque Nacional Corcovado es una selva viva. Guiado por ${guideName}, mantuviste los ojos bien abiertos para lo grande y lo pequeño, recorriendo senderos antiguos.`}
+          </p>
+        </motion.div>
         </motion.div>
       </div>
 
@@ -187,20 +192,20 @@ return (
             className="w-full md:w-1/2 h-[250px] md:h-auto relative bg-[#0b170f] overflow-hidden group cursor-pointer"
           >
             {mapFlipped ? (
-              <div className="absolute inset-0 bg-[#C86A27]/10 p-8 flex flex-col justify-center items-center text-center">
-                <Map className="w-8 h-8 text-[#C86A27] mb-4" />
+              <div className="absolute inset-0 bg-[#F0803C]/10 p-8 flex flex-col justify-center items-center text-center">
+                <Map className="w-8 h-8 text-[#F0803C] mb-4" />
                 <h4 className="text-xl font-black text-white mb-2">{activeTrek.title}</h4>
                 <p className="text-white/70 text-sm leading-relaxed">{activeTrek.desc}</p>
-                <p className="text-[#C86A27]/50 text-[10px] uppercase tracking-widest font-bold mt-6">Tap to close</p>
+                <p className="text-[#F0803C]/50 text-[10px] uppercase tracking-widest font-bold mt-6">Tap to close</p>
               </div>
             ) : (
               <>
                 <div className="absolute inset-0 opacity-30 group-hover:scale-105 transition-transform duration-700" 
-                     style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #C86A27 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
+                     style={{ backgroundImage: 'radial-gradient(circle at 50% 50%, #F0803C 1px, transparent 1px)', backgroundSize: '30px 30px' }}></div>
                 <div className="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-[#112217] via-transparent to-transparent z-10"></div>
                 <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2">
-                  <div className="w-3 h-3 bg-[#C86A27] rounded-full animate-pulse shadow-[0_0_10px_#C86A27]"></div>
-                  <p className="text-[#C86A27] font-bold text-xs uppercase tracking-widest">{activeTrek.title} Route</p>
+                  <div className="w-3 h-3 bg-[#F0803C] rounded-full animate-pulse shadow-[0_0_10px_#F0803C]"></div>
+                  <p className="text-[#F0803C] font-bold text-xs uppercase tracking-widest">{activeTrek.title} Route</p>
                 </div>
                 <div className="absolute top-6 right-6 z-20 bg-black/40 backdrop-blur-sm px-3 py-1 rounded-full border border-white/10 text-white/50 text-[10px] uppercase tracking-widest font-bold">Tap for info</div>
               </>
@@ -218,14 +223,13 @@ return (
                 <div className="bg-emerald-500/10 p-3 rounded-full text-emerald-400">
                   <Footprints className="w-6 h-6" />
                 </div>
-                <div>
-                  <p className="text-3xl font-black text-white">{activeTrek.kms} <span className="text-lg text-white/50 font-normal">km</span></p>
+<div>
+                  <p className="text-3xl font-black text-white">{animatedKms} <span className="text-lg text-white/50 font-normal">km</span></p>
                   <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Distance Hiked</p>
-                </div>
               </div>
 
 <div className="flex items-start gap-4">
-                <div className="bg-[#C86A27]/10 p-3 rounded-full text-[#C86A27]">
+                <div className="bg-[#F0803C]/10 p-3 rounded-full text-[#F0803C]">
                   <Camera className="w-6 h-6" />
                 </div>
                 <div>
@@ -256,13 +260,14 @@ return (
 
               </div>
 
-            </div>
+           </div>
           </div>
-   </div>
+        </div>
       </div>
 
-{/* EXPEDITION BADGES ROW */}
-// Badge Math - Adjusted category string to perfectly match the database!
+      {/* EXPEDITION BADGES ROW */}
+      {(() => {
+        // Badge Math - Adjusted category string to perfectly match the database!
         const repAmphibCount = loggedSpecies.filter(s => s.category === 'Reptiles & Amphibians' || s.category === 'Reptiles' || s.category === 'Amphibians').length;
         const insectCount = loggedSpecies.filter(s => s.category === 'Insects').length;
         const hasSloth = loggedSpecies.some(s => s.nameEN.toLowerCase().includes('sloth') || s.nameES.toLowerCase().includes('perezoso'));
@@ -387,21 +392,21 @@ return (
                     <div 
                       key={idx} 
                       onClick={() => setFlippedId(isFlipped ? null : species.id!)}
-                      className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#C86A27]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col cursor-pointer"
+                      className="break-inside-avoid mb-4 md:mb-6 bg-[#112217] border border-[#F0803C]/30 rounded-3xl overflow-hidden shadow-2xl relative group flex flex-col cursor-pointer"
                     >
                       {/* ANTI-HOP FLIP OVERLAY */}
                       <div className={`absolute inset-0 z-30 bg-[#112217]/95 backdrop-blur-md p-6 md:p-8 flex flex-col justify-center items-center transition-opacity duration-300 ${isFlipped ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
-                        <h3 className="text-2xl font-black text-[#C86A27] mb-4 text-center">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+                        <h3 className="text-2xl font-black text-[#F0803C] mb-4 text-center">{language === 'EN' ? species.nameEN : species.nameES}</h3>
                         <p className="text-white/80 italic text-sm md:text-base leading-relaxed text-center overflow-y-auto">
                           {language === 'EN' ? (species.descEN || 'Description coming soon.') : (species.descES || 'Descripción en breve.')}
                         </p>
-                        <p className="text-[#C86A27]/50 text-[10px] uppercase tracking-widest font-bold mt-4 shrink-0">Tap to close</p>
+                        <p className="text-[#F0803C]/50 text-[10px] uppercase tracking-widest font-bold mt-4 shrink-0">Tap to close</p>
                       </div>
 
  {/* BASE CARD (Always renders to hold height) */}
                       <div className="w-full relative overflow-hidden p-2 pb-0">
                         <img src={species.image} className="w-full h-auto object-cover rounded-2xl transform group-hover:scale-105 transition-transform duration-700" />
-                        <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
+                        <div className="absolute top-4 right-4 bg-[#F0803C] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
                           {language === 'EN' ? 'Highlight' : 'Destacado'}
                         </div>
                       </div>
