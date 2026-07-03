@@ -1,14 +1,15 @@
 import { ArrowLeft, Camera, Sparkles, MapPin, Footprints, Leaf, Trophy, Map, Bug, Eye } from 'lucide-react';
 import { useState, useEffect } from 'react';
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useInView } from 'framer-motion';
 import { Species, Language } from '../types';
 import { PrintablePoster } from './PrintablePoster';
 
 // Custom Hook for counting up (or down) numbers smoothly!
-function useCountUp(end: number, start: number = 0, duration: number = 4000, isFloat: boolean = false) {
+function useCountUp(end: number, start: number = 0, duration: number = 4000, isFloat: boolean = false, startTrigger: boolean = true) {
   const [count, setCount] = useState(start);
   useEffect(() => {
-    if (end === start) return;
+    if (end === start || !startTrigger) return;
     let startTimestamp: number | null = null;
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
@@ -37,10 +38,14 @@ const [mapFlipped, setMapFlipped] = useState(false);
   const loggedSpecies = rawSpecies || [];
   const totalSpecies = loggedSpecies.length;
   
-  // Phase 2: This will be passed down from the session. For now, change this string to test!
+ // Phase 2: This will be passed down from the session. For now, change this string to test!
   const demoExpeditionType = "Combo: Sirena + San Pedrillo"; 
   const guestName = "Explorer";
+  const demoTourDate = "October 12, 2026"; // Will be dynamic later!
 
+  // The ref that watches when the Stats box enters the screen
+  const statsRef = useRef(null);
+  const statsInView = useInView(statsRef, { once: true, amount: 0.3 });
   // Dynamic Trek Dictionary
   const trekData = {
     "Sirena Station (Day Tour)": { kms: "7.5", title: "Sirena Trail", desc: "A deep dive into Corcovado's biological heart, walking the coastal and dense secondary forests." },
@@ -97,9 +102,9 @@ const [mapFlipped, setMapFlipped] = useState(false);
   }
 
 // Fire up the animation hooks! (4 seconds long, rarity ticks down from 100)
-  const animatedSpeciesCount = useCountUp(totalSpecies, 0, 4000);
-  const animatedPercentile = useCountUp(targetPercentile, 100, 4000);
-  const animatedKms = useCountUp(parseFloat(activeTrek.kms), 0, 4000, true);
+  const animatedSpeciesCount = useCountUp(totalSpecies, 0, 4000, false, statsInView);
+  const animatedPercentile = useCountUp(targetPercentile, 100, 4000, false, statsInView);
+  const animatedKms = useCountUp(parseFloat(activeTrek.kms), 0, 4000, true, statsInView);
   
   let rarityStat = totalSpecies > 0 ? `Top ${animatedPercentile}% in Corcovado` : "Standard Rank";
   
@@ -126,12 +131,11 @@ const sectionOrder = [
 
 return (
   <div className="min-h-screen bg-[#060c08] text-white font-sans selection:bg-[#F0803C]/30 pb-32 select-none cursor-default relative overflow-hidden"
-       style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.04'/%3E%3C/svg%3E")` }}>
+       style={{ backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.015'/%3E%3C/svg%3E")` }}>
 
-    {/* Ambient Vines & Colors (Swaying) */}
-    <motion.div animate={{ rotate: [-2, 2, -2] }} transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }} className="absolute -top-10 -left-10 w-64 h-96 bg-[#230C0F]/40 blur-3xl rounded-full pointer-events-none z-0" />
-    <motion.div animate={{ rotate: [2, -2, 2] }} transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }} className="absolute top-1/4 -right-12 w-48 h-80 bg-[#A0AF84]/10 blur-3xl rounded-full pointer-events-none z-0" />
-    <motion.div animate={{ y: [-10, 10, -10] }} transition={{ repeat: Infinity, duration: 7, ease: "easeInOut" }} className="absolute bottom-1/3 -left-20 w-72 h-72 bg-[#337CA0]/10 blur-3xl rounded-full pointer-events-none z-0" />
+    {/* Ambient Vines (Swaying) */}
+    <motion.img src="YOUR_CLOUDINARY_LINK_HERE" animate={{ rotate: [-1, 1, -1] }} transition={{ repeat: Infinity, duration: 8, ease: "easeInOut" }} className="absolute -top-10 -left-10 w-96 h-auto opacity-40 pointer-events-none z-0 transform origin-top-left" />
+    <motion.img src="YOUR_CLOUDINARY_LINK_HERE" animate={{ rotate: [1, -1, 1] }} transition={{ repeat: Infinity, duration: 10, ease: "easeInOut" }} className="absolute top-1/4 -right-12 w-80 h-auto opacity-30 pointer-events-none z-0 transform origin-top-right" />
 
     {/* Dev Toolbar */}
     <div className="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
@@ -160,12 +164,18 @@ return (
         }}
         className="relative z-10 w-full"
       >
-        <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-7xl md:text-9xl font-black text-[#A0AF84] leading-[0.85] tracking-tighter mb-4 ml-0 md:-ml-4 transform -rotate-2">
-          Nature's<br/>Index
+        <motion.p variants={{ hidden: { opacity: 0, y: 10 }, show: { opacity: 1, y: 0 } }} className="text-[#A0AF84] font-black tracking-widest uppercase text-sm mb-4">
+          Nature's Index
+        </motion.p>
+        <motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-7xl md:text-9xl font-black text-white leading-[0.85] tracking-tighter mb-2 transform -rotate-1">
+          {guestName}'s
         </motion.h1>
-        <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-4xl md:text-5xl font-bold text-white mb-10 pl-8 md:pl-24 italic">
-          {guestName}'s <span className="text-[#F0803C]">Expedition</span>
+        <motion.h2 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-8xl font-black text-[#F0803C] mb-8 pl-8 md:pl-16 italic transform -rotate-2">
+          Expedition
         </motion.h2>
+        <motion.div variants={{ hidden: { opacity: 0 }, show: { opacity: 1 } }} className="inline-block bg-white/10 backdrop-blur-sm border border-white/10 px-4 py-2 rounded-full mb-10 pl-8 md:pl-20">
+          <p className="text-white/80 text-sm font-bold tracking-widest uppercase">{demoTourDate}</p>
+        </motion.div>
         
         {/* The Personal Story Block */}
         <motion.div variants={{ hidden: { opacity: 0, scale: 0.95 }, show: { opacity: 1, scale: 1, transition: { duration: 0.6 } } }} className="bg-[#230C0F]/60 backdrop-blur-md border border-[#423E28]/50 rounded-3xl p-8 md:p-10 text-left shadow-2xl relative overflow-hidden max-w-3xl ml-auto">
@@ -182,8 +192,8 @@ return (
           </motion.div>
         </div>
 
-      {/* Map & Expedition Stats */}
-      <div className="max-w-4xl mx-auto px-6 mb-20">
+ {/* Map & Expedition Stats */}
+      <div ref={statsRef} className="max-w-4xl mx-auto px-6 mb-20">
         <div className="bg-[#112217] border border-white/5 rounded-3xl overflow-hidden shadow-2xl flex flex-col md:flex-row relative">
           
  {/* Mock Map Side */}
@@ -404,10 +414,10 @@ return (
                         <p className="text-[#F0803C]/50 text-[10px] uppercase tracking-widest font-bold mt-4 shrink-0">Tap to close</p>
                       </div>
 
- {/* BASE CARD (Always renders to hold height) */}
+{/* BASE CARD (Always renders to hold height) */}
                       <div className="w-full relative overflow-hidden p-2 pb-0">
                         <img src={species.image} className="w-full h-auto object-cover rounded-2xl transform group-hover:scale-105 transition-transform duration-700" />
-                        <div className="absolute top-4 right-4 bg-[#F0803C] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
+                        <div className="absolute top-4 right-4 bg-[#F0803C] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-[0_4px_15px_rgba(240,128,60,0.6)] z-20">
                           {language === 'EN' ? 'Highlight' : 'Destacado'}
                         </div>
                       </div>
@@ -462,13 +472,14 @@ return (
         })}
       </div>
 
- {/* THE POSTER MOUNT */}
+{/* THE POSTER MOUNT */}
       <div className="w-full mx-auto px-4 md:px-6 mb-20 mt-10 flex justify-center">
         <PrintablePoster 
           loggedSpecies={loggedSpecies} 
           language={language} 
           guideName={guideName} 
           onClose={() => {}} 
+          tourDate={demoTourDate}
         />
       </div>
 
