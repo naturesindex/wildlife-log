@@ -4,21 +4,21 @@ import { motion } from 'framer-motion';
 import { Species, Language } from '../types';
 import { PrintablePoster } from './PrintablePoster';
 
-// Custom Hook for counting up numbers smoothly!
-function useCountUp(end: number, duration: number = 2500) {
-  const [count, setCount] = useState(0);
+// Custom Hook for counting up (or down) numbers smoothly!
+function useCountUp(end: number, start: number = 0, duration: number = 4000) {
+  const [count, setCount] = useState(start);
   useEffect(() => {
-    if (end === 0) return;
+    if (end === start) return;
     let startTimestamp: number | null = null;
     const step = (timestamp: number) => {
       if (!startTimestamp) startTimestamp = timestamp;
       const progress = Math.min((timestamp - startTimestamp) / duration, 1);
       const ease = 1 - Math.pow(1 - progress, 4); // Smooth deceleration
-      setCount(Math.floor(ease * end));
+      setCount(Math.floor(start + (end - start) * ease));
       if (progress < 1) window.requestAnimationFrame(step);
     };
     window.requestAnimationFrame(step);
-  }, [end, duration]);
+  }, [end, start, duration]);
   return count;
 }
 
@@ -96,9 +96,9 @@ const [mapFlipped, setMapFlipped] = useState(false);
     targetPercentile = Math.max(1, Math.round(100 - avgTopRarity));
   }
 
-  // Fire up the animation hooks!
-  const animatedSpeciesCount = useCountUp(totalSpecies);
-  const animatedPercentile = useCountUp(targetPercentile);
+// Fire up the animation hooks! (4 seconds long, rarity ticks down from 100)
+  const animatedSpeciesCount = useCountUp(totalSpecies, 0, 4000);
+  const animatedPercentile = useCountUp(targetPercentile, 100, 4000);
   
   let rarityStat = totalSpecies > 0 ? `Top ${animatedPercentile}% in Corcovado` : "Standard Rank";
   
@@ -123,34 +123,17 @@ const sectionOrder = [
     "Other Notables"
   ];
 
-  if (showPoster) {
-    return (
-      <PrintablePoster 
-        loggedSpecies={loggedSpecies} 
-        language={language} 
-        guideName={guideName} 
-        onBack={() => setShowPoster(false)} 
-      />
-    );
-  }
-
-  return (
-    <div className="min-h-screen bg-[#060c08] text-white font-sans selection:bg-[#C86A27]/30 pb-32">
+return (
+    <div className="min-h-screen bg-[#060c08] text-white font-sans selection:bg-[#C86A27]/30 pb-32 select-none">
       
       {/* Dev Toolbar */}
       <div className="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center bg-gradient-to-b from-black/80 to-transparent pointer-events-none">
-<div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
           <button 
             onClick={onBack}
             className="pointer-events-auto flex items-center gap-2 bg-white/10 backdrop-blur-md px-4 py-2 rounded-full text-white/70 hover:text-white hover:bg-white/20 transition-all text-xs font-bold uppercase tracking-wider border border-white/10"
           >
             <ArrowLeft className="w-4 h-4" /> Exit Sandbox
-          </button>
-          <button 
-            onClick={() => setShowPoster(true)}
-            className="pointer-events-auto flex items-center gap-2 bg-[#C86A27]/20 backdrop-blur-md px-4 py-2 rounded-full text-[#C86A27] hover:bg-[#C86A27]/40 transition-all text-xs font-bold uppercase tracking-wider border border-[#C86A27]/50"
-          >
-            🖨️ View Poster
           </button>
         </div>
         <div className="bg-[#C86A27] px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(200,106,39,0.5)]">
@@ -158,7 +141,7 @@ const sectionOrder = [
         </div>
       </div>
 
-{/* Hero Cover */}
+      {/* Hero Cover */}
       <div className="relative pt-32 pb-16 px-6 overflow-hidden flex flex-col items-center text-center">
         <motion.div initial={{ opacity: 0, y: -50 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 1, ease: "easeOut" }} className="absolute top-0 right-0 w-[800px] h-[800px] bg-emerald-900/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3" />
         <motion.div initial={{ opacity: 0, x: -50 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 1, ease: "easeOut", delay: 0.2 }} className="absolute top-20 left-0 w-[600px] h-[600px] bg-[#C86A27]/5 rounded-full blur-3xl -translate-x-1/2" />
@@ -174,7 +157,7 @@ const sectionOrder = [
           <motion.p variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-[#C86A27] font-bold tracking-[0.2em] text-sm mb-6 flex items-center justify-center gap-2">
             <Sparkles className="w-4 h-4" /> VOLUME I • OFFICIAL SOUVENIR
           </motion.p>
-<motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-5xl md:text-7xl font-black text-white leading-none mb-8">
+<motion.h1 variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }} className="text-6xl md:text-8xl font-black text-white leading-[0.85] tracking-tighter mb-8">
   {guestName}'s <br className="md:hidden" />
   <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-[#C86A27] italic">Expedition</span>
 </motion.h1>
@@ -290,10 +273,10 @@ const sectionOrder = [
         return (
           <div className="max-w-5xl mx-auto px-4 md:px-6 mb-16">
             <h3 className="text-xl font-bold text-white mb-4 border-b border-white/10 pb-2">Expedition Badges</h3>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               {hasGrandSlam && (
                 <div className="bg-[#112217] border border-yellow-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <div className="bg-yellow-500/10 p-3 rounded-full text-yellow-400"><Trophy className="w-6 h-6" /></div>
+                  <img src="PASTE_GRAND_SLAM_URL_HERE" alt="Grand Slam" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
                     <p className="font-black text-yellow-400 leading-tight">Primate Grand Slam</p>
                     <p className="text-xs text-white/60 mt-1">Spotted all 4 Corcovado monkeys!</p>
@@ -302,7 +285,7 @@ const sectionOrder = [
               )}
               {birdCount >= 10 && (
                 <div className="bg-[#112217] border border-sky-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <div className="bg-sky-500/10 p-3 rounded-full text-sky-400"><Sparkles className="w-6 h-6" /></div>
+                  <img src="PASTE_EAGLE_EYE_URL_HERE" alt="Eagle Eye" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
                     <p className="font-black text-sky-400 leading-tight">Eagle Eye</p>
                     <p className="text-xs text-white/60 mt-1">Logged over 10 different bird species.</p>
@@ -311,7 +294,7 @@ const sectionOrder = [
               )}
               {repAmphibCount >= 2 && (
                 <div className="bg-[#112217] border border-emerald-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <div className="bg-emerald-500/10 p-3 rounded-full text-emerald-400"><Eye className="w-6 h-6" /></div>
+                  <img src="PASTE_JUNGLE_NINJA_URL_HERE" alt="Jungle Ninja" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
                     <p className="font-black text-emerald-400 leading-tight">Jungle Ninja</p>
                     <p className="text-xs text-white/60 mt-1">Found elusive reptiles & amphibians.</p>
@@ -320,7 +303,7 @@ const sectionOrder = [
               )}
               {insectCount >= 3 && (
                 <div className="bg-[#112217] border border-stone-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <div className="bg-stone-500/10 p-3 rounded-full text-stone-400"><Bug className="w-6 h-6" /></div>
+                  <img src="PASTE_MACRO_MASTER_URL_HERE" alt="Macro Master" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
                     <p className="font-black text-stone-400 leading-tight">Macro Master</p>
                     <p className="text-xs text-white/60 mt-1">Investigated the tiny giants of the floor.</p>
@@ -329,7 +312,7 @@ const sectionOrder = [
               )}
               {hasMythical && (
                 <div className="bg-[#112217] border border-purple-500/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <div className="bg-purple-500/10 p-3 rounded-full text-purple-400"><Leaf className="w-6 h-6" /></div>
+                  <img src="PASTE_MYTH_SEEKER_URL_HERE" alt="Myth Seeker" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
                     <p className="font-black text-purple-400 leading-tight">Myth Seeker</p>
                     <p className="text-xs text-white/60 mt-1">Logged a near-mythical rarity species!</p>
@@ -338,7 +321,7 @@ const sectionOrder = [
             )}
               {hasTapir && (
                 <div className="bg-[#112217] border border-stone-400/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <div className="bg-stone-500/10 p-3 rounded-full text-stone-300"><Footprints className="w-6 h-6" /></div>
+                  <img src="PASTE_GENTLE_GIANT_URL_HERE" alt="Gentle Giant" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
                     <p className="font-black text-stone-300 leading-tight">Gentle Giant</p>
                     <p className="text-xs text-white/60 mt-1">Spotted Corcovado's legendary Tapir!</p>
@@ -406,15 +389,15 @@ const sectionOrder = [
                         <p className="text-[#C86A27]/50 text-[10px] uppercase tracking-widest font-bold mt-4 shrink-0">Tap to close</p>
                       </div>
 
-                      {/* BASE CARD (Always renders to hold height) */}
+ {/* BASE CARD (Always renders to hold height) */}
                       <div className="w-full relative overflow-hidden p-2 pb-0">
-                        <img src={species.image} className="w-full h-auto object-cover rounded-2xl" />
+                        <img src={species.image} className="w-full h-auto object-cover rounded-2xl transform group-hover:scale-105 transition-transform duration-700" />
                         <div className="absolute top-4 right-4 bg-[#C86A27] text-white text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full shadow-lg z-20">
                           {language === 'EN' ? 'Highlight' : 'Destacado'}
                         </div>
                       </div>
                       <div className="p-5 pt-4">
-                        <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight">{language === 'EN' ? species.nameEN : species.nameES}</h3>
+                        <h3 className="text-2xl md:text-3xl font-black text-white mb-1 leading-tight group-hover:text-emerald-400 transition-colors">{language === 'EN' ? species.nameEN : species.nameES}</h3>
                         <p className="text-white/50 text-sm italic font-serif">{species.scientificName}</p>
                       </div>
                     </div>
@@ -464,25 +447,14 @@ const sectionOrder = [
         })}
       </div>
 
-      {/* FIELD NOTES / POKEDEX BONES */}
-      <div className="max-w-5xl mx-auto px-4 md:px-6 mb-20 mt-10">
-        <div className="bg-gradient-to-br from-[#112217] to-[#060c08] border border-white/10 rounded-3xl p-8 md:p-12 text-center relative overflow-hidden shadow-2xl">
-          <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-emerald-500 to-[#C86A27]"></div>
-          <Camera className="w-12 h-12 text-white/20 mx-auto mb-4" />
-          <h3 className="text-2xl md:text-3xl font-black text-white mb-3">
-            {language === 'EN' ? 'My Field Notes' : 'Mis Notas de Campo'}
-          </h3>
-          <p className="text-white/50 mb-8 max-w-lg mx-auto text-sm md:text-base leading-relaxed">
-            {language === 'EN' 
-              ? 'Coming Soon: Upload your own photos from the trek to replace the guide shots and create a truly unique souvenir.' 
-              : 'Próximamente: Sube tus propias fotos para reemplazar las imágenes de la guía y crear un recuerdo único.'}
-          </p>
-          <div className="flex justify-center gap-4 opacity-40 grayscale pointer-events-none">
-             <div className="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-2xl border border-dashed border-white/20 flex items-center justify-center"><Camera className="w-6 h-6 text-white/30"/></div>
-             <div className="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-2xl border border-dashed border-white/20 flex items-center justify-center"><Camera className="w-6 h-6 text-white/30"/></div>
-             <div className="w-20 h-20 md:w-24 md:h-24 bg-white/5 rounded-2xl border border-dashed border-white/20 hidden sm:flex items-center justify-center"><Camera className="w-6 h-6 text-white/30"/></div>
-          </div>
-        </div>
+ {/* THE POSTER MOUNT */}
+      <div className="w-full mx-auto px-4 md:px-6 mb-20 mt-10 flex justify-center">
+        <PrintablePoster 
+          loggedSpecies={loggedSpecies} 
+          language={language} 
+          guideName={guideName} 
+          onClose={() => {}} 
+        />
       </div>
 
     </div>
