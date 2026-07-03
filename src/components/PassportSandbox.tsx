@@ -176,11 +176,11 @@ return (
           <p className="text-white/80 md:text-lg leading-relaxed font-light relative z-10">
             {language === 'EN' 
               ? `Today, you set foot in one of the most biodiverse places on Earth. Containing 2.5% of the planet's biodiversity, Corcovado National Park is a living, breathing jungle. Guided by ${guideName}, you kept your eyes peeled for the big and the small, traversing ancient trails and uncovering the secrets of the rainforest.`
-              : `Hoy, pusiste un pie en uno de los lugares más biodiversos de la Tierra. Conteniendo el 2.5% de la biodiversidad del planeta, el Parque Nacional Corcovado es una selva viva. Guiado por ${guideName}, mantuviste los ojos bien abiertos para lo grande y lo pequeño, recorriendo senderos antiguos.`}
-          </p>
-        </motion.div>
-        </motion.div>
-      </div>
+         : `Hoy, pusiste un pie en uno de los lugares más biodiversos de la Tierra. Conteniendo el 2.5% de la biodiversidad del planeta, el Parque Nacional Corcovado es una selva viva. Guiado por ${guideName}, mantuviste los ojos bien abiertos para lo grande y lo pequeño, recorriendo senderos antiguos.`}
+              </p>
+            </motion.div>
+          </motion.div>
+        </div>
 
       {/* Map & Expedition Stats */}
       <div className="max-w-4xl mx-auto px-6 mb-20">
