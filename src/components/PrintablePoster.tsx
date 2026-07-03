@@ -9,6 +9,7 @@ interface PrintablePosterProps {
   language: Language;
   guideName: string;
   onClose: () => void;
+  tourDate?: string;
 }
 
 // Estimate aspect ratio from known photo orientations
@@ -95,23 +96,22 @@ const handleDownload = async () => {
 
 return (
     <div className="min-h-screen bg-neutral-900 flex flex-col items-center py-10 px-4">
-      {/* Controls */}
-      <div className="w-full max-w-[800px] flex justify-between items-center mb-8">
-        <button onClick={onClose} className="flex items-center gap-2 text-white/70 hover:text-white transition-colors">
-          <ArrowLeft className="w-5 h-5" /> Back
-        </button>
+   {/* Controls */}
+      <div className="w-full max-w-[800px] flex justify-center items-center mb-8">
         <button
           onClick={handleDownload}
           disabled={isDownloading}
-          className="flex items-center gap-2 bg-[#C86A27] text-white px-6 py-3 rounded-full font-bold hover:bg-[#b05a1f] transition-all disabled:opacity-50"
+          className="flex items-center gap-2 bg-[#C86A27] text-white px-6 py-3 rounded-full font-bold hover:bg-[#b05a1f] transition-all disabled:opacity-50 shadow-lg shadow-[#C86A27]/20"
         >
           <Download className="w-5 h-5" />
           {isDownloading ? 'Generating High-Res...' : 'Download Print-Ready Poster'}
         </button>
       </div>
 
-      {/* POSTER CANVAS */}
-      <div
+      {/* Mobile Side-Scroll Wrapper */}
+      <div className="w-full max-w-[100vw] overflow-x-auto pb-8 flex justify-start md:justify-center items-start">
+        {/* POSTER CANVAS */}
+        <div
         ref={posterRef}
         style={{
           width: `${POSTER_W}px`,
@@ -177,9 +177,9 @@ return (
               color: 'rgba(44,62,53,0.55)',
               textTransform: 'uppercase',
             }}>
-              {new Date().toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', {
-                month: 'long', day: 'numeric', year: 'numeric',
-              }).toUpperCase()}
+    {tourDate 
+                ? tourDate.toUpperCase() 
+                : new Date().toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}
             </div>
           </div>
 
@@ -268,5 +268,6 @@ return (
         </div>
       </div>
     </div>
+      </div>
   );
 }
