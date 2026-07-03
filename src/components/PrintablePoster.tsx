@@ -26,7 +26,7 @@ function estimateAspectRatio(species: Species): number {
 const NUM_COLS = 4;
 const GAP = 7; // px between photos and columns
 
-export function PrintablePoster({ loggedSpecies, language, guideName, onClose }: PrintablePosterProps) {
+export function PrintablePoster({ loggedSpecies, language, guideName, onClose, tourDate }: PrintablePosterProps) {
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
 
