@@ -227,6 +227,7 @@ return (
                   <p className="text-3xl font-black text-white">{animatedKms} <span className="text-lg text-white/50 font-normal">km</span></p>
                   <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Distance Hiked</p>
               </div>
+                  </div>
 
 <div className="flex items-start gap-4">
                 <div className="bg-[#F0803C]/10 p-3 rounded-full text-[#F0803C]">
