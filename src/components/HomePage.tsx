@@ -252,13 +252,14 @@ const howItWorksRef = useRef<HTMLElement>(null);
             </h2>
             <svg className="absolute -bottom-3 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
              <motion.path 
-                d="M 5,10 Q 30,14 60,8 T 120,12 T 180,6 T 205,10" 
-                stroke="#99C2A2" 
-                strokeWidth="6" 
-                fill="none" 
-                strokeLinecap="round" 
-                style={{ pathLength: howProgress, opacity: howLineOpacity }} 
-              />
+  d="M 5,10 Q 30,14 60,8 T 120,12 T 180,6 T 205,10" 
+  stroke="#99C2A2" 
+  strokeWidth="6" 
+  fill="none" 
+  strokeLinecap="round" 
+  style={{ pathLength: howProgress, opacity: howLineOpacity }}
+  transition={{ duration: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.6 : 1.2, ease: "easeInOut" }}
+/>
             </svg>
           </div>
 
