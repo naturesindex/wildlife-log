@@ -113,35 +113,45 @@ const cardsOpacity = useTransform(heroProg, [0.25, 0.45], [0, 1]);
   const cardsY = useTransform(heroProg, [0.25, 0.45], [30, 0]);
 
 const howItWorksRef = useRef<HTMLElement>(null);
-  // Changed "center center" to "start 40%" so it finishes drawing while still lower on the screen
-  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 85%", "start 40%"] });
+  // Adjusted offset: starts drawing later on the screen and finishes later
+  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 70%", "end 80%"] });
+
+  // Strictly tied scroll animations for Steps 1, 2, and 3
+  const step1Opacity = useTransform(howProgress, [0, 0.25], [0, 1]);
+  const step1X = useTransform(howProgress, [0, 0.25], [-50, 0]);
+
+  const step2Opacity = useTransform(howProgress, [0.2, 0.45], [0, 1]);
+  const step2X = useTransform(howProgress, [0.2, 0.45], [50, 0]);
+
+  const step3Opacity = useTransform(howProgress, [0.4, 0.65], [0, 1]);
+  const step3Y = useTransform(howProgress, [0.4, 0.65], [50, 0]);
 
   const operatorRef = useRef<HTMLElement>(null);
-  const { scrollYProgress: operatorProgress } = useScroll({ target: operatorRef, offset: ["start 85%", "start 40%"] });
+  const { scrollYProgress: operatorProgress } = useScroll({ target: operatorRef, offset: ["start 75%", "start 40%"] });
 
   const futureRef = useRef<HTMLElement>(null);
-  const { scrollYProgress: futureProgress } = useScroll({ target: futureRef, offset: ["start 85%", "start 40%"] });
+  const { scrollYProgress: futureProgress } = useScroll({ target: futureRef, offset: ["start 75%", "start 40%"] });
 
   return (
-    // Added 'select-none' here to prevent the weird text-highlighting cursor everywhere!
-    <div className="min-[100dvh] bg-[#003B36] text-[#93B1A7] font-sans selection:bg-[#F0803C]/30 select-none">
+// Fixed Mobile layout jump by swapping dvh to svh
+    <div className="min-[100svh] bg-[#003B36] text-[#93B1A7] font-sans selection:bg-[#F0803C]/30 select-none">
 {/* Navbar */}
-      <nav className="absolute top-0 left-0 right-0 z-30 p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
-        <div className="text-2xl font-black tracking-tighter text-white flex items-center gap-2">
+      <nav className="absolute top-0 left-0 right-0 z-30 p-4 sm:p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
+        <div className="text-xl sm:text-2xl font-black tracking-tighter text-white flex items-center gap-2">
           <Leaf className="text-[#F0803C]" />
           <span className="text-[#F0803C]">NATURE'S INDEX</span>
         </div>
         <div className="flex items-center gap-3">
           <div className="flex bg-[#16697A]/40 rounded-full p-1 border border-[#99C2A2]/30 backdrop-blur-sm">
-            <button onClick={() => setLanguage('EN')} className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${language === 'EN' ? 'bg-[#F0803C] text-white' : 'text-[#99C2A2] hover:text-white'}`}>EN</button>
-            <button onClick={() => setLanguage('ES')} className={`px-3 py-1 rounded-full text-xs font-bold transition-all ${language === 'ES' ? 'bg-[#F0803C] text-white' : 'text-[#99C2A2] hover:text-white'}`}>ES</button>
+            <button onClick={() => setLanguage('EN')} className={`px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold transition-all ${language === 'EN' ? 'bg-[#F0803C] text-white' : 'text-[#99C2A2] hover:text-white'}`}>EN</button>
+            <button onClick={() => setLanguage('ES')} className={`px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold transition-all ${language === 'ES' ? 'bg-[#F0803C] text-white' : 'text-[#99C2A2] hover:text-white'}`}>ES</button>
           </div>
           <button 
             onClick={() => navigate('/corcovado/guide')}
-            className="hidden sm:flex items-center gap-2 bg-[#16697A] hover:bg-[#125866] text-white px-5 py-2.5 rounded-full text-sm font-bold transition-all border border-[#99C2A2]/30"
+            className="flex items-center gap-2 bg-[#16697A] hover:bg-[#125866] text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-sm font-bold transition-all border border-[#99C2A2]/30"
           >
             <UserCircle size={18} />
-            {language === 'EN' ? 'Guide Portal' : 'Portal de Guías'}
+            <span className="hidden sm:inline">{language === 'EN' ? 'Guide Portal' : 'Portal de Guías'}</span>
           </button>
         </div>
       </nav>
@@ -149,7 +159,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
 {/* Hero Section - Animated & Asymmetrical */}
 <main ref={heroRef} className="relative max-w-7xl mx-auto px-6 pb-16 overflow-hidden">
         <AmbientParticles />
-        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 pt-[calc(100dvh-120px)] md:pt-[calc(100dvh-220px)]">
+        <div className="grid md:grid-cols-2 gap-12 items-center w-full relative z-10 pt-[calc(100svh-120px)] md:pt-[calc(100svh-220px)]">
           
           {/* Left Column: Typography - Tied to Scroll Scrubbing */}
           <div className="space-y-8 z-10 relative">
@@ -187,13 +197,13 @@ const howItWorksRef = useRef<HTMLElement>(null);
             </motion.div>
           </div>
           
-          {/* Right Column: 3D Floating Cards - Tied to Scroll Scrubbing */}
+ {/* Right Column: 3D Floating Cards - Tied to Scroll Scrubbing */}
           <div className="relative h-[450px] md:h-[550px] mt-10 md:mt-0 perspective-[1200px]">
             <motion.div style={{ opacity: cardsOpacity, y: cardsY }} className="absolute inset-0">
               {/* Front Card - Jungle Passport */}
               <TiltCard className="absolute top-0 right-0 w-3/4 h-3/4 bg-[#16697A] rounded-3xl border border-[#99C2A2]/30 overflow-hidden z-20 shadow-2xl">
                 <div className="absolute inset-0 bg-gradient-to-t from-[#003B36]/90 via-[#003B36]/20 to-transparent z-10 pointer-events-none"></div>
-                <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=800&auto=format&fit=crop" alt="Lush Jungle" className="w-full h-full object-cover opacity-70 mix-blend-overlay" />
+                <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783132230/adam-thomas-GsCTWqFv3GE-unsplash.jpg" alt="Lush Jungle" className="w-full h-full object-cover opacity-70 mix-blend-overlay" />
                 <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
                     <div className="bg-[#99C2A2]/20 text-[#99C2A2] border border-[#99C2A2]/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">
                     {language === 'EN' ? 'Active' : 'Activo'}
@@ -202,10 +212,10 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 </div>
               </TiltCard>
               
-              {/* Back Card - Dive Log */}
-              <TiltCard delay={1.5} className="absolute bottom-0 left-0 w-2/3 h-1/2 bg-[#16697A] rounded-3xl border border-[#99C2A2]/30 overflow-hidden shadow-xl z-10">
+              {/* Back Card - Dive Log (Pulled further out to the left and down) */}
+              <TiltCard delay={1.5} className="absolute -bottom-8 -left-4 w-2/3 h-[55%] bg-[#16697A] rounded-3xl border border-[#99C2A2]/30 overflow-hidden shadow-xl z-10">
                 <div className="absolute inset-0 bg-gradient-to-t from-[#003B36]/90 via-[#003B36]/20 to-transparent z-10 pointer-events-none"></div>
-                <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop" alt="Deep Ocean Dive" className="w-full h-full object-cover opacity-40 grayscale-[30%] mix-blend-overlay" />
+                <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783132234/neom-I5j46lqAo-o-unsplash.jpg" alt="Deep Ocean Dive" className="w-full h-full object-cover opacity-40 grayscale-[30%] mix-blend-overlay" />
                     <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
                     <div className="bg-[#F0803C]/20 text-[#F0803C] border border-[#F0803C]/30 text-[10px] font-bold px-3 py-1 rounded-full mb-2 inline-block uppercase tracking-wider">
                     {language === 'EN' ? 'Coming Soon' : 'Próximamente'}
@@ -243,35 +253,29 @@ const howItWorksRef = useRef<HTMLElement>(null);
             {/* Connecting Background Line (Desktop only) */}
             <div className="hidden md:block absolute left-[4.5rem] top-10 bottom-10 w-[2px] bg-gradient-to-b from-[#16697A] via-[#16697A]/50 to-transparent -z-10" />
 
-{/* Step 1 - Left Aligned */}
-            <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3">
-              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">1</div>
+{/* Step 1 - Left Aligned - Scrubbed */}
+            <motion.div style={{ opacity: step1Opacity, x: step1X }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-lg">1</div>
               <div className="pt-2 md:pt-4">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'Guide Logs Sightings' : 'El Guía Registra'}</h3>
                 <p className="text-base md:text-lg text-[#93B1A7] leading-relaxed text-left">{language === 'EN' ? 'Guides log species in real time through a fast, mobile-friendly portal, built for the trail, not the office.' : 'Los guías registran especies en tiempo real a través de un portal rápido y móvil, diseñado para el sendero, no para la oficina.'}</p>
               </div>
             </motion.div>
 
-          {/* Step 2 - Offset Right on Both Mobile & Desktop */}
-            <motion.div 
-              initial={{ opacity: 0, x: 30 }} 
-              whileInView={{ opacity: 1, x: 0 }} 
-              viewport={{ once: true, margin: "-100px" }} 
-              transition={{ duration: 0.6 }} 
-              className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20 justify-end"
-            >
+          {/* Step 2 - Offset Right on Both Mobile & Desktop - Scrubbed */}
+            <motion.div style={{ opacity: step2Opacity, x: step2X }} className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20 justify-end">
               <div className="pt-2 md:pt-4 text-right">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'Guest Receives Link' : 'El Invitado Recibe el Enlace'}</h3>
                 <p className="text-base md:text-lg text-[#93B1A7] leading-relaxed text-right">{language === 'EN' ? "At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport." : 'Al final del recorrido, cada invitado obtiene un enlace personal, un resumen gratuito, un botón de propina y acceso para comprar su Pasaporte de Vida Silvestre.'}</p>
               </div>
-              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-lg">
                 2
               </div>
             </motion.div>
 
-            {/* Step 3 - Offset Further Left */}
-            <motion.div initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 0.6 }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 mt-12 md:mt-20">
-              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">3</div>
+            {/* Step 3 - Offset Further Left - Scrubbed */}
+            <motion.div style={{ opacity: step3Opacity, y: step3Y }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 mt-12 md:mt-20">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-lg">3</div>
               <div className="pt-2 md:pt-4">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'The Ripple Effect' : 'El Efecto Multiplicador'}</h3>
                 <p className="text-base md:text-lg text-[#93B1A7] leading-relaxed text-left">{language === 'EN' ? 'Guests share their adventure. Guides earn recognition and tips. Operators get content, data, and loyalty, all without lifting a finger.' : 'Los invitados comparten su aventura. Los guías ganan reconocimiento. Los operadores obtienen contenido y lealtad, sin mover un dedo.'}</p>
@@ -410,7 +414,14 @@ d="M 5,10 Q 40,14 80,8 T 160,12 T 235,10 Q 250,5 240,18"
             </div>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8">
+<div className="grid md:grid-cols-3 gap-8">
+            {/* Expedition Stats - Now First */}
+            <motion.div whileHover={{ y: -5 }} className="bg-[#16697A]/40 backdrop-blur-sm p-8 rounded-3xl border border-[#99C2A2]/30 transition-colors group relative overflow-hidden">
+              <BarChart3 className="text-[#F0803C] mb-6 group-hover:scale-110 transition-transform" size={40} />
+              <h3 className="text-2xl font-bold text-white mb-3">{language === 'EN' ? 'Expedition Stats' : 'Estadísticas de Expedición'}</h3>
+              <p className="text-[#99C2A2] leading-relaxed relative z-10">{language === 'EN' ? "Every tour builds your operation's record. We're building guide performance insights and species trend tracking." : 'Cada recorrido construye tu registro. Estamos desarrollando estadísticas de rendimiento e informes de tendencias.'}</p>
+            </motion.div>
+
             {/* Expanding Parks */}
             <motion.div whileHover={{ y: -5 }} className="bg-[#16697A]/40 backdrop-blur-sm p-8 rounded-3xl border border-[#99C2A2]/30 transition-colors group relative overflow-hidden">
               <Map className="text-[#F0803C] mb-6 group-hover:scale-110 transition-transform" size={40} />
@@ -423,13 +434,6 @@ d="M 5,10 Q 40,14 80,8 T 160,12 T 235,10 Q 250,5 240,18"
               <Waves className="text-[#F0803C] mb-6 group-hover:scale-110 transition-transform" size={40} />
               <h3 className="text-2xl font-bold text-white mb-3">{language === 'EN' ? 'Ocean Bound' : 'Hacia el Océano'}</h3>
               <p className="text-[#99C2A2] leading-relaxed relative z-10">{language === 'EN' ? 'Taking the Index underwater. Dive guides will be able to log marine life and generate beautiful shareable dive profiles.' : 'Llevando el Índice bajo el agua. Los guías podrán registrar vida marina y generar perfiles de buceo hermosos.'}</p>
-            </motion.div>
-
-            {/* Expedition Stats */}
-            <motion.div whileHover={{ y: -5 }} className="bg-[#16697A]/40 backdrop-blur-sm p-8 rounded-3xl border border-[#99C2A2]/30 transition-colors group relative overflow-hidden">
-              <BarChart3 className="text-[#F0803C] mb-6 group-hover:scale-110 transition-transform" size={40} />
-              <h3 className="text-2xl font-bold text-white mb-3">{language === 'EN' ? 'Expedition Stats' : 'Estadísticas de Expedición'}</h3>
-              <p className="text-[#99C2A2] leading-relaxed relative z-10">{language === 'EN' ? "Every tour builds your operation's record. We're building guide performance insights and species trend tracking." : 'Cada recorrido construye tu registro. Estamos desarrollando estadísticas de rendimiento e informes de tendencias.'}</p>
             </motion.div>
           </div>
         </div>
