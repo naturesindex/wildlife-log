@@ -6,9 +6,9 @@ import { supabase } from '../supabase';
 
 // --- ANIMATION COMPONENTS ---
 function AmbientParticles() {
-  // Memoize random values so they calculate ONCE, preventing massive scroll lag
   const particles = React.useMemo(() => {
-    return [...Array(15)].map((_, i) => ({
+    // Cut down to 8 particles for mobile performance
+    return [...Array(8)].map((_, i) => ({
       id: i,
       left: `${Math.random() * 100}%`,
       duration: Math.random() * 20 + 30,
@@ -21,14 +21,12 @@ function AmbientParticles() {
       {particles.map((p) => (
         <motion.div
           key={p.id}
-          // Removed the GPU-killing blur effect
           className="absolute w-2 h-2 bg-[#99C2A2]/30 rounded-full"
           style={{ left: p.left }}
           initial={{ y: -50, opacity: 0 }}
           animate={{
             y: '110vh',
-            x: [0, 40, -40, 0],
-            opacity: [0, 0.3, 0.3, 0],
+            opacity: [0, 0.3, 0],
           }}
           transition={{
             duration: p.duration,
@@ -42,48 +40,20 @@ function AmbientParticles() {
   );
 }
 
-// This handles the 3D mouse tracking AND the infinite ambient float
+// Stripped of 3D math for mobile performance, keeps the smooth ambient float!
 function TiltCard({ children, className, delay = 0 }: { children: React.ReactNode, className: string, delay?: number }) {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const mouseXSpring = useSpring(x, { stiffness: 200, damping: 20 });
-  const mouseYSpring = useSpring(y, { stiffness: 200, damping: 20 });
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["25deg", "-25deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-25deg", "25deg"]);
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const width = rect.width;
-    const height = rect.height;
-    const mouseX = e.clientX - rect.left;
-    const mouseY = e.clientY - rect.top;
-    const xPct = mouseX / width - 0.5;
-    const yPct = mouseY / height - 0.5;
-    x.set(xPct);
-    y.set(yPct);
-  };
-
-  const handleMouseLeave = () => {
-    x.set(0);
-    y.set(0);
-  };
-
   return (
     <motion.div
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
       animate={{ y: [0, -15, 0] }}
       transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay }}
       className={className}
     >
-      <div style={{ transform: "translateZ(50px)" }} className="w-full h-full relative">
+      <div className="w-full h-full relative">
         {children}
       </div>
     </motion.div>
   );
 }
-
 export function HomePage() {
 const navigate = useNavigate();
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
@@ -267,7 +237,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
             <div className="hidden md:block absolute left-[4.5rem] top-10 bottom-10 w-[2px] bg-gradient-to-b from-[#16697A] via-[#16697A]/50 to-transparent -z-10" />
 
 {/* Step 1 - Left Aligned - Scrubbed */}
-            <motion.div style={{ opacity: step1Opacity, x: step1X }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 will-change-transform">
+            <motion.div style={{ opacity: step1Opacity, x: step1X }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3">
               <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">1</div>
               <div className="pt-2 md:pt-4">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'Guide Logs Sightings' : 'El Guía Registra'}</h3>
@@ -276,7 +246,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
             </motion.div>
 
           {/* Step 2 - Offset Right on Both Mobile & Desktop - Scrubbed */}
-            <motion.div style={{ opacity: step2Opacity, x: step2X }} className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20 justify-end will-change-transform">
+            <motion.div style={{ opacity: step2Opacity, x: step2X }} className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20 justify-end">
               <div className="pt-2 md:pt-4 text-right">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'Guest Receives Link' : 'El Invitado Recibe el Enlace'}</h3>
                 <p className="text-base md:text-lg text-[#93B1A7] leading-relaxed text-right">{language === 'EN' ? "At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport." : 'Al final del recorrido, cada invitado obtiene un enlace personal, un resumen gratuito, un botón de propina y acceso para comprar su Pasaporte de Vida Silvestre.'}</p>
@@ -287,7 +257,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
             </motion.div>
 
             {/* Step 3 - Offset Further Left - Scrubbed */}
-            <motion.div style={{ opacity: step3Opacity, y: step3Y }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 mt-12 md:mt-20 will-change-transform">
+            <motion.div style={{ opacity: step3Opacity, y: step3Y }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 mt-12 md:mt-20">
               <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">3</div>
               <div className="pt-2 md:pt-4">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'The Ripple Effect' : 'El Efecto Multiplicador'}</h3>
