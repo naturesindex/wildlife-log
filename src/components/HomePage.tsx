@@ -1,4 +1,4 @@
-import { ArrowRight, Map, Waves, Leaf, Compass, UserCircle, Sparkles, HeartHandshake, DollarSign, Globe, BarChart3 } from 'lucide-react';
+import { ArrowRight, Map, Waves, UserCircle, BarChart3 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion, useTransform, useScroll, useInView } from 'framer-motion';
 import React, { useRef, useState } from 'react';
@@ -56,47 +56,12 @@ function TiltCard({ children, className, delay = 0 }: { children: React.ReactNod
   );
 }
 
-// NEW: FloatCard replaces the repeated "whileInView + infinite animate" pattern.
-// Key fix: the floating loop now only runs while the card is actually in view.
-// Previously all 4 benefit cards + 3 future cards animated forever even when
-// scrolled past — that's 7 perpetual rAF loops running on top of 4 scroll
-// listeners, which is exactly what causes mobile scroll to choke and jump.
-function FloatCard({
-  children,
-  className,
-  floatDelay = 0,
-  floatDuration = 6,
-  floatRange = 5,
-}: {
-  children: React.ReactNode;
-  className: string;
-  floatDelay?: number;
-  floatDuration?: number;
-  floatRange?: number;
-}) {
-  const ref = useRef(null);
-  const isInView = useInView(ref, { margin: '-80px', amount: 0.3 });
-
+// Replaced animated FloatCard with a static div to kill mobile lag completely
+function FloatCard({ children, className }: { children: React.ReactNode; className: string; floatDelay?: number; floatDuration?: number; floatRange?: number; }) {
   return (
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={
-        isInView
-          ? { opacity: 1, y: [0, -floatRange, 0] }
-          : { opacity: 0, y: 20 }
-      }
-      transition={{
-        opacity: { duration: 0.5 },
-        y: isInView
-          ? { duration: floatDuration, repeat: Infinity, ease: 'easeInOut', delay: floatDelay }
-          : { duration: 0.3 },
-      }}
-      style={{ willChange: 'transform, opacity' }}
-      className={className}
-    >
+    <div className={className}>
       {children}
-    </motion.div>
+    </div>
   );
 }
 
@@ -144,9 +109,10 @@ const cardsOpacity = useTransform(heroProg, [0.25, 0.45], [0, 1]);
   const cardsY = useTransform(heroProg, [0.25, 0.45], [30, 0]);
 
 const howItWorksRef = useRef<HTMLElement>(null);
-  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 90%", "start 10%"], layoutEffect: false });
+  // Pushed the start later and extended the end so it slides in slower when actually in view
+  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 75%", "end 50%"], layoutEffect: false });
 
-  const howLineOpacity = useTransform(howProgress, [0, 0.01], [0, 1]);
+  const howLineOpacity = useTransform(howProgress, [0, 0.05], [0, 1]);
 
   const step1Opacity = useTransform(howProgress, [0, 0.25], [0, 1]);
   const step1X = useTransform(howProgress, [0, 0.25], [-50, 0]);
@@ -158,17 +124,21 @@ const howItWorksRef = useRef<HTMLElement>(null);
   const step3Y = useTransform(howProgress, [0.4, 0.65], [50, 0]);
 
   const operatorRef = useRef<HTMLElement>(null);
-  const { scrollYProgress: operatorProgress } = useScroll({ target: operatorRef, offset: ["start 75%", "start 40%"], layoutEffect: false });
+  // Widened the offset to slow down the underline significantly
+  const { scrollYProgress: operatorProgress } = useScroll({ target: operatorRef, offset: ["start 85%", "start 20%"], layoutEffect: false });
+  const operatorLineOpacity = useTransform(operatorProgress, [0, 0.05], [0, 1]); // Fixes the dot!
 
   const futureRef = useRef<HTMLElement>(null);
-  const { scrollYProgress: futureProgress } = useScroll({ target: futureRef, offset: ["start 75%", "start 40%"], layoutEffect: false });
+  // Widened the offset here as well
+  const { scrollYProgress: futureProgress } = useScroll({ target: futureRef, offset: ["start 85%", "start 20%"], layoutEffect: false });
+  const futureLineOpacity = useTransform(futureProgress, [0, 0.05], [0, 1]); // Fixes the dot!
 
   return (
     <div className="min-[100svh] bg-[#003B36] text-[#93B1A7] font-sans selection:bg-[#F0803C]/30 select-none">
 {/* Navbar */}
       <nav className="absolute top-0 left-0 right-0 z-30 p-4 sm:p-6 flex justify-between items-center max-w-7xl mx-auto w-full">
         <div className="text-xl sm:text-2xl font-black tracking-tighter text-white flex items-center gap-2">
-          <Leaf className="text-[#F0803C]" />
+          <img src="YOUR_NEW_LOGO_URL_HERE" alt="Nature's Index Logo" className="w-8 h-8 object-contain" />
           <span className="text-[#F0803C]">NATURE'S INDEX</span>
         </div>
         <div className="flex items-center gap-3">
@@ -240,7 +210,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
                   alt="Lush Jungle"
                   loading="eager"
                   decoding="async"
-                  className="w-full h-full object-cover opacity-70 mix-blend-overlay"
+                  className="w-full h-full object-cover opacity-90"
                 />
                 <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
                     <div className="bg-[#99C2A2]/20 text-[#99C2A2] border border-[#99C2A2]/30 text-xs font-bold px-3 py-1 rounded-full mb-2 inline-block">
@@ -258,7 +228,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
                   alt="Deep Ocean Dive"
                   loading="lazy"
                   decoding="async"
-                  className="w-full h-full object-cover opacity-40 grayscale-[30%] mix-blend-overlay"
+                  className="w-full h-full object-cover opacity-80"
                 />
                     <div className="absolute bottom-6 left-6 z-20 pointer-events-none">
                     <div className="bg-[#F0803C]/20 text-[#F0803C] border border-[#F0803C]/30 text-[10px] font-bold px-3 py-1 rounded-full mb-2 inline-block uppercase tracking-wider">
@@ -341,7 +311,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 strokeWidth="6" 
                 fill="none" 
                 strokeLinecap="round" 
-                style={{ pathLength: operatorProgress }} 
+                style={{ pathLength: operatorProgress, opacity: operatorLineOpacity }}
               />
             </svg>
           </div>
@@ -417,7 +387,7 @@ d="M 5,10 Q 40,14 80,8 T 160,12 T 235,10 Q 250,5 240,18"
                   strokeWidth="6" 
                   fill="none" 
                   strokeLinecap="round" 
-                  style={{ pathLength: futureProgress }} 
+                 style={{ pathLength: futureProgress, opacity: futureLineOpacity }}
                 />
               </svg>
             </div>
