@@ -328,7 +328,7 @@ return (
               )}
               {hasMythical && (
                 <div className="bg-[#112217] border border-[#c084fc]/20 rounded-2xl p-4 flex items-center gap-4 shadow-lg">
-                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783109119/Mystic.png" alt="Myth Seeker" className="w-12 h-12 object-contain drop-shadow-lg" />
+                  <img src="https://res.cloudinary.com/dcysfuoig/image/upload/v1783184523/Mystic.png" alt="Myth Seeker" className="w-12 h-12 object-contain drop-shadow-lg" />
                   <div>
                     <p className="font-black text-[#c084fc] leading-tight">Myth Seeker</p>
                     <p className="text-xs text-white/60 mt-1">Logged a near-mythical rarity species!</p>
