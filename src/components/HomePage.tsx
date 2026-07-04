@@ -124,10 +124,12 @@ const cardsOpacity = useTransform(heroProg, [0.25, 0.45], [0, 1]);
   const cardsY = useTransform(heroProg, [0.25, 0.45], [30, 0]);
 
 const howItWorksRef = useRef<HTMLElement>(null);
-  // Sped up for mobile: Starts slightly earlier, but finishes WAY faster
-  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 80%", "start 30%"] });
+  // Stretched out mapping so it doesn't rush (adjust these percentages to play with speed!):
+  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 90%", "start 10%"] });
+  
+  // This instantly hides that annoying floating dot until you start scrolling:
+  const howLineOpacity = useTransform(howProgress, [0, 0.01], [0, 1]);
 
-  // Strictly tied scroll animations for Steps 1, 2, and 3
   const step1Opacity = useTransform(howProgress, [0, 0.25], [0, 1]);
   const step1X = useTransform(howProgress, [0, 0.25], [-50, 0]);
 
@@ -249,13 +251,13 @@ const howItWorksRef = useRef<HTMLElement>(null);
             </h2>
             {/* Drawn Ragged Brush Underline - Scrubbed */}
             <svg className="absolute -bottom-3 left-0 w-full h-6 pointer-events-none z-0 overflow-visible" viewBox="0 0 200 20" preserveAspectRatio="none">
-              <motion.path 
+             <motion.path 
                 d="M 5,10 Q 30,14 60,8 T 120,12 T 180,6 T 205,10" 
                 stroke="#99C2A2" 
                 strokeWidth="6" 
                 fill="none" 
                 strokeLinecap="round" 
-                style={{ pathLength: howProgress }} 
+                style={{ pathLength: howProgress, opacity: howLineOpacity }} 
               />
             </svg>
           </div>
@@ -324,13 +326,9 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                animate={{ borderRadius: ["40% 60% 70% 30% / 40% 50% 60% 50%", "60% 40% 30% 70% / 60% 30% 70% 40%", "40% 60% 70% 30% / 40% 50% 60% 50%"] }}
-                transition={{ 
-                  borderRadius: { duration: 8, repeat: Infinity, ease: "easeInOut" },
-                  opacity: { duration: 0.6 },
-                  y: { duration: 0.6 }
-                }}
-                className="w-[92%] md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
+                animate={{ y: [-5, 5, -5] }}
+                transition={{ opacity: { duration: 0.6 }, y: { duration: 6, repeat: Infinity, ease: "easeInOut" } }}
+                className="w-[92%] md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center rounded-[3rem] rounded-tr-[5rem] rounded-bl-[4rem]"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'The Guest Wow Factor' : 'El Factor Sorpresa'}</h3>
@@ -343,13 +341,9 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                animate={{ borderRadius: ["50% 50% 30% 70% / 60% 40% 60% 40%", "30% 70% 50% 50% / 40% 60% 40% 60%", "50% 50% 30% 70% / 60% 40% 60% 40%"] }}
-                transition={{ 
-                  borderRadius: { duration: 9, repeat: Infinity, ease: "easeInOut", delay: 0.5 },
-                  opacity: { duration: 0.6 },
-                  y: { duration: 0.6 }
-                }}
-                className="w-[92%] ml-auto md:w-full md:ml-0 md:mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
+                animate={{ y: [5, -5, 5] }}
+                transition={{ opacity: { duration: 0.6 }, y: { duration: 7, repeat: Infinity, ease: "easeInOut", delay: 0.5 } }}
+                className="w-[92%] ml-auto md:w-full md:ml-0 md:mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center rounded-[3rem] rounded-tl-[5rem] rounded-br-[4rem]"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'The Tip Mechanic' : 'Mecánica de Propinas'}</h3>
@@ -362,13 +356,9 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                animate={{ borderRadius: ["70% 30% 60% 40% / 50% 60% 40% 50%", "40% 60% 40% 60% / 60% 40% 60% 40%", "70% 30% 60% 40% / 50% 60% 40% 50%"] }}
-                transition={{ 
-                  borderRadius: { duration: 7, repeat: Infinity, ease: "easeInOut", delay: 1 },
-                  opacity: { duration: 0.6 },
-                  y: { duration: 0.6 }
-                }}
-                className="w-[92%] md:w-full md:-mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
+                animate={{ y: [-5, 5, -5] }}
+                transition={{ opacity: { duration: 0.6 }, y: { duration: 6.5, repeat: Infinity, ease: "easeInOut", delay: 1 } }}
+                className="w-[92%] md:w-full md:-mt-12 bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center rounded-[3rem] rounded-bl-[5rem] rounded-tr-[4rem]"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'Passive Upsell Revenue' : 'Ingresos Pasivos'}</h3>
@@ -381,13 +371,9 @@ const howItWorksRef = useRef<HTMLElement>(null);
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, amount: 0.3 }}
-                animate={{ borderRadius: ["30% 70% 40% 60% / 40% 50% 50% 60%", "60% 40% 70% 30% / 50% 40% 60% 50%", "30% 70% 40% 60% / 40% 50% 50% 60%"] }}
-                transition={{ 
-                  borderRadius: { duration: 8.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 },
-                  opacity: { duration: 0.6 },
-                  y: { duration: 0.6 }
-                }}
-                className="w-[92%] ml-auto md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center"
+                animate={{ y: [5, -5, 5] }}
+                transition={{ opacity: { duration: 0.6 }, y: { duration: 7.5, repeat: Infinity, ease: "easeInOut", delay: 1.5 } }}
+                className="w-[92%] ml-auto md:w-full bg-[#16697A]/40 p-8 md:p-10 border border-[#99C2A2]/30 backdrop-blur-sm relative overflow-hidden h-[300px] flex flex-col justify-center items-center text-center rounded-[3rem] rounded-br-[5rem] rounded-tl-[4rem]"
             >
               <div className="relative z-10 flex flex-col items-center">
                 <h3 className="text-2xl md:text-3xl font-black text-white mb-3 tracking-tighter">{language === 'EN' ? 'Bilingual by Design' : 'Bilingüe por Diseño'}</h3>
