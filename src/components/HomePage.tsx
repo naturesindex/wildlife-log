@@ -6,24 +6,35 @@ import { supabase } from '../supabase';
 
 // --- ANIMATION COMPONENTS ---
 function AmbientParticles() {
+  // Memoize random values so they calculate ONCE, preventing massive scroll lag
+  const particles = React.useMemo(() => {
+    return [...Array(15)].map((_, i) => ({
+      id: i,
+      left: `${Math.random() * 100}%`,
+      duration: Math.random() * 20 + 30,
+      delay: Math.random() * 10
+    }));
+  }, []);
+
   return (
     <div className="absolute inset-0 pointer-events-none overflow-hidden z-0">
-      {[...Array(15)].map((_, i) => (
+      {particles.map((p) => (
         <motion.div
-          key={i}
-          className="absolute w-2 h-2 bg-[#99C2A2]/20 rounded-full blur-[1px]"
-          style={{ left: `${Math.random() * 100}%` }}
-          initial={{ y: -50, rotate: 0, opacity: 0 }}
+          key={p.id}
+          // Removed the GPU-killing blur effect
+          className="absolute w-2 h-2 bg-[#99C2A2]/30 rounded-full"
+          style={{ left: p.left }}
+          initial={{ y: -50, opacity: 0 }}
           animate={{
             y: '110vh',
             x: [0, 40, -40, 0],
-            opacity: [0, 0.2, 0.2, 0],
+            opacity: [0, 0.3, 0.3, 0],
           }}
           transition={{
-            duration: Math.random() * 20 + 30,
+            duration: p.duration,
             repeat: Infinity,
             ease: "linear",
-            delay: Math.random() * 10,
+            delay: p.delay,
           }}
         />
       ))}
@@ -113,8 +124,8 @@ const cardsOpacity = useTransform(heroProg, [0.25, 0.45], [0, 1]);
   const cardsY = useTransform(heroProg, [0.25, 0.45], [30, 0]);
 
 const howItWorksRef = useRef<HTMLElement>(null);
-  // Adjusted offset: starts drawing later on the screen and finishes later
-  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 70%", "end 80%"] });
+  // Sped up for mobile: Starts slightly earlier, but finishes WAY faster
+  const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 80%", "start 30%"] });
 
   // Strictly tied scroll animations for Steps 1, 2, and 3
   const step1Opacity = useTransform(howProgress, [0, 0.25], [0, 1]);
@@ -254,8 +265,8 @@ const howItWorksRef = useRef<HTMLElement>(null);
             <div className="hidden md:block absolute left-[4.5rem] top-10 bottom-10 w-[2px] bg-gradient-to-b from-[#16697A] via-[#16697A]/50 to-transparent -z-10" />
 
 {/* Step 1 - Left Aligned - Scrubbed */}
-            <motion.div style={{ opacity: step1Opacity, x: step1X }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3">
-              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-lg">1</div>
+            <motion.div style={{ opacity: step1Opacity, x: step1X }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 will-change-transform">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">1</div>
               <div className="pt-2 md:pt-4">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'Guide Logs Sightings' : 'El Guía Registra'}</h3>
                 <p className="text-base md:text-lg text-[#93B1A7] leading-relaxed text-left">{language === 'EN' ? 'Guides log species in real time through a fast, mobile-friendly portal, built for the trail, not the office.' : 'Los guías registran especies en tiempo real a través de un portal rápido y móvil, diseñado para el sendero, no para la oficina.'}</p>
@@ -263,19 +274,19 @@ const howItWorksRef = useRef<HTMLElement>(null);
             </motion.div>
 
           {/* Step 2 - Offset Right on Both Mobile & Desktop - Scrubbed */}
-            <motion.div style={{ opacity: step2Opacity, x: step2X }} className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20 justify-end">
+            <motion.div style={{ opacity: step2Opacity, x: step2X }} className="flex gap-4 md:gap-8 items-start w-[95%] ml-auto md:w-2/3 md:ml-auto mt-12 md:mt-20 justify-end will-change-transform">
               <div className="pt-2 md:pt-4 text-right">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'Guest Receives Link' : 'El Invitado Recibe el Enlace'}</h3>
                 <p className="text-base md:text-lg text-[#93B1A7] leading-relaxed text-right">{language === 'EN' ? "At tour's end, every guest gets a personal link, their free highlight reel, a tip button for their guide, and access to purchase their Wildlife Passport." : 'Al final del recorrido, cada invitado obtiene un enlace personal, un resumen gratuito, un botón de propina y acceso para comprar su Pasaporte de Vida Silvestre.'}</p>
               </div>
-              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-lg">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">
                 2
               </div>
             </motion.div>
 
             {/* Step 3 - Offset Further Left - Scrubbed */}
-            <motion.div style={{ opacity: step3Opacity, y: step3Y }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 mt-12 md:mt-20">
-              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black shadow-lg">3</div>
+            <motion.div style={{ opacity: step3Opacity, y: step3Y }} className="flex gap-4 md:gap-8 items-start w-[95%] md:w-2/3 mt-12 md:mt-20 will-change-transform">
+              <div className="w-14 h-14 md:w-20 md:h-20 shrink-0 bg-[#16697A] border-2 border-[#99C2A2] text-[#F0803C] rounded-full flex items-center justify-center text-xl md:text-3xl font-black">3</div>
               <div className="pt-2 md:pt-4">
                 <h3 className="text-xl md:text-2xl font-bold text-white mb-2 md:mb-4">{language === 'EN' ? 'The Ripple Effect' : 'El Efecto Multiplicador'}</h3>
                 <p className="text-base md:text-lg text-[#93B1A7] leading-relaxed text-left">{language === 'EN' ? 'Guests share their adventure. Guides earn recognition and tips. Operators get content, data, and loyalty, all without lifting a finger.' : 'Los invitados comparten su aventura. Los guías ganan reconocimiento. Los operadores obtienen contenido y lealtad, sin mover un dedo.'}</p>
