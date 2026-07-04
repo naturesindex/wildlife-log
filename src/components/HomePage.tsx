@@ -258,7 +258,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
   fill="none" 
   strokeLinecap="round" 
   style={{ pathLength: howProgress, opacity: howLineOpacity }}
-  transition={{ duration: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.6 : 1.2, ease: "easeInOut" }}
+  transition={{ duration: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.4 : 1.2, ease: "easeInOut" }}
 />
             </svg>
           </div>
