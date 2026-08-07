@@ -62,6 +62,8 @@ export function GuidePortal() {
 
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
 const [expeditionType, setExpeditionType] = useState('Sirena Station (Day Tour)');
+  return localStorage.getItem('corcovado_expedition_type') || 'Sirena Station (Day Tour)';
+});
 const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeFilter, setActiveFilter] = useState<ActiveFilter>('Favorites');
@@ -147,6 +149,8 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   // --- END RECENT TOURS LOGIC ---
 // --- NEW: Start Tour Logic ---
   const startNewTour = async () => {
+    // Save the chosen expedition type to phone memory!
+    localStorage.setItem('corcovado_expedition_type', expeditionType);
     const { data, error } = await supabase
       .from('tours')
       .insert({ guide_id: guideId, status: 'active', zone: expeditionType })
@@ -530,6 +534,11 @@ if (showExport) {
   language={language}
   guideName={guideName}
   tourId={tourId}
+  expeditionType={expeditionType}
+  setExpeditionType={(newType: string) => {
+    setExpeditionType(newType);
+    localStorage.setItem('corcovado_expedition_type', newType);
+  }}
   onBack={() => setShowExport(false)}
   setLanguage={setLanguage}
  onEndSession={() => {
