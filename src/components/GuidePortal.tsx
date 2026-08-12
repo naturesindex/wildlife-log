@@ -61,7 +61,7 @@ export function GuidePortal() {
   });
 
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
-const [expeditionType, setExpeditionType] = useState('Sirena Station (Day Tour)');
+const [expeditionType, setExpeditionType] = useState(() => {
   return localStorage.getItem('corcovado_expedition_type') || 'Sirena Station (Day Tour)';
 });
 const [showExpeditionModal, setShowExpeditionModal] = useState(false);
