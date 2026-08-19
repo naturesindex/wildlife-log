@@ -12,6 +12,7 @@ export const initialSpecies: Species[] = [
     "descEN": "The Baird's tapir is the largest land mammal in Central America, weighing up to 300 kg. Despite their barrel-shaped bulk, they are agile swimmers and climbers, using a flexible prehensile nose to grab vegetation. Their lineage stretches back 35 million years, making them one of Earth's most ancient surviving large mammals.",
     "descES": "La danta es el mamífero terrestre más grande de América Central, con un peso de hasta 300 kg. A pesar de su enorme tamaño, son nadadores y trepadores ágiles, y usan su nariz prensil y flexible para agarrar la vegetación. Su linaje se remonta 35 millones de años, lo que las convierte en uno de los grandes mamíferos vivos más antiguos del planeta."
   },
+  
   {
     "id": "scarlet-macaw",
     "nameEN": "Scarlet Macaw",
