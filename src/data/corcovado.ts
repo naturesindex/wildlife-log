@@ -1056,7 +1056,6 @@ export const initialSpecies: Species[] = [
     "id": "bushmaster",
     "nameEN": "Bushmaster",
     "nameES": "Matabuey",
-    scientificName: "Lachesis muta",
     "category": "Reptiles & Amphibians",
     "section": "The Forest Floor",
     "tier": 2,
@@ -1070,7 +1069,6 @@ export const initialSpecies: Species[] = [
     "id": "glass-frog",
     "nameEN": "Glass Frog",
     "nameES": "Rana de Cristal",
-    scientificName: "Hyalinobatrachium spp.",
     "category": "Reptiles & Amphibians",
     "section": "The Canopy Crew",
     "tier": 2,
@@ -1510,4 +1508,3 @@ export const initialSpecies: Species[] = [
     "descES": "Un hongo en forma de copa singularmente hermoso y delicado que se asemeja a pequeños cálices de colores brillantes que crecen en madera podrida. Descubrir estos pequeños y vibrantes hongos agrega un toque mágico a cualquier caminata por el bosque."
   }
 ];
-
