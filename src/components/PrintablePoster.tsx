@@ -2,7 +2,7 @@ import { ArrowLeft, Download } from 'lucide-react';
 import { useRef, useState } from 'react';
 import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
-import { initialSpecies } from '../data/species';
+import { initialSpecies } from '../data/corcovado';
 
 interface PrintablePosterProps {
   loggedSpecies: Species[];
