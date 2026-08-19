@@ -1,8 +1,10 @@
 import { LoginScreen } from './LoginScreen';
 import { supabase } from '../supabase';
 import { useState, useMemo, useEffect, useCallback } from 'react';
+import { useParams } from 'react-router-dom';
 import { Species, BioCategory } from '../types';
 import { initialSpecies } from '../data/species';
+import { uticaSpecies } from '../data/utica';
 import { Header } from './Header';
 import { SearchBar, CategoryTabs } from './Filters';
 import { SpeciesGrid } from './SpeciesGrid';
@@ -34,22 +36,27 @@ function normalize(raw: Species): Species {
 }
 
 export function GuidePortal() {
-  // 1. Database & Session States
+  // Traffic Cop: Check the URL to see which location we are in
+  const { location } = useParams<{ location: string }>();
+  const locKey = location || 'corcovado';
+  const activeDataset = locKey === 'utica' ? uticaSpecies : initialSpecies;
+
+  // 1. Database & Session States (Dynamic based on location!)
   const [tourId, setTourId] = useState<string | null>(() => {
-    return localStorage.getItem('corcovado_tour_id') || null;
+    return localStorage.getItem(`${locKey}_tour_id`) || null;
   });
   
   const [guideId, setGuideId] = useState(() => {
-    return localStorage.getItem('corcovado_guide_id') || '';
+    return localStorage.getItem(`${locKey}_guide_id`) || '';
   });
 
   const [sessionActive, setSessionActive] = useState(() => {
-    return localStorage.getItem('corcovado_session_active') !== 'false';
+    return localStorage.getItem(`${locKey}_session_active`) !== 'false';
   });
 
   // 1b. Initialize species from localStorage OR default data
   const [species, setSpecies] = useState<Species[]>(() => {
-    const saved = localStorage.getItem('corcovado_species_state');
+    const saved = localStorage.getItem(`${locKey}_species_state`);
     if (saved) {
       try {
         return JSON.parse(saved);
@@ -57,7 +64,7 @@ export function GuidePortal() {
         console.error('Failed to parse saved species state', e);
       }
     }
-    return (initialSpecies as Species[]).map(normalize);
+    return (activeDataset as Species[]).map(normalize);
   });
 
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
