@@ -69,7 +69,7 @@ export function GuidePortal() {
 
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
 const [expeditionType, setExpeditionType] = useState(() => {
-  return localStorage.getItem('corcovado_expedition_type') || 'Sirena Station (Day Tour)';
+  return localStorage.getItem(`${locKey}_expedition_type`) || 'Sirena Station (Day Tour)';
 });
 const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -78,17 +78,17 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const [showExport, setShowExport] = useState(false);
   
   const [guideName, setGuideName] = useState(() => {
-    return localStorage.getItem('corcovado_guide_name') || '';
+    return localStorage.getItem(`${locKey}_guide_name`) || '';
   });
 
-  // Persist Guide ID and Tour ID to phone memory
+ // Persist Guide ID and Tour ID to phone memory
   useEffect(() => {
-    localStorage.setItem('corcovado_guide_id', guideId);
+    localStorage.setItem(`${locKey}_guide_id`, guideId);
   }, [guideId]);
 
   useEffect(() => {
-    if (tourId) localStorage.setItem('corcovado_tour_id', tourId);
-    else localStorage.removeItem('corcovado_tour_id');
+    if (tourId) localStorage.setItem(`${locKey}_tour_id`, tourId);
+    else localStorage.removeItem(`${locKey}_tour_id`);
   }, [tourId]);
 // --- NEW: RECENT TOURS LOGIC ---
   const [recentTours, setRecentTours] = useState<any[]>([]);
@@ -104,8 +104,8 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
     }
   }, [guideId, tourId]);
 
-  useEffect(() => {
-    localStorage.setItem('corcovado_session_active', String(sessionActive));
+ useEffect(() => {
+    localStorage.setItem(`${locKey}_session_active`, String(sessionActive));
   }, [sessionActive]);
 
   const fetchRecentTours = async () => {
@@ -155,9 +155,9 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   };
   // --- END RECENT TOURS LOGIC ---
 // --- NEW: Start Tour Logic ---
-  const startNewTour = async () => {
+const startNewTour = async () => {
     // Save the chosen expedition type to phone memory!
-    localStorage.setItem('corcovado_expedition_type', expeditionType);
+    localStorage.setItem(`${locKey}_expedition_type`, expeditionType);
     const { data, error } = await supabase
       .from('tours')
       .insert({ guide_id: guideId, status: 'active', zone: expeditionType })
@@ -188,11 +188,11 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
 
   const handleLogout = () => {
     if (window.confirm(language === 'EN' ? "Wait! Have you saved your passport? Are you sure you want to log out?" : "¡Espera! ¿Has guardado tu pasaporte? ¿Estás seguro de que quieres cerrar sesión?")) {
-      setGuideId('');
+setGuideId('');
       setGuideName('');
       setTourId(null);
-      localStorage.removeItem('corcovado_guide_name');
-      localStorage.removeItem('corcovado_species_state');
+      localStorage.removeItem(`${locKey}_guide_name`);
+      localStorage.removeItem(`${locKey}_species_state`);
     }
   };
 
@@ -202,14 +202,14 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
   
-  // 3. Save species to localStorage whenever it changes
+ // 3. Save species to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('corcovado_species_state', JSON.stringify(species));
+    localStorage.setItem(`${locKey}_species_state`, JSON.stringify(species));
   }, [species]);
 
   // 4. Save guideName to localStorage whenever it changes
   useEffect(() => {
-    localStorage.setItem('corcovado_guide_name', guideName);
+    localStorage.setItem(`${locKey}_guide_name`, guideName);
   }, [guideName]);
 
   // --- UPGRADED TOGGLE LOG FUNCTION ---
@@ -542,16 +542,16 @@ if (showExport) {
   guideName={guideName}
   tourId={tourId}
   expeditionType={expeditionType}
-  setExpeditionType={(newType: string) => {
+setExpeditionType={(newType: string) => {
     setExpeditionType(newType);
-    localStorage.setItem('corcovado_expedition_type', newType);
+    localStorage.setItem(`${locKey}_expedition_type`, newType);
   }}
   onBack={() => setShowExport(false)}
   setLanguage={setLanguage}
  onEndSession={() => {
     setShowExport(false);
     setTourId(null); // This triggers the Lobby view!
-    localStorage.removeItem('corcovado_tour_id');
+    localStorage.removeItem(`${locKey}_tour_id`);
     // Keep favorites safely intact, only reset the checks!
     setSpecies(prev => prev.map(s => ({ ...s, isLogged: false })));
   }}
