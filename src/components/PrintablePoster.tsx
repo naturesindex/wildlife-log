@@ -4,6 +4,7 @@ import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
 import { initialSpecies } from '../data/corcovado';
 
+
 interface PrintablePosterProps {
   loggedSpecies: Species[];
   language: Language;
