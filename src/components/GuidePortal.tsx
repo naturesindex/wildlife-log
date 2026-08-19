@@ -3,7 +3,7 @@ import { supabase } from '../supabase';
 import { useState, useMemo, useEffect, useCallback } from 'react';
 import { useParams } from 'react-router-dom';
 import { Species, BioCategory } from '../types';
-import { initialSpecies } from '../data/species';
+import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
 import { Header } from './Header';
 import { SearchBar, CategoryTabs } from './Filters';
@@ -69,7 +69,8 @@ export function GuidePortal() {
 
 const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
 const [expeditionType, setExpeditionType] = useState(() => {
-  return localStorage.getItem(`${locKey}_expedition_type`) || 'Sirena Station (Day Tour)';
+  const fallback = locKey === 'utica' ? 'Naturaleza Viva (Útica)' : 'Sirena Station (Day Tour)';
+  return localStorage.getItem(`${locKey}_expedition_type`) || fallback;
 });
 const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -145,8 +146,8 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const handleOpenPastTour = (tour: any) => {
     // Extract just the species IDs from the logs
     const pastSpeciesIds = tour.tour_logs.map((log: any) => log.species_id);
-    // Rebuild the logged list from our master initialSpecies list
-    const pastLogged = initialSpecies
+    // Rebuild the logged list from our master dataset for this location
+    const pastLogged = (activeDataset as Species[])
       .filter(s => pastSpeciesIds.includes(s.id))
       .map(s => ({ ...s, isLogged: true }));
     
@@ -493,14 +494,16 @@ if (!tourId || !sessionActive) {
                 {language === 'EN' ? 'Choose your route to start logging.' : 'Elige tu ruta para empezar.'}
               </p>
               <div className="flex flex-col gap-3 mb-6">
-            {[
+            {(locKey === 'utica' ? [
+                  'Naturaleza Viva (Útica)'
+                ] : [
                   'Sirena Station (Day Tour)',
                   'San Pedrillo Station (Day Tour)',
                   'Sirena Station (Overnight)',
                   'Combo: Sirena + San Pedrillo (day tour)',
                   'Combo: Sirena + San Pedrillo (overnight)',
                   'Combo: Sirena + San Pedrillo (3 day)'
-                ].map((exp) => (
+                ]).map((exp) => (
                   <button
                     key={exp}
                     onClick={() => setExpeditionType(exp)}
