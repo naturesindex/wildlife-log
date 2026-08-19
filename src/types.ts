@@ -6,7 +6,14 @@ export type BioCategory =
   | 'Birds'
   | 'Reptiles & Amphibians'
   | 'Flora'
-  | 'Marine Life';
+  | 'Marine Life'
+  // Útica Birding Categories
+  | 'Raptors'
+  | 'Hummingbirds'
+  | 'Tanagers'
+  | 'Taucans & Motmots'
+  | 'Woodpeckers & Barbets'
+  | 'Other Birds';
 
 /** Thematic passport section — used for passport grouping and category colors */
 export type PassportSection =
@@ -15,7 +22,14 @@ export type PassportSection =
   | 'Sea & Shore'
   | 'Forest Floor'
   | 'Fascinating Flora'
-  | 'Other Notable';
+  | 'Other Notable'
+  // Útica Birding Passport Sections
+  | 'Feathered Royalty'
+  | 'Jewels of the Air'
+  | 'Canopy Color'
+  | 'Forest Songbirds'
+  | 'Woodland Wonders'
+  | 'Other Discoveries';
 
 export type Language = 'EN' | 'ES';
 
@@ -30,8 +44,8 @@ export interface Species {
   isLogged: boolean;
   nameEN: string;
   nameES: string;
-  scientificName?: string; // NEW
-  rarityScore?: number;    // NEW: 0-100 scale
+  scientificName?: string;
+  rarityScore?: number;
   descEN?: string;
   descES?: string;
   image: string;
