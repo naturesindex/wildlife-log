@@ -1,7 +1,8 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '../supabase';
-import { initialSpecies } from '../data/species';
+import { initialSpecies } from '../data/corcovado';
+import { uticaSpecies } from '../data/utica';
 import { Species } from '../types';
 import { SocialStory } from './SocialStory'; // Reusing your fixed graphic component
 import { WildlifePassport } from './WildlifePassport';
@@ -27,10 +28,10 @@ export function GuestPortal() {
   const fetchTourDetails = async () => {
     if (!tourId) return;
     
-    // 1. Get the tour and the logged species IDs
+    // 1. Get the tour, zone/location, and logged species IDs
     const { data: tourData } = await supabase
       .from('tours')
-      .select('guide_id, tour_logs(species_id)')
+      .select('guide_id, zone, tour_logs(species_id)')
       .eq('id', tourId)
       .single();
 
@@ -44,9 +45,13 @@ export function GuestPortal() {
         
       if (guideData) setGuideName(guideData.name);
 
-      // 3. Match the logged IDs to our species data
+      // 3. Determine dataset dynamically (Útica vs Corcovado)
+      const isUtica = tourData.zone?.toLowerCase().includes('utica') || false;
+      const masterList = isUtica ? uticaSpecies : initialSpecies;
+
+      // 4. Match the logged IDs to species data
       const loggedIds = tourData.tour_logs.map((log: any) => log.species_id);
-      const matchedSpecies = (initialSpecies as Species[]).filter(s => loggedIds.includes(s.id));
+      const matchedSpecies = (masterList as Species[]).filter(s => loggedIds.includes(s.id));
       setLoggedSpecies(matchedSpecies);
     }
     setLoading(false);
