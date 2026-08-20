@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { supabase } from '../supabase';
 import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
+import { getLocationConfig } from '../data/locations';
 import { Species } from '../types';
 import { SocialStory } from './SocialStory'; // Reusing your fixed graphic component
 import { WildlifePassport } from './WildlifePassport';
@@ -14,8 +15,10 @@ export function GuestPortal() {
   const [loading, setLoading] = useState(true);
   const [guideName, setGuideName] = useState('Your Guide');
   const [loggedSpecies, setLoggedSpecies] = useState<Species[]>([]);
+  const [locKey, setLocKey] = useState('corcovado');
   const [guestName, setGuestName] = useState('');
   const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
+  const config = getLocationConfig(locKey);
   
   const snapshotRef = useRef<HTMLDivElement>(null);
   const checkoutRef = useRef<HTMLDivElement>(null);
@@ -47,6 +50,8 @@ export function GuestPortal() {
 
       // 3. Determine dataset dynamically (Útica vs Corcovado)
       const isUtica = tourData.zone?.toLowerCase().includes('utica') || false;
+      const resolvedLocKey = isUtica ? 'utica' : 'corcovado';
+      setLocKey(resolvedLocKey);
       const masterList = isUtica ? uticaSpecies : initialSpecies;
 
       // 4. Match the logged IDs to species data
@@ -97,7 +102,7 @@ export function GuestPortal() {
           Nature's Index
         </h2>
         <h1 className="text-4xl font-black text-white mb-4 leading-tight">
-          {language === 'EN' ? 'Your Corcovado Adventure' : 'Tu Aventura en Corcovado'}
+          {language === 'EN' ? `Your ${config.nameEN} Adventure` : `Tu Aventura en ${config.nameES}`}
         </h1>
         <p className="text-emerald-400 text-lg font-medium">
           {language === 'EN' ? `Guided by ${guideName}` : `Guiado por ${guideName}`} • {loggedSpecies.length} {language === 'EN' ? 'Species Logged' : 'Especies'}
@@ -123,6 +128,7 @@ export function GuestPortal() {
               language={language} 
               guideName={guideName} 
               totalLogged={loggedSpecies.length} 
+              location={locKey}
             />
           </div>
 
@@ -190,7 +196,7 @@ export function GuestPortal() {
           </div>
           {/* Real component, heavily blurred and faded */}
           <div className="relative h-[400px] overflow-hidden blur-[5px] opacity-70 select-none pointer-events-none transform scale-95 origin-top mt-2">
-             <WildlifePassport loggedSpecies={loggedSpecies} language={language} guideName={guideName} />
+             <WildlifePassport loggedSpecies={loggedSpecies} language={language} guideName={guideName} location={locKey} />
              <div className="absolute inset-0 bg-gradient-to-b from-transparent via-white/50 to-white z-10"></div>
           </div>
           
@@ -246,12 +252,17 @@ export function GuestPortal() {
                 : 'bg-stone-200 text-stone-400 cursor-not-allowed'}`}
           >
             <Lock className="w-5 h-5" />
-            {language === 'EN' ? 'Purchase Passport - $15' : 'Comprar Pasaporte - $15'}
+            {language === 'EN' ? `Purchase Passport - $${config.premiumPriceUSD}` : `Comprar Pasaporte - $${config.premiumPriceUSD}`}
           </button>
           <p className="text-center text-xs text-stone-400 mt-4 font-medium">
              {language === 'EN' ? 'Secure payment via Stripe. Instant access.' : 'Pago seguro vía Stripe. Acceso instantáneo.'}
           </p>
         </div>
+
+      </div>
+    </div>
+  );
+}
 
       </div>
     </div>
