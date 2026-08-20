@@ -65,7 +65,7 @@ export function LoginScreen({ onLogin, language, setLanguage }: LoginProps) {
   };
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center p-6" style={{ background: '#0b170f' }}>
+    <div className="min-h-screen flex flex-col items-center justify-start pt-12 md:pt-16 p-6" style={{ background: '#0b170f' }}>
       
       {/* Language Toggle */}
       <div className="absolute top-6 right-6 flex bg-[#162b1d] rounded-full p-1">
