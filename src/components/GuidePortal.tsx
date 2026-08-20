@@ -10,6 +10,7 @@ import { SearchBar, CategoryTabs } from './Filters';
 import { SpeciesGrid } from './SpeciesGrid';
 import { ExportView } from './ExportView';
 import { PassportSandbox } from './PassportSandbox';
+import { fetchGuideFavorites, setGuideFavorite } from '../data/favorites';
 import { RotateCcw, Copy, Trash2, Eye } from 'lucide-react';
 
 
@@ -96,6 +97,7 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
  const [loadingTours, setLoadingTours] = useState(false);
   const [showSandbox, setShowSandbox] = useState(false);
   const [sandboxSpecies, setSandboxSpecies] = useState<Species[]>([]);
+  const [sandboxMeta, setSandboxMeta] = useState<{ expeditionType?: string; tourDate?: string }>({});
   const [showArchive, setShowArchive] = useState(false); // NEW: Archive State
 
   useEffect(() => {
@@ -112,9 +114,14 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const fetchRecentTours = async () => {
     setLoadingTours(true);
     // Fetch completed tours, sorted newest first!
+    // NOTE: scoped to this guide (.eq('guide_id', guideId)) — previously this
+    // query had no filter at all, so every guide on every account could see
+    // every other guide's tours in their Lobby. Now added `zone` too, since
+    // the sandbox preview needs it to know which trail/expedition was run.
     const { data, error } = await supabase
       .from('tours')
-      .select('id, created_at, tour_logs(species_id)')
+      .select('id, created_at, zone, tour_logs(species_id)')
+      .eq('guide_id', guideId)
       .order('created_at', { ascending: false }); // NEW: Sorts chronologically
 
     if (data) {
@@ -150,8 +157,12 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
     const pastLogged = (activeDataset as Species[])
       .filter(s => pastSpeciesIds.includes(s.id))
       .map(s => ({ ...s, isLogged: true }));
-    
+
     setSandboxSpecies(pastLogged);
+    setSandboxMeta({
+      expeditionType: tour.zone,
+      tourDate: new Date(tour.created_at).toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long', day: 'numeric', year: 'numeric' }),
+    });
     setShowSandbox(true);
   };
   // --- END RECENT TOURS LOGIC ---
@@ -213,6 +224,26 @@ setGuideId('');
     localStorage.setItem(`${locKey}_guide_name`, guideName);
   }, [guideName]);
 
+  // 5. Sync favorites from the guide's Supabase account so they follow the
+  // guide across devices instead of living only in this browser's localStorage.
+  // If the account has no favorites synced yet but this device does (an
+  // existing guide who hasn't been through this flow before), push this
+  // device's favorites up as a one-time backfill instead of wiping them.
+  useEffect(() => {
+    if (!guideId) return;
+    (async () => {
+      const remoteFavIds = await fetchGuideFavorites(guideId, locKey);
+      setSpecies((prev) => {
+        const localFavIds = prev.filter((s) => s.isFavorite).map((s) => s.id);
+        if (remoteFavIds.size === 0 && localFavIds.length > 0) {
+          localFavIds.forEach((id) => setGuideFavorite(guideId, locKey, id, true));
+          return prev;
+        }
+        return prev.map((s) => ({ ...s, isFavorite: remoteFavIds.has(s.id) }));
+      });
+    })();
+  }, [guideId, locKey]);
+
   // --- UPGRADED TOGGLE LOG FUNCTION ---
   const toggleLog = async (id: string) => {
     const targetSpecies = species.find((s) => s.id === id);
@@ -245,10 +276,13 @@ setGuideId('');
   // --- END UPGRADED TOGGLE LOG FUNCTION ---
 
   const toggleFavorite = useCallback((id: string) => {
-    setSpecies((prev) =>
-      prev.map((s) => (s.id === id ? { ...s, isFavorite: !s.isFavorite } : s))
-    );
-  }, []);
+    setSpecies((prev) => {
+      const target = prev.find((s) => s.id === id);
+      const next = !(target?.isFavorite);
+      setGuideFavorite(guideId, locKey, id, next);
+      return prev.map((s) => (s.id === id ? { ...s, isFavorite: next } : s));
+    });
+  }, [guideId, locKey]);
 
   const loggedCount = useMemo(() => species.filter((s) => s.isLogged).length, [species]);
   const loggedSpecies = useMemo(() => species.filter((s) => s.isLogged), [species]);
@@ -311,11 +345,14 @@ if (!tourId || !sessionActive) {
   // If they clicked a past tour, show the sandbox!
   if (showSandbox) {
     return (
-      <PassportSandbox 
-        loggedSpecies={sandboxSpecies} 
-        language={language} 
-        guideName={guideName} 
-        onBack={() => setShowSandbox(false)} 
+      <PassportSandbox
+        loggedSpecies={sandboxSpecies}
+        language={language}
+        guideName={guideName}
+        onBack={() => setShowSandbox(false)}
+        location={locKey}
+        expeditionType={sandboxMeta.expeditionType}
+        tourDate={sandboxMeta.tourDate}
       />
     );
   }
