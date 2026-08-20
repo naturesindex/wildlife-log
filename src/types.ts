@@ -8,13 +8,16 @@ export type BioCategory =
   | 'Flora'
   | 'Marine Life'
   | 'Insects & Invertebrates'
-  // Útica Birding Categories
-  | 'Raptors'
+  // Útica Birding Categories — mirrors the passport section names 1:1,
+  // since Útica's guide filter tabs and passport chapters use the same
+  // birding taxonomy (unlike Corcovado, where category/section differ).
+  | 'Raptors & Vultures'
   | 'Hummingbirds'
-  | 'Tanagers'
-  | 'Taucans & Motmots'
+  | 'Tanagers & Songbirds'
+  | 'Toucans & Motmots'
   | 'Woodpeckers & Barbets'
-  | 'Other Birds';
+  | 'Waterbirds'
+  | 'Other Discoveries';
 
 
 /** Thematic passport section — used for passport grouping and category colors */
@@ -26,11 +29,12 @@ export type PassportSection =
   | 'Fascinating Flora'
   | 'Other Notables'
   // Útica Birding Passport Sections
-  | 'Feathered Royalty'
-  | 'Jewels of the Air'
-  | 'Canopy Color'
-  | 'Forest Songbirds'
-  | 'Woodland Wonders'
+  | 'Raptors & Vultures'
+  | 'Hummingbirds'
+  | 'Tanagers & Songbirds'
+  | 'Toucans & Motmots'
+  | 'Woodpeckers & Barbets'
+  | 'Waterbirds'
   | 'Other Discoveries';
 
 export type Language = 'EN' | 'ES';
