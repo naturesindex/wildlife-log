@@ -84,9 +84,13 @@ for (const species of sorted) {
     }
   }
 
-  // Scale factor: stretch all columns proportionally to fill GRID_H
-  // Each column gets its own scale so photos fill exactly
-  const colScales = colHeights.map(h => h > 0 ? GRID_H / h : 1);
+  // NOTE: this used to scaleY() each column's stack to force it to exactly
+  // fill GRID_H. That stretched BOTH the photos and the name/scientific-name
+  // text non-uniformly — exactly the "stretched, unreadable" look reported.
+  // Fixed below by letting each column's real (undistorted) content size
+  // itself, and filling leftover height as evenly-distributed gaps instead
+  // (see `justifyContent: 'space-evenly'` on the column wrapper) — still
+  // "fills the space" edge-to-edge, just without warping anything.
 
 const handleDownload = async () => {
     if (!posterRef.current) return;
@@ -228,21 +232,20 @@ return (
                   flexShrink: 0,
                   overflow: 'hidden',
                   display: 'flex',
-                  alignItems: 'center',
                 }}
               >
                 <div
                   style={{
                     width: '100%',
+                    height: '100%',
                     display: 'flex',
                     flexDirection: 'column',
-                    gap: `${GAP}px`,
-                    // Scales this column's naturally-stacked photo heights to
-                    // exactly fill GRID_H, so every column bottoms out at the
-                    // same line instead of the ragged edge you get from just
-                    // stacking real (uneven) photo aspect ratios.
-                    transform: `scaleY(${colScales[colIdx] || 1})`,
-                    transformOrigin: 'center',
+                    // Real, undistorted photos — leftover column height is
+                    // absorbed as evenly-distributed gaps instead of warping
+                    // the images/text, so every column still bottoms out
+                    // together and stays centered/balanced top-to-bottom.
+                    justifyContent: 'space-evenly',
+                    alignItems: 'center',
                   }}
                 >
                 {col.map((species) => {
