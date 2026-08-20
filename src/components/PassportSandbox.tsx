@@ -62,6 +62,8 @@ interface SandboxProps {
   language: Language;
   guideName: string;
   onBack: () => void;
+  /** Lets the toolbar's EN/ES toggle actually change the language. */
+  setLanguage?: (lang: Language) => void;
   /** Location slug, e.g. 'corcovado' or 'utica'. Defaults to corcovado for any
    *  older callers that haven't been updated to pass it yet. */
   location?: string;
@@ -76,6 +78,7 @@ export function PassportSandbox({
   language,
   guideName,
   onBack,
+  setLanguage,
   location,
   expeditionType,
   guestName: guestNameProp,
@@ -216,8 +219,26 @@ export function PassportSandbox({
             <ArrowLeft className="w-4 h-4" /> Exit Sandbox
           </button>
         </div>
-        <div className="bg-[#F0803C] px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(240,128,60,0.5)]">
-          Editorial Preview
+        <div className="flex items-center gap-3 pointer-events-auto">
+          {setLanguage && (
+            <div className="flex bg-white/10 backdrop-blur-md rounded-full p-1 border border-white/10">
+              <button
+                onClick={() => setLanguage('EN')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${language === 'EN' ? 'bg-[#F0803C] text-white' : 'text-white/50'}`}
+              >
+                EN
+              </button>
+              <button
+                onClick={() => setLanguage('ES')}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-colors ${language === 'ES' ? 'bg-[#F0803C] text-white' : 'text-white/50'}`}
+              >
+                ES
+              </button>
+            </div>
+          )}
+          <div className="bg-[#F0803C] px-3 py-1 rounded-full text-[10px] font-black tracking-widest uppercase shadow-[0_0_15px_rgba(240,128,60,0.5)]">
+            Editorial Preview
+          </div>
         </div>
       </div>
 
