@@ -112,6 +112,15 @@ const howItWorksRef = useRef<HTMLElement>(null);
   // Pushed the start later and extended the end so it slides in slower when actually in view
   const { scrollYProgress: howProgress } = useScroll({ target: howItWorksRef, offset: ["start 75%", "end 50%"], layoutEffect: false });
 
+  // The underline needs its OWN, much tighter scroll range scoped to just the
+  // heading — it was previously tied to `howProgress`, which spans the ENTIRE
+  // section (heading + all 3 steps). On a tall mobile layout, the section takes
+  // so much scrolling to get through that the underline was still barely
+  // drawn by the time the heading itself was on-screen. Scoping it to the
+  // heading's own ref fixes that regardless of how tall the section is.
+  const howTitleRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress: howTitleProgress } = useScroll({ target: howTitleRef, offset: ["start 90%", "start 35%"], layoutEffect: false });
+
   const howLineOpacity = useTransform(howProgress, [0, 0.05], [0, 1]);
 
   const step1Opacity = useTransform(howProgress, [0, 0.25], [0, 1]);
@@ -246,7 +255,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
       <section ref={howItWorksRef} className="py-32 bg-[#16697A]/10 border-t border-[#99C2A2]/10 overflow-hidden relative">
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           
-          <div className="mb-24 relative inline-block">
+          <div className="mb-24 relative inline-block" ref={howTitleRef}>
             <h2 className="text-4xl md:text-5xl font-black text-white tracking-tight relative z-10">
               {language === 'EN' ? 'How It Works' : 'Cómo Funciona'}
             </h2>
@@ -257,7 +266,7 @@ const howItWorksRef = useRef<HTMLElement>(null);
   strokeWidth="6" 
   fill="none" 
   strokeLinecap="round" 
-  style={{ pathLength: howProgress, opacity: howLineOpacity }}
+  style={{ pathLength: howTitleProgress, opacity: howLineOpacity }}
   transition={{ duration: typeof window !== 'undefined' && window.innerWidth < 768 ? 0.2 : 1.2, ease: "easeInOut" }}
 />
             </svg>
