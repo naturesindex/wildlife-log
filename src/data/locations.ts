@@ -10,6 +10,18 @@ export interface LocationConfig {
   /** Distance/km stat only makes sense for trekking tours, not birding */
   showDistance: boolean;
   premiumPriceUSD: number;
+  /** Small-caps line under the big poster title, e.g. "National Park • Costa Rica" */
+  posterRegionEN: string;
+  posterRegionES: string;
+  /** Passport hero-page narrative. Called with the guest & guide names already
+   *  resolved, so each location can tell its own story. */
+  introEN: (guestName: string, guideName: string) => string;
+  introES: (guestName: string, guideName: string) => string;
+  /** For locations WITHOUT a trekking map (showDistance: false), this is the
+   *  flip-card content shown when guests tap the map. Locations WITH a map
+   *  (showDistance: true) use the per-expedition trekData dictionary instead,
+   *  since their map content changes with the chosen trail/station. */
+  mapInfo?: { titleEN: string; titleES: string; descEN: string; descES: string };
   /** Preferred display order for sections. Any section NOT listed here still
    *  renders — it's just appended at the end — so new/unexpected section
    *  values never get silently dropped. */
@@ -26,10 +38,16 @@ export const LOCATIONS: Record<string, LocationConfig> = {
     slug: 'corcovado',
     nameEN: 'Corcovado National Park',
     nameES: 'Parque Nacional Corcovado',
-    taglineEN: 'Deep Jungle Expedition',
+    taglineEN: 'Jungle Expedition',
     taglineES: 'Expedición en la Selva',
     showDistance: true,
     premiumPriceUSD: 15,
+    posterRegionEN: 'National Park • Costa Rica',
+    posterRegionES: 'Parque Nacional • Costa Rica',
+    introEN: (_guestName, guideName) =>
+      `Today, you set foot in one of the most biodiverse places on Earth. Corcovado National Park holds an astonishing 2.5% of the entire planet's biodiversity inside a single, living, breathing jungle — jaguars move unseen through the undergrowth, scarlet macaws blaze across the canopy, and trails wind past trees that were already ancient centuries before this park existed. Guided by ${guideName}, you kept your eyes peeled for the big and the small, traversing ancient trails, crossing rivers, and uncovering the secrets of the rainforest one sighting at a time.`,
+    introES: (_guestName, guideName) =>
+      `Hoy, pusiste un pie en uno de los lugares más biodiversos de la Tierra. El Parque Nacional Corcovado alberga un asombroso 2.5% de toda la biodiversidad del planeta dentro de una sola selva viva y palpitante — jaguares se mueven sin ser vistos entre la maleza, las lapas rojas cruzan el dosel en llamas de color, y los senderos pasan junto a árboles que ya eran ancestrales siglos antes de que existiera este parque. Guiado por ${guideName}, mantuviste los ojos bien abiertos para lo grande y lo pequeño, recorriendo senderos antiguos, cruzando ríos, y descubriendo los secretos de la selva avistamiento tras avistamiento.`,
     sectionOrder: ['The Canopy Crew', 'The Forest Floor', 'Sea and Shore', 'Fascinating Flora', 'Other Notables'],
     sectionColors: {
       'The Canopy Crew': '#4A7256',
@@ -62,6 +80,18 @@ export const LOCATIONS: Record<string, LocationConfig> = {
     taglineES: 'Tour de Aves Naturaleza Viva',
     showDistance: false,
     premiumPriceUSD: 2.99,
+    posterRegionEN: 'Cundinamarca • Colombia',
+    posterRegionES: 'Cundinamarca • Colombia',
+    introEN: (_guestName, guideName) =>
+      `Today, you slowed down in one of Cundinamarca's richest birding valleys. Along the warm slopes above the Magdalena river basin, the Naturaleza Viva route reveals a world in motion — hummingbirds flashing between blossoms, tanagers lighting up the canopy in impossible color, and raptors carving slow circles on the canyon's rising thermals. Guided by ${guideName}, you kept your eyes — and ears — open for every flash of color and every call echoing off the valley walls, one patient sighting at a time.`,
+    introES: (_guestName, guideName) =>
+      `Hoy, bajaste el ritmo en uno de los valles de aviturismo más ricos de Cundinamarca. En las cálidas laderas sobre la cuenca del río Magdalena, la ruta Naturaleza Viva revela un mundo en movimiento — colibríes destellando entre las flores, tangaras iluminando el dosel con colores imposibles, y rapaces trazando círculos lentos sobre las corrientes térmicas del cañón. Guiado por ${guideName}, mantuviste los ojos — y los oídos — abiertos a cada destello de color y cada canto que resonaba en las paredes del valle, un avistamiento paciente a la vez.`,
+    mapInfo: {
+      titleEN: 'Útica Birding Grounds',
+      titleES: 'Zona de Aviturismo de Útica',
+      descEN: "A gentle, slow-paced route through Útica's valley trails, garden edges, and riverside canopy — prime habitat for the tour's signature species. No rush, no distance to chase, just time to look and listen.",
+      descES: 'Una ruta suave y pausada por los senderos del valle de Útica, bordes de jardín y dosel ribereño: hábitat privilegiado para las especies emblemáticas del tour. Sin prisa, sin distancia que perseguir, solo tiempo para observar y escuchar.',
+    },
     sectionOrder: ['Feathered Royalty', 'Jewels of the Air', 'Canopy Color', 'Forest Songbirds', 'Woodland Wonders', 'Other Discoveries'],
     sectionColors: {
       'Feathered Royalty': '#C86A27',
