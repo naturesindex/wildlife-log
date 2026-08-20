@@ -1,20 +1,23 @@
 import { Species, Language } from '../types';
+import { getLocationConfig } from '../data/locations';
 
 interface SocialStoryProps {
   loggedSpecies: Species[];
   language: Language;
   guideName: string;
   totalLogged: number;
+  location?: string;
 }
-
-const HERO_ORANGE = '#C86A27';
 
 export function SocialStory({
   loggedSpecies,
   language,
   guideName,
   totalLogged,
+  location,
 }: SocialStoryProps) {
+  const config = getLocationConfig(location);
+
   // Calculate stats for the Strava-like dashboard
   const rareSpecies = loggedSpecies.filter((s) => s.tier === 1);
   const rareCount = rareSpecies.length;
@@ -26,8 +29,8 @@ export function SocialStory({
     ...loggedSpecies.filter((s) => s.tier === 3),
   ].slice(0, 3);
   
-  const titleTextLine1 = language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado';
-  const titleTextLine2 = language === 'EN' ? 'Deep Jungle Expedition' : 'Expedición en la Selva';
+  const titleTextLine1 = language === 'EN' ? config.nameEN : config.nameES;
+  const titleTextLine2 = language === 'EN' ? config.taglineEN : config.taglineES;
   const withText = language === 'EN' ? 'Guided by' : 'Guiado por';
 
   return (
