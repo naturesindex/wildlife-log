@@ -1,39 +1,11 @@
 import { Species, Language } from '../types';
+import { getLocationConfig, getSectionColor, getSectionLabel, resolveSectionOrder } from '../data/locations';
 
 interface PassportProps {
   loggedSpecies: Species[];
   language: Language;
   guideName: string;
-}
-
-// We keep a single unified color map based on the English section keys
-const SECTION_COLORS: Record<string, string> = {
-  "Today's Highlights": '#C86A27',
-  'The Canopy Crew': '#4A7256',
-  'The Forest Floor': '#B04A3C',
-  'Sea and Shore': '#3A7CA5',
-  'Fascinating Flora': '#8C5170',
-  'Other Notables': '#636B66',
-};
-
-function getSectionColor(section: string): string {
-  return SECTION_COLORS[section] ?? '#636B66';
-}
-
-// Helper to translate section headers dynamically
-function translateSection(section: string, language: Language): string {
-  if (language === 'EN') return section;
-  
-  const translations: Record<string, string> = {
-    "Today's Highlights": "Destacados de Hoy",
-    "The Canopy Crew": "El Equipo del Dosel",
-    "The Forest Floor": "El Suelo del Bosque",
-    "Sea and Shore": "Mar y Costa",
-    "Fascinating Flora": "Flora Fascinante",
-    "Other Notables": "Otros Notables"
-  };
-  
-  return translations[section] || section;
+  location?: string;
 }
 
 function NameBadge({
@@ -130,7 +102,9 @@ function GridEntry({
   );
 }
 
-export function WildlifePassport({ loggedSpecies, language, guideName }: PassportProps) {
+export function WildlifePassport({ loggedSpecies, language, guideName, location }: PassportProps) {
+  const config = getLocationConfig(location);
+
   // Generate the date dynamically based on the current language tab
   const dateLocale = language === 'EN' ? 'en-US' : 'es-ES';
   const passportDate = new Date().toLocaleDateString(dateLocale, {
@@ -151,15 +125,9 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
     return acc;
   }, {});
 
-  const sectionOrder = [
-    'The Canopy Crew',
-    'The Forest Floor',
-    'Sea and Shore',
-    'Fascinating Flora',
-    'Other Notables'
-  ];
-  
-  const orderedSections = sectionOrder.filter((sec) => groupedOthers[sec]);
+  // Config order first, then any section present in the data but missing from
+  // config — so a typo'd or new section value still renders instead of vanishing.
+  const orderedSections = resolveSectionOrder(config, Object.keys(groupedOthers));
 
   return (
     <div className="bg-[#162b1d] rounded-2xl overflow-hidden">
@@ -168,7 +136,7 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
       <div className="p-6">
         <div className="mb-5">
           <p className="text-[#8FCB8C] text-sm font-bold tracking-wide">
-            {language === 'EN' ? 'Corcovado National Park' : 'Parque Nacional Corcovado'}
+            {language === 'EN' ? config.nameEN : config.nameES}
           </p>
           <p className="text-[#6A9A7A] text-xs font-medium mt-1 capitalize">
             {passportDate}
@@ -219,15 +187,15 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
         {tier1Species.length > 0 && (
           <div className="mb-10">
             <SectionHeader 
-              title={translateSection("Today's Highlights", language)} 
-              color={getSectionColor("Today's Highlights")} 
+              title={language === 'EN' ? "Today's Highlights" : 'Destacados de Hoy'} 
+              color="#C86A27" 
             />
             {tier1Species.map((s) => (
               <HeroEntry 
                 key={s.id} 
                 species={s} 
                 language={language} 
-                color={getSectionColor("Today's Highlights")} 
+                color="#C86A27" 
               />
             ))}
           </div>
@@ -236,11 +204,11 @@ export function WildlifePassport({ loggedSpecies, language, guideName }: Passpor
         {/* Render the Photo Grids for everything else */}
         {orderedSections.map((section) => {
           const animals = groupedOthers[section];
-          const color = getSectionColor(section);
+          const color = getSectionColor(config, section);
 
           return (
             <div key={section} className="mb-8">
-              <SectionHeader title={translateSection(section, language)} color={color} />
+              <SectionHeader title={getSectionLabel(config, section, language)} color={color} />
               
               <div className="columns-2 gap-4">
                 {animals.map((s) => (
