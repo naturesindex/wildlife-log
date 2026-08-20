@@ -350,6 +350,7 @@ if (!tourId || !sessionActive) {
         language={language}
         guideName={guideName}
         onBack={() => setShowSandbox(false)}
+        setLanguage={setLanguage}
         location={locKey}
         expeditionType={sandboxMeta.expeditionType}
         tourDate={sandboxMeta.tourDate}
