@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Species, Language } from '../types';
 import { getLocationConfig } from '../data/locations';
 
@@ -7,6 +8,39 @@ interface SocialStoryProps {
   guideName: string;
   totalLogged: number;
   location?: string;
+}
+
+type Orientation = 'portrait' | 'landscape';
+
+/** Preloads each image just to read its natural dimensions, so the grid can
+ *  pick a layout that actually fits the photos instead of guessing and
+ *  letting `object-cover` crop awkwardly. Returns 'landscape' for anything
+ *  still loading or that fails to load, so the initial/fallback layout is
+ *  always sane. */
+function useOrientations(urls: string[]): Record<string, Orientation> {
+  const [orientations, setOrientations] = useState<Record<string, Orientation>>({});
+
+  useEffect(() => {
+    let cancelled = false;
+    urls.forEach((url) => {
+      const img = new Image();
+      img.onload = () => {
+        if (cancelled) return;
+        setOrientations((prev) => ({ ...prev, [url]: img.naturalHeight > img.naturalWidth ? 'portrait' : 'landscape' }));
+      };
+      img.onerror = () => {
+        if (cancelled) return;
+        setOrientations((prev) => ({ ...prev, [url]: 'landscape' }));
+      };
+      img.src = url;
+    });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [urls.join('|')]);
+
+  return orientations;
 }
 
 export function SocialStory({
@@ -28,7 +62,25 @@ export function SocialStory({
     ...loggedSpecies.filter((s) => s.tier === 2),
     ...loggedSpecies.filter((s) => s.tier === 3),
   ].slice(0, 3);
-  
+
+  const orientations = useOrientations(featured.map((s) => s.image));
+  const orientationOf = (s: Species) => orientations[s.image] || 'landscape';
+  const portraitCount = featured.filter((s) => orientationOf(s) === 'portrait').length;
+
+  // Layout rule: two portraits pair side-by-side; one portrait next to a
+  // stack of two landscapes; anything else falls back to the original
+  // hero-plus-two grid, which handles same-orientation sets fine.
+  const layout: 'single' | 'twin-portrait' | 'stacked' | 'portrait-plus-two' | 'hero' =
+    featured.length === 1
+      ? 'single'
+      : featured.length === 2
+      ? portraitCount === 2
+        ? 'twin-portrait'
+        : 'stacked'
+      : portraitCount === 1
+      ? 'portrait-plus-two'
+      : 'hero';
+
   const titleTextLine1 = language === 'EN' ? config.nameEN : config.nameES;
   const titleTextLine2 = language === 'EN' ? config.taglineEN : config.taglineES;
   const withText = language === 'EN' ? 'Guided by' : 'Guiado por';
@@ -64,7 +116,7 @@ export function SocialStory({
         </div>
       </div>
 
-      {/* Photo Showcase (Dynamic Grid) */}
+      {/* Photo Showcase (Orientation-Balanced Grid) */}
       <div className="flex-1 p-3 flex flex-col gap-2 overflow-hidden bg-[#0b170f]">
         {featured.length === 0 ? (
            <div className="flex items-center justify-center h-full border-2 border-dashed border-white/10 rounded-xl">
@@ -72,10 +124,47 @@ export function SocialStory({
                {language === 'EN' ? 'No species logged' : 'No hay registros'}
              </p>
            </div>
+        ) : layout === 'portrait-plus-two' ? (
+          // 1 portrait + 2 landscapes: portrait as a full-height column, the
+          // two landscapes stacked in the remaining column.
+          (() => {
+            const portrait = featured.find((s) => orientationOf(s) === 'portrait')!;
+            const landscapes = featured.filter((s) => s.id !== portrait.id);
+            return (
+              <div className="w-full h-full grid grid-cols-2 grid-rows-2 gap-2">
+                <div className="relative rounded-xl overflow-hidden row-span-2">
+                  <img src={`${portrait.image}?v=1`} alt={portrait.nameEN} className="absolute inset-0 w-full h-full object-cover" crossOrigin="anonymous" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
+                  <p className="absolute bottom-2 left-3 text-white font-bold text-xs uppercase tracking-wide shadow-black drop-shadow-md z-10">
+                    {language === 'EN' ? portrait.nameEN : portrait.nameES}
+                  </p>
+                </div>
+                {landscapes.map((s) => (
+                  <div key={s.id} className="relative rounded-xl overflow-hidden">
+                    <img src={`${s.image}?v=1`} alt={s.nameEN} className="absolute inset-0 w-full h-full object-cover" crossOrigin="anonymous" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
+                    <p className="absolute bottom-2 left-3 text-white font-bold text-xs uppercase tracking-wide shadow-black drop-shadow-md z-10">
+                      {language === 'EN' ? s.nameEN : s.nameES}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            );
+          })()
         ) : (
-          <div className={`w-full h-full grid gap-2 ${featured.length === 3 ? 'grid-cols-2 grid-rows-2' : featured.length === 2 ? 'grid-cols-1 grid-rows-2' : 'grid-cols-1 grid-rows-1'}`}>
+          <div
+            className={`w-full h-full grid gap-2 ${
+              layout === 'twin-portrait'
+                ? 'grid-cols-2 grid-rows-1'
+                : layout === 'stacked'
+                ? 'grid-cols-1 grid-rows-2'
+                : layout === 'hero'
+                ? 'grid-cols-2 grid-rows-2'
+                : 'grid-cols-1 grid-rows-1'
+            }`}
+          >
             {featured.map((s, i) => {
-              const isHero = featured.length === 3 && i === 0; // First photo takes top row
+              const isHero = layout === 'hero' && i === 0; // First photo takes top row
               return (
                 <div key={s.id} className={`relative rounded-xl overflow-hidden ${isHero ? 'col-span-2 row-span-1' : ''}`}>
                   <img 
