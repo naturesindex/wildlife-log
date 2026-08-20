@@ -7,6 +7,7 @@ export type BioCategory =
   | 'Reptiles & Amphibians'
   | 'Flora'
   | 'Marine Life'
+  | 'Insects & Invertebrates'
   // Útica Birding Categories
   | 'Raptors'
   | 'Hummingbirds'
