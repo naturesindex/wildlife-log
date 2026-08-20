@@ -3,6 +3,8 @@ import { useRef, useState } from 'react';
 import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
 import { initialSpecies } from '../data/corcovado';
+import { uticaSpecies } from '../data/utica';
+import { getLocationConfig } from '../data/locations';
 
 
 interface PrintablePosterProps {
@@ -11,7 +13,15 @@ interface PrintablePosterProps {
   guideName: string;
   onClose: () => void;
   tourDate?: string;
+  /** Location slug, e.g. 'corcovado' or 'utica'. Defaults to corcovado. */
+  location?: string;
+  /** "Starbucks effect" — the guest's name, printed on the poster itself. */
+  guestName?: string;
 }
+
+// Extra vertical space each photo needs for the name/scientific-name block
+// that now renders BELOW the image instead of overlaid on top of it.
+const LABEL_H = 34;
 
 // Estimate aspect ratio from known photo orientations
 // Falls back to 1.0 (square) if unknown
@@ -27,9 +37,11 @@ function estimateAspectRatio(species: Species): number {
 const NUM_COLS = 4;
 const GAP = 7; // px between photos and columns
 
-export function PrintablePoster({ loggedSpecies, language, guideName, onClose, tourDate }: PrintablePosterProps) {
+export function PrintablePoster({ loggedSpecies, language, guideName, onClose, tourDate, location, guestName }: PrintablePosterProps) {
   const posterRef = useRef<HTMLDivElement>(null);
   const [isDownloading, setIsDownloading] = useState(false);
+  const config = getLocationConfig(location);
+  const masterList = location === 'utica' ? uticaSpecies : initialSpecies;
 
 const POSTER_W = 850;
   const POSTER_H = 1100;
@@ -38,9 +50,10 @@ const POSTER_W = 850;
   const GRID_H = POSTER_H - PADDING * 2 - HEADER_H;
   const COL_W = (POSTER_W - PADDING * 2 - GAP * (NUM_COLS - 1)) / NUM_COLS;
 
- // Pad with extra species to make the glob as full and balanced as possible!
+ // Pad with extra species (from THIS location's master list) to make the
+ // glob as full and balanced as possible!
   const seenIds = new Set(loggedSpecies.map(s => s.id));
-  const extras = initialSpecies.filter(s => !seenIds.has(s.id));
+  const extras = (masterList as Species[]).filter(s => !seenIds.has(s.id));
   const allSpecies = [...loggedSpecies, ...extras];
 
   // Sort by rarity descending
@@ -52,7 +65,7 @@ const POSTER_W = 850;
 
 for (const species of sorted) {
     const ar = estimateAspectRatio(species);
-    const imgH = COL_W / ar;
+    const imgH = COL_W / ar + LABEL_H;
     
    // Define custom target heights for our 4 columns to create the "Diamond" shape
     // Outer columns (0 and 3) stop early, inner columns (1 and 2) pack heavily
@@ -85,7 +98,7 @@ const handleDownload = async () => {
         pixelRatio: 4 
       });
       const link = document.createElement('a');
-      link.download = `Corcovado-Poster-${new Date().toISOString().split('T')[0]}.png`;
+      link.download = `${config.slug}-Poster-${new Date().toISOString().split('T')[0]}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
@@ -150,14 +163,14 @@ return (
             <div style={{
               fontFamily: '"Georgia", "Times New Roman", serif',
               fontWeight: 900,
-              fontSize: '72px',
+              fontSize: config.nameEN.length > 14 ? '48px' : '72px',
               letterSpacing: '0.12em',
               color: '#1C2B22',
               lineHeight: 1,
               textTransform: 'uppercase',
               marginBottom: '5px',
             }}>
-              Corcovado
+              {language === 'EN' ? config.nameEN : config.nameES}
             </div>
             <div style={{
               fontFamily: '"Georgia", serif',
@@ -168,7 +181,7 @@ return (
               textTransform: 'uppercase',
               marginBottom: '6px',
             }}>
-              National Park • Costa Rica
+              {language === 'EN' ? config.posterRegionEN : config.posterRegionES}
             </div>
             <div style={{
               fontFamily: 'sans-serif',
@@ -182,6 +195,20 @@ return (
                 ? tourDate.toUpperCase() 
                 : new Date().toLocaleDateString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long', day: 'numeric', year: 'numeric' }).toUpperCase()}
             </div>
+            {/* "Starbucks effect" — print the guest's name on their own poster */}
+            {guestName && (
+              <div style={{
+                fontFamily: '"Georgia", serif',
+                fontWeight: 700,
+                fontStyle: 'italic',
+                fontSize: '12px',
+                letterSpacing: '0.05em',
+                color: '#1C2B22',
+                marginTop: '4px',
+              }}>
+                {language === 'EN' ? `${guestName}'s Collection` : `Colección de ${guestName}`}
+              </div>
+            )}
           </div>
 
           {/* GRID */}
@@ -212,7 +239,6 @@ return (
                     <div
                       key={species.id}
                       style={{
-                        position: 'relative',
                         width: '100%',
                         overflow: 'hidden',
                       }}
@@ -227,23 +253,18 @@ return (
                           filter: 'sepia(6%) saturate(108%)',
                         }}
                       />
-                      <div style={{
-                        position: 'absolute',
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        background: 'linear-gradient(to top, rgba(15,25,18,0.82) 0%, transparent 100%)',
-                        padding: '20px 6px 5px 6px',
-                      }}>
+                      {/* Name/scientific-name now sits BELOW the photo, in normal
+                          flow, instead of overlaid on top of it — so faces are
+                          never covered by text. */}
+                      <div style={{ padding: '4px 4px 0 4px' }}>
                         <div style={{
                           fontFamily: 'sans-serif',
                           fontWeight: 700,
                           fontSize: '7px',
                           letterSpacing: '0.08em',
-                          color: '#FFFFFF',
+                          color: '#1C2B22',
                           textTransform: 'uppercase',
                           textAlign: 'center',
-                          textShadow: '0 1px 3px rgba(0,0,0,0.7)',
                         }}>
                           {label}
                         </div>
@@ -252,7 +273,7 @@ return (
                             fontFamily: '"Georgia", serif',
                             fontStyle: 'italic',
                             fontSize: '6px',
-                            color: 'rgba(255,255,255,0.72)',
+                            color: 'rgba(44,62,53,0.65)',
                             textAlign: 'center',
                             marginTop: '1px',
                           }}>
