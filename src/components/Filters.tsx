@@ -1,6 +1,6 @@
 import { Search, X, Star } from 'lucide-react';
 import { BioCategory, Language } from '../types';
-import { BIO_CATEGORIES } from '../data/constants';
+import { getCategories } from '../data/constants';
 
 interface SearchBarProps {
   value: string;
@@ -37,19 +37,30 @@ interface CategoryTabsProps {
   activeFilter: ActiveFilter;
   onChange: (filter: ActiveFilter) => void;
   language: Language;
+  /** Location slug, e.g. 'corcovado' or 'utica'. Defaults to corcovado's
+   *  cross-taxon categories when omitted. */
+  location?: string;
 }
 
 const CATEGORY_ES: Record<string, string> = {
   'Mammals': 'Mamíferos',
   'Birds': 'Aves',
   'Reptiles & Amphibians': 'Reptiles y Anfibios',
-  'Insects & Spiders': 'Insectos y Arañas',
+  'Flora': 'Plantas y Árboles',
+  'Insects & Invertebrates': 'Insectos e Invertebrados',
   'Marine Life': 'Vida Marina',
-  'Plants & Trees': 'Plantas y Árboles',
-  'Other Notables': 'Otros Notables'
+  'Other Notables': 'Otros Notables',
+  'Raptors & Vultures': 'Rapaces y Buitres',
+  'Hummingbirds': 'Colibríes',
+  'Tanagers & Songbirds': 'Tangaras y Aves Cantoras',
+  'Toucans & Motmots': 'Tucanes y Botorros',
+  'Woodpeckers & Barbets': 'Carpinteros y Toritos',
+  'Waterbirds': 'Aves Acuáticas',
+  'Other Discoveries': 'Otros Descubrimientos',
 };
 
-export function CategoryTabs({ activeFilter, onChange, language }: CategoryTabsProps) {
+export function CategoryTabs({ activeFilter, onChange, language, location }: CategoryTabsProps) {
+  const categories = getCategories(location);
   return (
     <div className="flex gap-2 px-4 pb-4 overflow-x-auto scrollbar-hide">
       {/* Favorites */}
@@ -69,8 +80,8 @@ export function CategoryTabs({ activeFilter, onChange, language }: CategoryTabsP
         />
       </button>
 
-   {/* Biological categories */}
-      {BIO_CATEGORIES.map((cat) => {
+   {/* Location-aware categories */}
+      {categories.map((cat) => {
         const isActive = activeFilter === cat;
         return (
           <button
