@@ -254,15 +254,10 @@ export function GuestPortal() {
             <Lock className="w-5 h-5" />
             {language === 'EN' ? `Purchase Passport - $${config.premiumPriceUSD}` : `Comprar Pasaporte - $${config.premiumPriceUSD}`}
           </button>
-          <p className="text-center text-xs text-stone-400 mt-4 font-medium">
+       <p className="text-center text-xs text-stone-400 mt-4 font-medium">
              {language === 'EN' ? 'Secure payment via Stripe. Instant access.' : 'Pago seguro vía Stripe. Acceso instantáneo.'}
           </p>
         </div>
-
-      </div>
-    </div>
-  );
-}
 
       </div>
     </div>
