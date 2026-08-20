@@ -426,7 +426,7 @@ if (!tourId || !sessionActive) {
 
 {/* Start Tour Button (Intercepts with Modal) */}
         <button 
-          onClick={() => setShowExpeditionModal(true)}
+          onClick={() => (locKey === 'utica' ? startNewTour() : setShowExpeditionModal(true))}
           className="w-full bg-[#C86A27] text-white font-black text-2xl py-6 rounded-3xl shadow-[0_0_40px_rgba(200,106,39,0.3)] hover:bg-[#b05a1f] transition-all transform hover:scale-105 active:scale-95 mb-4 mt-4"
         >
           {language === 'EN' ? 'Start New Tour' : 'Iniciar Nuevo Tour'}
@@ -628,7 +628,7 @@ setExpeditionType={(newType: string) => {
 
 <div className="max-w-lg mx-auto">
         <SearchBar value={searchQuery} onChange={setSearchQuery} language={language} />
-        <CategoryTabs activeFilter={activeFilter} onChange={setActiveFilter} language={language} />
+        <CategoryTabs activeFilter={activeFilter} onChange={setActiveFilter} language={language} location={locKey} />
         
         {/* Empty Favorites Prompt */}
         {activeFilter === 'Favorites' && filteredSpecies.length === 0 ? (
