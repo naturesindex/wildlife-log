@@ -15,6 +15,7 @@ export type BioCategory =
   | 'Woodpeckers & Barbets'
   | 'Other Birds';
 
+
 /** Thematic passport section — used for passport grouping and category colors */
 export type PassportSection =
   | 'Highlights'
