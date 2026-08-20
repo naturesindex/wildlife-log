@@ -49,7 +49,13 @@ export function GuestPortal() {
       if (guideData) setGuideName(guideData.name);
 
       // 3. Determine dataset dynamically (Útica vs Corcovado)
-      const isUtica = tourData.zone?.toLowerCase().includes('utica') || false;
+      // NOTE: zone strings can contain accented characters (e.g. "Naturaleza
+      // Viva (Útica)"), and .toLowerCase() alone does NOT fold 'Ú' to plain
+      // 'u' — so a plain .includes('utica') silently never matched and this
+      // always fell back to the Corcovado config (wrong price/name/tagline
+      // on the guest link). Stripping diacritics before matching fixes it.
+      const stripAccents = (s: string) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+      const isUtica = stripAccents(tourData.zone || '').toLowerCase().includes('utica');
       const resolvedLocKey = isUtica ? 'utica' : 'corcovado';
       setLocKey(resolvedLocKey);
       const masterList = isUtica ? uticaSpecies : initialSpecies;
@@ -72,7 +78,7 @@ export function GuestPortal() {
         style: { transform: 'scale(1)', transformOrigin: 'top left' }
       });
       const link = document.createElement('a');
-      link.download = `Corcovado-Snapshot-${new Date().toISOString().split('T')[0]}.png`;
+      link.download = `${config.slug}-Snapshot-${new Date().toISOString().split('T')[0]}.png`;
       link.href = dataUrl;
       link.click();
     } catch (err) {
