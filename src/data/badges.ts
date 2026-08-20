@@ -137,7 +137,7 @@ export const uticaBadges: BadgeDef[] = [
     check: (species) =>
       distinctCount(
         species,
-        (s) => s.category === 'Tanagers' || s.category === 'Other Birds' || nameIncludes(s, ['wren', 'oriole', 'tanager'])
+        (s) => s.category === 'Tanagers & Songbirds' || s.category === 'Other Discoveries' || nameIncludes(s, ['wren', 'oriole', 'tanager'])
       ) >= 5,
   },
   {
@@ -148,7 +148,7 @@ export const uticaBadges: BadgeDef[] = [
     descES: 'Avista al menos 1 rapaz surcando las corrientes térmicas.',
     color: '#C86A27',
     icon: 'Wind',
-    check: (species) => species.some((s) => s.category === 'Raptors'),
+    check: (species) => species.some((s) => s.category === 'Raptors & Vultures'),
   },
   {
     id: 'magdalena-master',
