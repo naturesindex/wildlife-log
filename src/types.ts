@@ -17,12 +17,12 @@ export type BioCategory =
 
 /** Thematic passport section — used for passport grouping and category colors */
 export type PassportSection =
-  | 'Hero Sightings'
-  | 'Canopy Crew'
-  | 'Sea & Shore'
-  | 'Forest Floor'
+  | 'Highlights'
+  | 'The Canopy Crew'
+  | 'The Forest Floor'
+  | 'Sea and Shore'
   | 'Fascinating Flora'
-  | 'Other Notable'
+  | 'Other Notables'
   // Útica Birding Passport Sections
   | 'Feathered Royalty'
   | 'Jewels of the Air'
