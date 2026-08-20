@@ -115,10 +115,10 @@ export function GuestPortal() {
           <div className="text-center mb-4 mt-2">
             <h3 className="text-xl font-bold text-stone-800 flex items-center justify-center gap-2">
               <Sparkles className="w-5 h-5 text-[#C86A27]" />
-              {language === 'EN' ? 'Your Free Social Story' : 'Tu Historia Social Gratuita'}
+              {language === 'EN' ? 'A Gift From Us!' : '¡Un Regalo Nuestro!'}
             </h3>
             <p className="text-sm text-stone-500 mt-1">
-              {language === 'EN' ? 'A gift from us! Save and share your highlight.' : '¡Un regalo nuestro! Guarda y comparte tu resumen.'}
+              {language === 'EN' ? 'Your free social story — save and share your highlight.' : 'Tu historia social gratuita: guarda y comparte tu resumen.'}
             </p>
           </div>
           
@@ -149,9 +149,9 @@ export function GuestPortal() {
             {language === 'EN' ? 'Unlock Your Interactive Passport' : 'Desbloquea tu Pasaporte Interactivo'}
           </h2>
           <p className="text-stone-600 font-medium">
-            {language === 'EN' 
-              ? `Get the complete, clickable digital documentary of your exact day.` 
-              : `Obtén el documental digital completo e interactivo de tu día exacto.`}
+            {language === 'EN'
+              ? `Your sightings. Your ${config.showDistance ? 'trek' : 'outing'}. All in one interactive keepsake.`
+              : `Tus avistamientos. Tu ${config.showDistance ? 'caminata' : 'salida'}. Todo en un recuerdo interactivo.`}
           </p>
         </div>
 
@@ -163,7 +163,7 @@ export function GuestPortal() {
             </div>
             <div>
               <h4 className="font-bold text-stone-800">{language === 'EN' ? 'Interactive Encyclopedia' : 'Enciclopedia Interactiva'}</h4>
-              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'Tap any of your sighted species to reveal facts, rarity, and traits.' : 'Toca cualquier especie vista para revelar datos, rareza y características.'}</p>
+              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'Tap any species you spotted to explore its rarity ranking and what makes it special to find.' : 'Toca cualquier especie que hayas visto para explorar su nivel de rareza y qué la hace especial.'}</p>
             </div>
           </div>
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-100 flex items-start gap-4">
@@ -171,8 +171,8 @@ export function GuestPortal() {
               <Map className="w-6 h-6" />
             </div>
             <div>
-              <h4 className="font-bold text-stone-800">{language === 'EN' ? 'Expedition Map & Badges' : 'Mapa de Expedición y Insignias'}</h4>
-              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'A personalized topographic breakdown of your trek and achievements.' : 'Un desglose topográfico personalizado de tu caminata y logros.'}</p>
+              <h4 className="font-bold text-stone-800">{language === 'EN' ? 'Expedition Map & Badges' : 'Mapa de Expedición e Insignias'}</h4>
+              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'A Strava-style visual breakdown of your route and milestones, with a shareable post ready to go.' : 'Un desglose visual estilo Strava de tu recorrido y logros, con una publicación lista para compartir.'}</p>
             </div>
           </div>
           <div className="bg-white p-5 rounded-2xl shadow-sm border border-stone-100 flex items-start gap-4">
@@ -181,7 +181,7 @@ export function GuestPortal() {
             </div>
             <div>
               <h4 className="font-bold text-stone-800">{language === 'EN' ? 'Printable Museum Poster' : 'Póster de Museo Imprimible'}</h4>
-              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'Includes a high-res ID chart of your specific sightings.' : 'Incluye una tabla de identificación de alta resolución de tus avistamientos.'}</p>
+              <p className="text-sm text-stone-500 leading-snug">{language === 'EN' ? 'A high-resolution ID chart of the top species you spotted, ready for printing and framing, or saving and sharing.' : 'Una tabla de identificación en alta resolución de las mejores especies que viste, lista para imprimir y enmarcar, o guardar y compartir.'}</p>
             </div>
           </div>
         </div>
