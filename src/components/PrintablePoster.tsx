@@ -223,15 +223,28 @@ return (
               <div
                 key={colIdx}
                 style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'center',
                   height: '100%',
-                  gap: `${GAP}px`,
                   width: `${COL_W}px`,
                   flexShrink: 0,
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
                 }}
               >
+                <div
+                  style={{
+                    width: '100%',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: `${GAP}px`,
+                    // Scales this column's naturally-stacked photo heights to
+                    // exactly fill GRID_H, so every column bottoms out at the
+                    // same line instead of the ragged edge you get from just
+                    // stacking real (uneven) photo aspect ratios.
+                    transform: `scaleY(${colScales[colIdx] || 1})`,
+                    transformOrigin: 'center',
+                  }}
+                >
                 {col.map((species) => {
                   const label = language === 'EN' ? species.nameEN : species.nameES;
                   const sci = species.scientificName || '';
@@ -284,6 +297,7 @@ return (
                     </div>
                   );
                 })}
+                </div>
               </div>
             ))}
           </div>
