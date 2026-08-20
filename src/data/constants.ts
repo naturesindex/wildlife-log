@@ -1,5 +1,6 @@
 import { PassportSection } from '../types';
 
+
 export const SECTION_COLORS: Record<PassportSection, string> = {
   'Highlights': '#C86A27',
   'The Canopy Crew': '#4A7256',
