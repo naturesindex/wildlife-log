@@ -3,6 +3,15 @@ import { ArrowLeft, UserCircle, Map, Camera, HeartHandshake, Download } from 'lu
 import { useNavigate } from 'react-router-dom';
 import React, { useRef } from 'react';
 
+// Real species/photos so the preview actually shows the product instead of
+// generic gray placeholder blocks.
+const PREVIEW_SPECIES = [
+  { name: 'Baird\u2019s Tapir', image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1781657218/Baird_s_Tapir.jpg' },
+  { name: 'Scarlet Macaw', image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Scarlet_Macaw.jpg' },
+  { name: 'Jaguar', image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Jaguar.jpg' },
+  { name: 'Three-toed Sloth', image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1781657210/Three-toed_Sloth.jpg' },
+];
+
 export function PreviewPage() {
   const navigate = useNavigate();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -68,13 +77,13 @@ export function PreviewPage() {
                 <span className="text-white text-3xl font-black">12 SPECIES</span>
               </div>
               <div className="space-y-3">
-                {[1, 2, 3, 4].map(i => (
-                  <div key={i} className="bg-white/5 border border-white/10 p-3 rounded-xl flex items-center justify-between">
+                {PREVIEW_SPECIES.map((s) => (
+                  <div key={s.name} className="bg-white/5 border border-white/10 p-3 rounded-xl flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 bg-slate-800 rounded-full"></div>
-                      <div className="h-4 w-24 bg-white/20 rounded"></div>
+                      <img src={s.image} alt={s.name} className="w-10 h-10 rounded-full object-cover" />
+                      <span className="text-white/90 text-sm font-bold">{s.name}</span>
                     </div>
-                    <div className="w-8 h-8 rounded-full border-2 border-emerald-500 flex items-center justify-center">✓</div>
+                    <div className="w-8 h-8 rounded-full border-2 border-emerald-500 flex items-center justify-center text-emerald-400">✓</div>
                   </div>
                 ))}
               </div>
@@ -100,7 +109,7 @@ export function PreviewPage() {
             {/* Final Passport UI */}
             <motion.div style={{ opacity: passportOpacity }} className="absolute inset-0 bg-[#FDFBF7] text-stone-900 flex flex-col overflow-hidden">
               <div className="h-48 bg-stone-300 relative">
-                <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?q=80&w=500&auto=format&fit=crop" className="w-full h-full object-cover" alt="Jungle" />
+                <img src={PREVIEW_SPECIES[2].image} className="w-full h-full object-cover" alt={PREVIEW_SPECIES[2].name} />
                 <div className="absolute bottom-0 left-0 w-full bg-gradient-to-t from-[#FDFBF7] to-transparent h-20"></div>
               </div>
               <div className="px-4 -mt-10 relative z-10 flex-1">
@@ -108,19 +117,19 @@ export function PreviewPage() {
                 <div className="grid grid-cols-2 gap-2 mb-4">
                   <div className="bg-white shadow-sm border border-stone-200 p-3 rounded-xl">
                     <span className="block text-[10px] text-stone-500 font-bold uppercase">Rating</span>
-                    <span className="font-black text-emerald-600">Top 12%</span>
+                    <span className="font-black text-emerald-600">Elite Tracker</span>
                   </div>
                   <div className="bg-white shadow-sm border border-stone-200 p-3 rounded-xl">
-                    <span className="block text-[10px] text-stone-500 font-bold uppercase">Distance</span>
-                    <span className="font-black text-stone-800">10 km</span>
+                    <span className="block text-[10px] text-stone-500 font-bold uppercase">Rarity</span>
+                    <span className="font-black text-stone-800">Top 8%</span>
                   </div>
                 </div>
                 <button className="w-full bg-[#C86A27] text-white py-3 rounded-xl font-bold flex items-center justify-center gap-2 shadow-lg shadow-[#C86A27]/20">
                    <Download size={18} /> High-Res Poster
                 </button>
                 <div className="mt-4 grid grid-cols-2 gap-2">
-                   <div className="h-24 bg-stone-200 rounded-xl"></div>
-                   <div className="h-24 bg-stone-200 rounded-xl"></div>
+                   <img src={PREVIEW_SPECIES[0].image} alt={PREVIEW_SPECIES[0].name} className="h-24 w-full object-cover rounded-xl" />
+                   <img src={PREVIEW_SPECIES[1].image} alt={PREVIEW_SPECIES[1].name} className="h-24 w-full object-cover rounded-xl" />
                 </div>
               </div>
             </motion.div>
