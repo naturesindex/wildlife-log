@@ -55,7 +55,7 @@ const BADGE_ICONS: Record<BadgeIconKey, React.ComponentType<{ className?: string
 // dataset is split into finer categories (Hummingbirds, Raptors, Tanagers, etc.)
 // since it's a birding-only tour. Counting all of them together keeps the
 // "Canopy Scout" expedition rating meaningful for both locations.
-const BIRD_CATEGORIES = ['Birds', 'Raptors', 'Hummingbirds', 'Tanagers', 'Taucans & Motmots', 'Woodpeckers & Barbets', 'Other Birds'];
+const BIRD_CATEGORIES = ['Birds', 'Raptors & Vultures', 'Hummingbirds', 'Tanagers & Songbirds', 'Toucans & Motmots', 'Woodpeckers & Barbets', 'Waterbirds', 'Other Discoveries'];
 
 interface SandboxProps {
   loggedSpecies: Species[];
@@ -360,6 +360,9 @@ export function PassportSandbox({
                     {animatedSpeciesCount} <span className="text-lg text-white/50 font-normal">species</span>
                   </p>
                   <p className="text-sm text-white/50 uppercase tracking-wider font-bold mt-1">Unique Discoveries</p>
+                  <p className="text-sm text-purple-300/80 font-bold mt-1">
+                    {eliteCount} {language === 'EN' ? 'rare species' : 'especies raras'}
+                  </p>
                 </div>
               </div>
 
