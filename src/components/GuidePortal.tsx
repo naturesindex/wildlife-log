@@ -13,7 +13,6 @@ import { PassportSandbox } from './PassportSandbox';
 import { fetchGuideFavorites, setGuideFavorite } from '../data/favorites';
 import { RotateCcw, Copy, Trash2, Eye } from 'lucide-react';
 
-
 type ActiveFilter = BioCategory | 'Favorites' | null;
 
 function fuzzyMatch(str: string | undefined, query: string): boolean {
