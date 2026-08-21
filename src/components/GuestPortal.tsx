@@ -10,6 +10,7 @@ import { WildlifePassport } from './WildlifePassport';
 import { Download, Sparkles, Lock, Coffee, Map, BookOpen, MousePointerClick } from 'lucide-react';
 import { toPng } from 'html-to-image';
 
+
 export function GuestPortal() {
   const { tourId } = useParams();
   const [loading, setLoading] = useState(true);
