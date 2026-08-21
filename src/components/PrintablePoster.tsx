@@ -6,7 +6,6 @@ import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
 import { getLocationConfig } from '../data/locations';
 
-
 interface PrintablePosterProps {
   loggedSpecies: Species[];
   language: Language;
