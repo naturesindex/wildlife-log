@@ -11,6 +11,11 @@ export default function App() {
       <Routes>
         {/* Route 1: The Guide Portal (e.g., /corcovado/guide) */}
         <Route path="/:location/guide" element={<GuidePortal />} />
+
+        {/* Route 1b: Location-less entry point from the homepage button.
+            Shows the login screen, then GuidePortal redirects to the
+            guide's real /:location/guide once Supabase confirms who they are. */}
+        <Route path="/guide" element={<GuidePortal />} />
         
 
 {/* Route 2: The Guest Portal (Direct Link from Guide) */}
