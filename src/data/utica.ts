@@ -1,187 +1,129 @@
 import { Species } from '../types';
 
-/** Which lucide-react icon to render for a badge that has no custom Cloudinary
- *  artwork yet. Corcovado badges use real icon images; Útica's are brand-new
- *  so they fall back to a lucide icon until custom art is ready. */
-export type BadgeIconKey = 'Feather' | 'Music2' | 'Wind' | 'Trophy' | 'Waves' | 'Mountain';
-
-export interface BadgeDef {
-  id: string;
-  titleEN: string;
-  titleES: string;
-  descEN: string;
-  descES: string;
-  /** Accent color used for the badge card border/text. */
-  color: string;
-  /** Cloudinary artwork, if we have it. */
-  image?: string;
-  /** Fallback lucide icon, used when `image` isn't set. */
-  icon?: BadgeIconKey;
-  /** Given everything logged on the tour, does this badge unlock? */
-  check: (species: Species[]) => boolean;
-}
-
-const nameIncludes = (s: Species, terms: string[]) => {
-  const en = s.nameEN.toLowerCase();
-  const es = s.nameES.toLowerCase();
-  return terms.some((t) => en.includes(t) || es.includes(t));
-};
-
-const distinctCount = (species: Species[], predicate: (s: Species) => boolean) =>
-  new Set(species.filter(predicate).map((s) => s.id)).size;
-
-// ---------------------------------------------------------------------------
-// CORCOVADO — jungle trekking badges
-// ---------------------------------------------------------------------------
-export const corcovadoBadges: BadgeDef[] = [
+/** Placeholder Útica species set (8 birds) — enough to exercise the sandbox,
+ *  badges, and passport sections end-to-end. Swap in the full species list
+ *  when it's ready; category/section values below already match the
+ *  LOCATIONS.utica config in locations.ts, so new entries just need to pick
+ *  one of the seven section names used there. */
+export const uticaSpecies: Species[] = [
   {
-    id: 'primate-grand-slam',
-    titleEN: 'Primate Grand Slam',
-    titleES: 'Grand Slam de Primates',
-    descEN: 'Spotted all 4 Corcovado monkeys!',
-    descES: '¡Avistaste los 4 monos de Corcovado!',
-    color: '#FE654F',
-    image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1783109116/monkey.png',
-    check: (species) => {
-      const monkeyNames = ['Squirrel Monkey', 'Howler Monkey', 'Spider Monkey', 'White-faced Capuchin'];
-      const logged = species.map((s) => s.nameEN);
-      return monkeyNames.every((m) => logged.includes(m));
-    },
+    id: "keel-billed-toucan",
+    tier: 1,
+    category: "Toucans & Motmots",
+    section: "Toucans & Motmots",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Keel-billed Toucan",
+    nameES: "Tucán Piquiverde",
+    scientificName: "Ramphastos sulfuratus",
+    rarityScore: 40,
+    descEN: "Famous for its oversized multicolored bill, this canopy resident feeds on forest fruits and roosts in family groups.",
+    descES: "Famoso por su enorme pico multicolor, este residente del dosel se alimenta de frutas del bosque y descansa en grupos familiares.",
+    image: "https://images.unsplash.com/photo-1550853024-fae8cd4be47f?q=80&w=800&auto=format&fit=crop"
   },
   {
-    id: 'eagle-eye',
-    titleEN: 'Eagle Eye',
-    titleES: 'Ojo de Águila',
-    descEN: 'Logged over 10 different bird species.',
-    descES: 'Registraste más de 10 especies de aves.',
-    color: '#5DD9C1',
-    image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1783109116/Eagle.png',
-    check: (species) => species.filter((s) => s.category === 'Birds').length >= 10,
+    id: "andean-motmot",
+    tier: 1,
+    category: "Toucans & Motmots",
+    section: "Toucans & Motmots",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Andean Motmot",
+    nameES: "Botorro Andino",
+    scientificName: "Momotus aequatorialis",
+    rarityScore: 45,
+    descEN: "A striking bird with a turquoise crown and distinct racquet-tipped tail feathers that swing like a pendulum.",
+    descES: "Un ave llamativa con corona turquesa y plumas de cola en forma de raqueta que se balancean como un péndulo.",
+    image: "https://images.unsplash.com/photo-1520808663317-647b476a81b9?q=80&w=800&auto=format&fit=crop"
   },
   {
-    id: 'jungle-ninja',
-    titleEN: 'Jungle Ninja',
-    titleES: 'Ninja de la Selva',
-    descEN: 'Found elusive reptiles & amphibians.',
-    descES: 'Encontraste esquivos reptiles y anfibios.',
-    color: '#7da7d9',
-    image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1783109128/ninja.png',
-    check: (species) => species.filter((s) => s.category === 'Reptiles & Amphibians').length >= 2,
+    id: "sparkling-violetear",
+    tier: 1,
+    category: "Hummingbirds",
+    section: "Hummingbirds",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Sparkling Violetear",
+    nameES: "Colibrí Orejivioláceo Grande",
+    scientificName: "Colibri coruscans",
+    rarityScore: 30,
+    descEN: "An energetic hummingbird with brilliant violet ear patches and iridescent green plumage.",
+    descES: "Un colibrí enérgico con brillantes parches violeta en las orejas y plumaje verde iridiscente.",
+    image: "https://images.unsplash.com/photo-1551085254-e96b210df58a?q=80&w=800&auto=format&fit=crop"
   },
   {
-    id: 'bug-whisperer',
-    titleEN: 'Bug Whisperer',
-    titleES: 'Susurrador de Insectos',
-    descEN: 'Investigated the tiny giants of the floor.',
-    descES: 'Investigaste a los pequeños gigantes del suelo.',
-    color: '#F7D08A',
-    image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1783109120/Macro.png',
-    // NOTE: previously checked category === 'Insects', which never matched —
-    // the real category string is 'Insects & Invertebrates'.
-    check: (species) => species.filter((s) => s.category === 'Insects & Invertebrates').length >= 3,
+    id: "crimson-rumped-toucanet",
+    tier: 2,
+    category: "Toucans & Motmots",
+    section: "Toucans & Motmots",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Crimson-rumped Toucanet",
+    nameES: "Tucancito Lomo Rojo",
+    scientificName: "Aulacorhynchus haematopygus",
+    rarityScore: 60,
+    descEN: "A vivid green mountain toucanet with a dark red bill base and a bright crimson rump.",
+    descES: "Un tucancito de montaña de color verde vivo con la base del pico rojo oscuro y la rabadilla carmesí brillante.",
+    image: "https://images.unsplash.com/photo-1616149562384-ce261468b0e7?q=80&w=800&auto=format&fit=crop"
   },
   {
-    id: 'myth-seeker',
-    titleEN: 'Myth Seeker',
-    titleES: 'Buscador de Mitos',
-    descEN: 'Logged a near-mythical rarity species!',
-    descES: '¡Registraste una especie de rareza casi mítica!',
-    color: '#c084fc',
-    image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1783184523/Mystic.png',
-    check: (species) => species.some((s) => (s.rarityScore ?? 0) >= 90),
+    id: "blue-gray-tanager",
+    tier: 2,
+    category: "Tanagers & Songbirds",
+    section: "Tanagers & Songbirds",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Blue-gray Tanager",
+    nameES: "Tangara Azuleja",
+    scientificName: "Thraupis episcopus",
+    rarityScore: 25,
+    descEN: "One of Colombia's most common garden and forest edge birds, showing smooth sky-blue plumage.",
+    descES: "Una de las aves más comunes de jardín y borde de bosque en Colombia, con un suave plumaje azul cielo.",
+    image: "https://images.unsplash.com/photo-1535083783855-76ae62b2914e?q=80&w=800&auto=format&fit=crop"
   },
   {
-    id: 'gentle-giant',
-    titleEN: 'Gentle Giant',
-    titleES: 'Gigante Gentil',
-    descEN: "Spotted Corcovado's legendary Tapir!",
-    descES: '¡Avistaste al legendario Tapir de Corcovado!',
-    color: '#716A5C',
-    image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1783109115/tapir_-_Copy.png',
-    check: (species) => species.some((s) => s.id === 'bairds-tapir' || nameIncludes(s, ['tapir'])),
+    id: "red-headed-barbet",
+    tier: 2,
+    category: "Woodpeckers & Barbets",
+    section: "Woodpeckers & Barbets",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Red-headed Barbet",
+    nameES: "Torito Cabecirrojo",
+    scientificName: "Eubucco bourcierii",
+    rarityScore: 65,
+    descEN: "A brightly multicolored bird of humid Andean slopes. Males sport a brilliant scarlet head and yellow belly.",
+    descES: "Un ave multicolor brillante de laderas andinas húmedas. Los machos lucen una cabeza escarlata brillante y vientre amarillo.",
+    image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?q=80&w=800&auto=format&fit=crop"
   },
   {
-    id: 'slow-and-steady',
-    titleEN: 'Slow & Steady',
-    titleES: 'Lento y Constante',
-    descEN: "Spotted one of the canopy's most relaxed residents.",
-    descES: 'Avistaste a uno de los residentes más relajados del dosel.',
-    color: '#8F2D56',
-    image: 'https://res.cloudinary.com/dcysfuoig/image/upload/v1783109122/slow_-_Copy.png',
-    check: (species) => species.some((s) => nameIncludes(s, ['sloth', 'perezoso'])),
+    id: "roadside-hawk",
+    tier: 2,
+    category: "Raptors & Vultures",
+    section: "Raptors & Vultures",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Roadside Hawk",
+    nameES: "Gavilán Caminero",
+    scientificName: "Rupornis magnirostris",
+    rarityScore: 35,
+    descEN: "A small raptor with yellow eyes and banded tail feathers, often perching conspicuously along forest openings.",
+    descES: "Una pequeña rapaz con ojos amarillos y plumas de la cola con bandas, a menudo posada a la vista en claros del bosque.",
+    image: "https://images.unsplash.com/photo-1516641396056-0ce60a85d49f?q=80&w=800&auto=format&fit=crop"
   },
+  {
+    id: "green-hermit",
+    tier: 3,
+    category: "Hummingbirds",
+    section: "Hummingbirds",
+    isFavorite: false,
+    isLogged: false,
+    nameEN: "Green Hermit",
+    nameES: "Ermitaño Verde",
+    scientificName: "Phaethornis guy",
+    rarityScore: 50,
+    descEN: "A large hummingbird with a decurved bill and elongated white central tail feathers, patrolling understory flowers.",
+    descES: "Un gran colibrí con pico decurvado y plumas centrales de la cola alargadas y blancas, patrullando flores del sotobosque.",
+    image: "https://images.unsplash.com/photo-1522926193341-e9ffd686c60f?q=80&w=800&auto=format&fit=crop"
+  }
 ];
-
-// ---------------------------------------------------------------------------
-// ÚTICA — Naturaleza Viva birding badges
-// ---------------------------------------------------------------------------
-export const uticaBadges: BadgeDef[] = [
-  {
-    id: 'hummingbird-whisperer',
-    titleEN: 'Hummingbird Whisperer',
-    titleES: 'Susurrador de Colibríes',
-    descEN: 'Spot and log at least 3 different hummingbird species.',
-    descES: 'Registra al menos 3 especies diferentes de colibríes.',
-    color: '#8C5170',
-    icon: 'Feather',
-    check: (species) => distinctCount(species, (s) => s.category === 'Hummingbirds') >= 3,
-  },
-  {
-    id: 'canyon-chorus',
-    titleEN: 'Canyon Chorus',
-    titleES: 'Coro del Cañón',
-    descEN: 'Log 5+ songbirds or vocal species typical of the region.',
-    descES: 'Registra 5 o más aves cantoras típicas de la región.',
-    color: '#B04A3C',
-    icon: 'Music2',
-    check: (species) =>
-      distinctCount(
-        species,
-        (s) => s.category === 'Tanagers & Songbirds' || s.category === 'Other Discoveries' || nameIncludes(s, ['wren', 'oriole', 'tanager'])
-      ) >= 5,
-  },
-  {
-    id: 'raptor-royalty',
-    titleEN: 'Raptor Royalty',
-    titleES: 'Realeza Rapaz',
-    descEN: 'Spot at least 1 raptor riding the thermal currents.',
-    descES: 'Avista al menos 1 rapaz surcando las corrientes térmicas.',
-    color: '#C86A27',
-    icon: 'Wind',
-    check: (species) => species.some((s) => s.category === 'Raptors & Vultures'),
-  },
-  {
-    id: 'magdalena-master',
-    titleEN: 'Magdalena Master',
-    titleES: 'Maestro del Magdalena',
-    descEN: 'Log 10 total bird species during a single Útica excursion.',
-    descES: 'Registra 10 especies de aves en una sola excursión en Útica.',
-    color: '#4A7256',
-    icon: 'Trophy',
-    check: (species) => species.length >= 10,
-  },
-  {
-    id: 'riverbank-ranger',
-    titleEN: 'Riverbank Ranger',
-    titleES: 'Guardián del Río',
-    descEN: 'Spot at least 2 water-adjacent or riverside bird species.',
-    descES: 'Avista al menos 2 especies de aves ribereñas.',
-    color: '#3A7CA5',
-    icon: 'Waves',
-    check: (species) => distinctCount(species, (s) => nameIncludes(s, ['kingfisher', 'heron', 'egret', 'martín pescador', 'garza'])) >= 2,
-  },
-  {
-    id: 'valley-trailblazer',
-    titleEN: 'Valley Trailblazer',
-    titleES: 'Pionero del Valle',
-    descEN: 'Complete a full Útica excursion and log 15+ total species.',
-    descES: 'Completa una excursión completa en Útica con 15+ especies.',
-    color: '#F0803C',
-    icon: 'Mountain',
-    check: (species) => species.length >= 15,
-  },
-];
-
-export function getBadges(location?: string): BadgeDef[] {
-  return location === 'utica' ? uticaBadges : corcovadoBadges;
-}
