@@ -2,7 +2,10 @@ import { useState } from 'react';
 import { supabase } from '../supabase';
 
 interface LoginProps {
-  onLogin: (guideId: string, guideName: string) => void;
+  // 3rd arg: the location this company actually belongs to (from Supabase),
+  // so the caller can route the guide to their real dataset instead of
+  // whatever location happened to be in the URL when they logged in.
+  onLogin: (guideId: string, guideName: string, companyLocation: string | null) => void;
   language: 'EN' | 'ES';
   setLanguage: (lang: 'EN' | 'ES') => void;
 }
@@ -20,10 +23,12 @@ export function LoginScreen({ onLogin, language, setLanguage }: LoginProps) {
     setError('');
     setLoading(true);
 
-    // 2. Updated Logic: Find company by the handle they typed
+    // 2. Updated Logic: Find company by the handle they typed.
+    // NOTE: `location` here is what actually decides which dataset/app-shell
+    // the guide lands in — NOT the URL they happened to log in from.
     const { data: companyData, error: companyError } = await supabase
       .from('companies')
-      .select('id, password')
+      .select('id, password, location')
       .eq('handle', companyHandle.toLowerCase().trim())
       .single();
 
@@ -61,7 +66,7 @@ export function LoginScreen({ onLogin, language, setLanguage }: LoginProps) {
     }
 
     setLoading(false);
-    onLogin(currentGuideId, guideName);
+    onLogin(currentGuideId, guideName, companyData.location ?? null);
   };
 
   return (
