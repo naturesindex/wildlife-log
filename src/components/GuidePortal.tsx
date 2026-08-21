@@ -1,10 +1,11 @@
 import { LoginScreen } from './LoginScreen';
 import { supabase } from '../supabase';
 import { useState, useMemo, useEffect, useCallback } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Species, BioCategory } from '../types';
 import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
+import { LOCATIONS } from '../data/locations';
 import { Header } from './Header';
 import { SearchBar, CategoryTabs } from './Filters';
 import { SpeciesGrid } from './SpeciesGrid';
@@ -36,8 +37,13 @@ function normalize(raw: Species): Species {
 }
 
 export function GuidePortal() {
-  // Traffic Cop: Check the URL to see which location we are in
+  // Traffic Cop: Check the URL to see which location we are in.
+  // NOTE: this is only a starting guess — whichever company the guide
+  // actually logs in as is what determines the real location (see onLogin
+  // below). Falling back to 'corcovado' here just picks a default dataset
+  // to render behind the login screen; it's never trusted post-login.
   const { location } = useParams<{ location: string }>();
+  const navigate = useNavigate();
   const locKey = location || 'corcovado';
   const activeDataset = locKey === 'utica' ? uticaSpecies : initialSpecies;
 
@@ -328,7 +334,23 @@ const handleGenerateClick = async () => {
   if (!guideId) {
     return (
       <LoginScreen 
-        onLogin={(id, name) => {
+        onLogin={(id, name, companyLocation) => {
+          // The company's actual location (from Supabase) wins — not
+          // whatever :location happened to be in the URL. If they don't
+          // match, stash the login under the CORRECT location's storage
+          // keys and navigate there, so the guide lands on their real
+          // dataset instead of whichever URL they logged in from.
+          const resolvedLocation = companyLocation && LOCATIONS[companyLocation]
+            ? companyLocation
+            : locKey;
+
+          if (resolvedLocation !== locKey) {
+            localStorage.setItem(`${resolvedLocation}_guide_id`, id);
+            localStorage.setItem(`${resolvedLocation}_guide_name`, name);
+            navigate(`/${resolvedLocation}/guide`, { replace: true });
+            return;
+          }
+
           setGuideId(id);
           setGuideName(name);
         }} 
