@@ -2,6 +2,7 @@ import { Search, X, Star } from 'lucide-react';
 import { BioCategory, Language } from '../types';
 import { getCategories } from '../data/constants';
 
+
 interface SearchBarProps {
   value: string;
   onChange: (value: string) => void;
