@@ -159,7 +159,12 @@ const howItWorksRef = useRef<HTMLElement>(null);
             <button onClick={() => setLanguage('ES')} className={`px-2 sm:px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold transition-all ${language === 'ES' ? 'bg-[#F0803C] text-white' : 'text-[#99C2A2] hover:text-white'}`}>ES</button>
           </div>
           <button 
-            onClick={() => navigate('/corcovado/guide')}
+            // Was hardcoded to '/corcovado/guide' — every guide, regardless of
+            // location, landed in Corcovado's app shell before their login
+            // even mattered. '/guide' is a location-less entry point;
+            // GuidePortal now resolves + redirects to the guide's real
+            // location as soon as they log in.
+            onClick={() => navigate('/guide')}
             className="flex items-center gap-2 bg-[#16697A] hover:bg-[#125866] text-white px-3 sm:px-5 py-2 sm:py-2.5 rounded-full text-sm font-bold transition-all border border-[#99C2A2]/30"
           >
             <UserCircle size={18} />
