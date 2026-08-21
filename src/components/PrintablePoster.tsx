@@ -55,32 +55,48 @@ const POSTER_W = 850;
   const extras = (masterList as Species[]).filter(s => !seenIds.has(s.id));
   const allSpecies = [...loggedSpecies, ...extras];
 
-  // Sort by rarity descending
-  const sorted = [...allSpecies]
-    .sort((a, b) => (b.rarityScore || 0) - (a.rarityScore || 0));
-  // Greedy column-fill: assign each species to the shortest column
+  // Sort so a guide's real sightings always win a spot before "filler"
+  // extras do — if a column ever does run out of room, it's the filler
+  // that gets left off, never something the guest actually saw. Rarer
+  // species still lead within each group, same as before.
+  const sorted = [...allSpecies].sort((a, b) => {
+    const aLogged = seenIds.has(a.id) ? 1 : 0;
+    const bLogged = seenIds.has(b.id) ? 1 : 0;
+    if (aLogged !== bLogged) return bLogged - aLogged;
+    return (b.rarityScore || 0) - (a.rarityScore || 0);
+  });
+
+  // Greedy column-fill: assign each species to the column that most wants it
   const colHeights = Array(NUM_COLS).fill(0);
   const columns: Species[][] = Array.from({ length: NUM_COLS }, () => []);
 
-for (const species of sorted) {
+  // Target heights create the "Diamond" shape — inner columns (1, 2) fill
+  // the full grid height, outer columns (0, 3) stop a bit short. These are
+  // shaping preferences ONLY, and every one of them is <= GRID_H.
+  // Previously these intentionally targeted GRID_H + 200 / + 530 ("grab 1-2
+  // more photos") — that overshoot got silently clipped by `overflow:
+  // hidden`, chopping off the bottom-most photo's caption in each column,
+  // and left `justifyContent: space-evenly` with no leftover room to
+  // actually space things out. That's the squished/invisible-name bug.
+  const targetHeights = [GRID_H * 0.82, GRID_H, GRID_H, GRID_H * 0.82];
+
+  for (const species of sorted) {
     const ar = estimateAspectRatio(species);
     const imgH = COL_W / ar + LABEL_H;
-    
-   // Define custom target heights for our 4 columns to create the "Diamond" shape
-    // Outer columns (0 and 3) stop early, inner columns (1 and 2) pack heavily
-    // BUMPED UP: We made the math greedier so it grabs 1-2 more photos to fill those gaps!
-    const targetHeights = [GRID_H + 200, GRID_H + 530, GRID_H + 530, GRID_H + 200];
-    
-    // Calculate which column has the most space left to reach its specific target
-    const spaceLeft = colHeights.map((h, i) => targetHeights[i] - h);
-    const maxSpace = Math.max(...spaceLeft);
-    
-    // If the column with the most space still needs photos, add one!
-    if (maxSpace > 0) {
-      const bestColIdx = spaceLeft.indexOf(maxSpace);
-      columns[bestColIdx].push(species);
-      colHeights[bestColIdx] += imgH + GAP;
-    }
+
+    // Hard cap: a column is only eligible if this photo would still fit
+    // inside the real, visible GRID_H — not just "has room left toward its
+    // target." This is what guarantees nothing ever overflows the poster,
+    // no matter how the target heights are tuned.
+    const eligible = colHeights
+      .map((h, i) => ({ i, spaceLeft: targetHeights[i] - h, fits: h + imgH + GAP <= GRID_H }))
+      .filter((c) => c.fits);
+
+    if (eligible.length === 0) continue; // every column is genuinely full — stop
+
+    const best = eligible.reduce((a, b) => (b.spaceLeft > a.spaceLeft ? b : a));
+    columns[best.i].push(species);
+    colHeights[best.i] += imgH + GAP;
   }
 
   // NOTE: this used to scaleY() each column's stack to force it to exactly
