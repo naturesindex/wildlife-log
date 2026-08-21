@@ -20,7 +20,9 @@ interface PrintablePosterProps {
 
 // Extra vertical space each photo needs for the name/scientific-name block
 // that now renders BELOW the image instead of overlaid on top of it.
-const LABEL_H = 34;
+// Tightened from 34 -> 22px (matches the actual text block size) so more
+// photos fit per column without the layout feeling sparse.
+const LABEL_H = 22;
 
 // Estimate aspect ratio from known photo orientations
 // Falls back to 1.0 (square) if unknown
@@ -34,7 +36,7 @@ function estimateAspectRatio(species: Species): number {
 }
 
 const NUM_COLS = 4;
-const GAP = 7; // px between photos and columns
+const GAP = 5; // px between photos and columns — tightened from 7 so the grid reads denser
 
 export function PrintablePoster({ loggedSpecies, language, guideName, onClose, tourDate, location, guestName }: PrintablePosterProps) {
   const posterRef = useRef<HTMLDivElement>(null);
@@ -71,14 +73,13 @@ const POSTER_W = 850;
   const columns: Species[][] = Array.from({ length: NUM_COLS }, () => []);
 
   // Target heights create the "Diamond" shape — inner columns (1, 2) fill
-  // the full grid height, outer columns (0, 3) stop a bit short. These are
-  // shaping preferences ONLY, and every one of them is <= GRID_H.
-  // Previously these intentionally targeted GRID_H + 200 / + 530 ("grab 1-2
-  // more photos") — that overshoot got silently clipped by `overflow:
-  // hidden`, chopping off the bottom-most photo's caption in each column,
-  // and left `justifyContent: space-evenly` with no leftover room to
-  // actually space things out. That's the squished/invisible-name bug.
-  const targetHeights = [GRID_H * 0.82, GRID_H, GRID_H, GRID_H * 0.82];
+  // the full grid height, outer columns (0, 3) stop a bit shorter. These are
+  // shaping preferences ONLY, and every one of them is <= GRID_H (the hard
+  // cap below is what actually prevents overflow, not these numbers).
+  // Bumped the outer columns from 0.82 -> 0.92 — with LABEL_H and GAP both
+  // tightened above, and the hard cap still doing its job, this lands more
+  // photos per poster while staying comfortably inside the visible area.
+  const targetHeights = [GRID_H * 0.92, GRID_H, GRID_H, GRID_H * 0.92];
 
   for (const species of sorted) {
     const ar = estimateAspectRatio(species);
