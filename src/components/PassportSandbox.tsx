@@ -7,6 +7,7 @@ import { PrintablePoster } from './PrintablePoster';
 import { getLocationConfig, getSectionColor, getSectionLabel, resolveSectionOrder } from '../data/locations';
 import { getBadges, BadgeIconKey } from '../data/badges';
 
+
 // Custom Hook for counting up (or down) numbers smoothly!
 function useCountUp(end: number, start: number = 0, duration: number = 4000, isFloat: boolean = false, startTrigger: boolean = true) {
   const [count, setCount] = useState(start);
