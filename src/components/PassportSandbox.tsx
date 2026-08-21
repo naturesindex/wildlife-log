@@ -89,6 +89,14 @@ export function PassportSandbox({
   const [flippedId, setFlippedId] = useState<string | null>(null);
   const [mapFlipped, setMapFlipped] = useState(false);
 
+  // This view swaps in over the Lobby/ExportView without a real route
+  // change, so the page otherwise keeps whatever scroll position it had
+  // before (e.g. scrolled partway down the recent-tours list) — it opens
+  // "mid-scroll" instead of at the top. Force it to the top on mount.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
   const loggedSpecies = rawSpecies || [];
   const totalSpecies = loggedSpecies.length;
 
