@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { Species, Language } from '../types';
 import { getLocationConfig, getSectionColor, getSectionLabel, resolveSectionOrder } from '../data/locations';
 
@@ -104,6 +105,14 @@ function GridEntry({
 
 export function WildlifePassport({ loggedSpecies, language, guideName, location }: PassportProps) {
   const config = getLocationConfig(location);
+
+  // Same fix as PassportSandbox: this view can mount while the guest's
+  // browser is still scrolled from whatever tab/section they were on
+  // before, so it opens "mid-scroll" instead of at the top.
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
 
   // Generate the date dynamically based on the current language tab
   const dateLocale = language === 'EN' ? 'en-US' : 'es-ES';
