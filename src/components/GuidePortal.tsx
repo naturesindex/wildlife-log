@@ -753,6 +753,7 @@ setExpeditionType={(newType: string) => {
         </div>
       )}
 
+      
    </div>
   );
 }
