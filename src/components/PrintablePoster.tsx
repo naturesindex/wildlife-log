@@ -4,7 +4,7 @@ import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
 import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
-import { getLocationConfig, getSectionColor } from '../data/locations';
+import { getLocationConfig } from '../data/locations';
 
 interface PrintablePosterProps {
   loggedSpecies: Species[];
@@ -18,11 +18,13 @@ interface PrintablePosterProps {
   guestName?: string;
 }
 
-// Extra vertical space each photo needs for the name/scientific-name block.
-// The name pill now overlaps the bottom of the photo (half in, half out —
-// same look as the Passport view's NameBadge), so only ~half its height
-// actually adds to the column, plus the italic scientific name below it.
-const LABEL_H = 20;
+// Extra vertical space each photo needs below it for the pill's overhang.
+// The pill now holds BOTH the name and the scientific name stacked inside
+// it (not sci-name as a separate line below) — same overlap trick as
+// before (half in / half out of the photo), just a taller pill to fit
+// both lines. Card-to-card spacing is handled by the wrapper's
+// marginBottom below, not this constant.
+const LABEL_H = 15;
 
 // Estimate aspect ratio from known photo orientations
 // Falls back to 1.0 (square) if unknown
@@ -36,7 +38,12 @@ function estimateAspectRatio(species: Species): number {
 }
 
 const NUM_COLS = 4;
-const GAP = 5; // px between photos and columns — tightened from 7 so the grid reads denser
+const GAP = 4; // px between photos and columns — tightened further (was 5)
+
+// The one consistent brand orange used everywhere else in the app (header
+// dates, buttons, brand name) — using it here too instead of per-section
+// colors, per your note that you want one solid color for consistency.
+const BRAND_ORANGE = '#C86A27';
 
 export function PrintablePoster({ loggedSpecies, language, guideName, onClose, tourDate, location, guestName }: PrintablePosterProps) {
   const posterRef = useRef<HTMLDivElement>(null);
@@ -267,16 +274,16 @@ return (
                 {col.map((species) => {
                   const label = language === 'EN' ? species.nameEN : species.nameES;
                   const sci = species.scientificName || '';
-                  const pillColor = getSectionColor(config, species.section);
                   return (
                     <div
                       key={species.id}
                       style={{
                         width: '100%',
                         overflow: 'visible',
-                        // Room for the pill to overhang the bottom of the
-                        // photo, plus the sci-name line underneath it.
-                        marginBottom: '10px',
+                        // Just enough room for the pill's overhang below the
+                        // photo, plus a little breathing room before the
+                        // next card — tightened way down from before.
+                        marginBottom: '9px',
                       }}
                     >
                       <div style={{ position: 'relative' }}>
@@ -290,19 +297,21 @@ return (
                             filter: 'sepia(6%) saturate(108%)',
                           }}
                         />
-                        {/* Name pill — same visual language as the Passport
-                            view's NameBadge: solid color, overlapping the
-                            bottom edge of the photo, half in / half out. */}
+                        {/* Name + scientific name pill — ONE solid brand-orange
+                            pill holding both lines, overlapping the bottom
+                            edge of the photo (half in / half out). Sized to
+                            actually fit both lines now instead of clipping
+                            the second one. */}
                         <div style={{
                           position: 'absolute',
                           bottom: 0,
                           left: '50%',
                           transform: 'translate(-50%, 50%)',
-                          width: '90%',
-                          padding: '2px 5px',
-                          borderRadius: '5px',
+                          width: '92%',
+                          padding: '3px 5px 4px',
+                          borderRadius: '6px',
                           textAlign: 'center',
-                          backgroundColor: pillColor,
+                          backgroundColor: BRAND_ORANGE,
                           boxShadow: '0 2px 4px rgba(0,0,0,0.35)',
                         }}>
                           <div style={{
@@ -312,27 +321,24 @@ return (
                             letterSpacing: '0.06em',
                             color: '#FFFFFF',
                             textTransform: 'uppercase',
-                            lineHeight: 1.2,
+                            lineHeight: 1.25,
                           }}>
                             {label}
                           </div>
+                          {sci && (
+                            <div style={{
+                              fontFamily: '"Georgia", serif',
+                              fontStyle: 'italic',
+                              fontSize: '5.5px',
+                              color: 'rgba(255,255,255,0.85)',
+                              lineHeight: 1.2,
+                              marginTop: '1px',
+                            }}>
+                              {sci}
+                            </div>
+                          )}
                         </div>
                       </div>
-                      {/* Scientific name sits below the photo+pill, outside
-                          the overlap, so it never gets crowded by the pill. */}
-                      {sci && (
-                        <div style={{
-                          fontFamily: '"Georgia", serif',
-                          fontStyle: 'italic',
-                          fontSize: '6px',
-                          color: 'rgba(44,62,53,0.65)',
-                          textAlign: 'center',
-                          marginTop: '5px',
-                          padding: '0 4px',
-                        }}>
-                          {sci}
-                        </div>
-                      )}
                     </div>
                   );
                 })}
