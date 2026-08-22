@@ -10,6 +10,18 @@ export interface LocationConfig {
   /** Distance/km stat only makes sense for trekking tours, not birding */
   showDistance: boolean;
   premiumPriceUSD: number;
+  /** Guest-facing commerce config for the passport purchase + tip flow.
+   *  Not wired to a real Stripe charge yet (see GuestPortal.tsx) — this is
+   *  the single source of truth for what guests see AND what the
+   *  guide-earnings dashboard uses to compute real totals, so once
+   *  checkout does go live, nothing else needs to change.
+   *  `passportPrice` / `guidePayoutPerSale` are in `currency`'s major
+   *  units (dollars or pesos), not the cents Stripe itself expects. */
+  commerce: {
+    currency: 'usd' | 'cop';
+    passportPrice: number;
+    guidePayoutPerSale: number;
+  };
   /** Small-caps line under the big poster title, e.g. "National Park • Costa Rica" */
   posterRegionEN: string;
   posterRegionES: string;
@@ -42,6 +54,13 @@ export const LOCATIONS: Record<string, LocationConfig> = {
     taglineES: 'Expedición en la Selva',
     showDistance: true,
     premiumPriceUSD: 15,
+    // $1.99 passport, guide keeps a flat $1 of it (per your note) — the
+    // remaining $0.99 is the platform's cut. Confirm before this goes live.
+    commerce: {
+      currency: 'usd',
+      passportPrice: 1.99,
+      guidePayoutPerSale: 1.00,
+    },
     posterRegionEN: 'National Park • Costa Rica',
     posterRegionES: 'Parque Nacional • Costa Rica',
     introEN: (_guestName, guideName) =>
@@ -80,6 +99,15 @@ export const LOCATIONS: Record<string, LocationConfig> = {
     taglineES: 'Naturaleza Viva',
     showDistance: false,
     premiumPriceUSD: 2.99,
+    // ASSUMPTION — please confirm: ~10,000 COP guest price, guide payout
+    // scaled to the same ~50% split as Corcovado's $1/$1.99 (~5,025 COP).
+    // I don't know yet whether you want the guide's cut actually paid out
+    // in COP or converted to a flat USD amount — see my note in chat.
+    commerce: {
+      currency: 'cop',
+      passportPrice: 10000,
+      guidePayoutPerSale: 5025,
+    },
     posterRegionEN: 'Cundinamarca • Colombia',
     posterRegionES: 'Cundinamarca • Colombia',
     introEN: (_guestName, guideName) =>
@@ -125,6 +153,16 @@ export const LOCATIONS: Record<string, LocationConfig> = {
 
 export function getLocationConfig(locKey?: string | null): LocationConfig {
   return LOCATIONS[locKey || 'corcovado'] || LOCATIONS.corcovado;
+}
+
+/** Formats a `commerce`-config amount for display, e.g. "$1.99" or
+ *  "$10.000 COP". Keeps every price display in the app (guest checkout,
+ *  guide earnings dashboard) reading from the same formatting rule. */
+export function formatMoney(amount: number, currency: 'usd' | 'cop'): string {
+  if (currency === 'cop') {
+    return `$${Math.round(amount).toLocaleString('es-CO')} COP`;
+  }
+  return `$${amount.toFixed(2)}`;
 }
 
 export function getSectionColor(config: LocationConfig, section: string): string {
