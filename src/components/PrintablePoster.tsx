@@ -4,7 +4,7 @@ import { toPng } from 'html-to-image';
 import { Species, Language } from '../types';
 import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
-import { getLocationConfig } from '../data/locations';
+import { getLocationConfig, getSectionColor } from '../data/locations';
 
 interface PrintablePosterProps {
   loggedSpecies: Species[];
@@ -18,11 +18,11 @@ interface PrintablePosterProps {
   guestName?: string;
 }
 
-// Extra vertical space each photo needs for the name/scientific-name block
-// that now renders BELOW the image instead of overlaid on top of it.
-// Tightened from 34 -> 22px (matches the actual text block size) so more
-// photos fit per column without the layout feeling sparse.
-const LABEL_H = 22;
+// Extra vertical space each photo needs for the name/scientific-name block.
+// The name pill now overlaps the bottom of the photo (half in, half out —
+// same look as the Passport view's NameBadge), so only ~half its height
+// actually adds to the column, plus the italic scientific name below it.
+const LABEL_H = 20;
 
 // Estimate aspect ratio from known photo orientations
 // Falls back to 1.0 (square) if unknown
@@ -267,52 +267,72 @@ return (
                 {col.map((species) => {
                   const label = language === 'EN' ? species.nameEN : species.nameES;
                   const sci = species.scientificName || '';
+                  const pillColor = getSectionColor(config, species.section);
                   return (
                     <div
                       key={species.id}
                       style={{
                         width: '100%',
-                        overflow: 'hidden',
+                        overflow: 'visible',
+                        // Room for the pill to overhang the bottom of the
+                        // photo, plus the sci-name line underneath it.
+                        marginBottom: '10px',
                       }}
                     >
-                      <img
-                        src={species.image}
-                        alt={label}
-                        style={{
-                          width: '100%',
-                          height: 'auto',
-                          display: 'block',
-                          filter: 'sepia(6%) saturate(108%)',
-                        }}
-                      />
-                      {/* Name/scientific-name now sits BELOW the photo, in normal
-                          flow, instead of overlaid on top of it — so faces are
-                          never covered by text. */}
-                      <div style={{ padding: '4px 4px 0 4px' }}>
+                      <div style={{ position: 'relative' }}>
+                        <img
+                          src={species.image}
+                          alt={label}
+                          style={{
+                            width: '100%',
+                            height: 'auto',
+                            display: 'block',
+                            filter: 'sepia(6%) saturate(108%)',
+                          }}
+                        />
+                        {/* Name pill — same visual language as the Passport
+                            view's NameBadge: solid color, overlapping the
+                            bottom edge of the photo, half in / half out. */}
                         <div style={{
-                          fontFamily: 'sans-serif',
-                          fontWeight: 700,
-                          fontSize: '7px',
-                          letterSpacing: '0.08em',
-                          color: '#1C2B22',
-                          textTransform: 'uppercase',
+                          position: 'absolute',
+                          bottom: 0,
+                          left: '50%',
+                          transform: 'translate(-50%, 50%)',
+                          width: '90%',
+                          padding: '2px 5px',
+                          borderRadius: '5px',
                           textAlign: 'center',
+                          backgroundColor: pillColor,
+                          boxShadow: '0 2px 4px rgba(0,0,0,0.35)',
                         }}>
-                          {label}
-                        </div>
-                        {sci && (
                           <div style={{
-                            fontFamily: '"Georgia", serif',
-                            fontStyle: 'italic',
-                            fontSize: '6px',
-                            color: 'rgba(44,62,53,0.65)',
-                            textAlign: 'center',
-                            marginTop: '1px',
+                            fontFamily: 'sans-serif',
+                            fontWeight: 700,
+                            fontSize: '6.5px',
+                            letterSpacing: '0.06em',
+                            color: '#FFFFFF',
+                            textTransform: 'uppercase',
+                            lineHeight: 1.2,
                           }}>
-                            {sci}
+                            {label}
                           </div>
-                        )}
+                        </div>
                       </div>
+                      {/* Scientific name sits below the photo+pill, outside
+                          the overlap, so it never gets crowded by the pill. */}
+                      {sci && (
+                        <div style={{
+                          fontFamily: '"Georgia", serif',
+                          fontStyle: 'italic',
+                          fontSize: '6px',
+                          color: 'rgba(44,62,53,0.65)',
+                          textAlign: 'center',
+                          marginTop: '5px',
+                          padding: '0 4px',
+                        }}>
+                          {sci}
+                        </div>
+                      )}
                     </div>
                   );
                 })}
