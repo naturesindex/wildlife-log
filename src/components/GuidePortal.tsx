@@ -5,7 +5,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { Species, BioCategory } from '../types';
 import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
-import { LOCATIONS } from '../data/locations';
+import { LOCATIONS, formatMoney } from '../data/locations';
 import { Header } from './Header';
 import { SearchBar, CategoryTabs } from './Filters';
 import { SpeciesGrid } from './SpeciesGrid';
@@ -105,12 +105,32 @@ const [showExpeditionModal, setShowExpeditionModal] = useState(false);
   const [sandboxMeta, setSandboxMeta] = useState<{ expeditionType?: string; tourDate?: string }>({});
   const [showArchive, setShowArchive] = useState(false); // NEW: Archive State
 
+  // Real earnings data. Replaces the old `recentTours.length * 10` flat
+  // stand-in — that number was never real revenue, just a tours-count
+  // placeholder. Empty/zero here is the ACCURATE state until Stripe
+  // checkout is actually wired up and the `sales` table starts getting
+  // real rows (see locations.ts `commerce` config + the SQL note for the
+  // `sales` table schema).
+  const [sales, setSales] = useState<{ type: 'passport' | 'tip'; amount: number; created_at: string }[]>([]);
+
   useEffect(() => {
-    // Only fetch if we are in the Lobby (logged in, but no active tour)
     if (guideId && !tourId) {
       fetchRecentTours();
+      fetchSales();
     }
   }, [guideId, tourId]);
+
+  const fetchSales = async () => {
+    // Scoped to this guide only, same convention as `tours` below.
+    const { data, error } = await supabase
+      .from('sales')
+      .select('type, amount, created_at')
+      .eq('guide_id', guideId);
+
+    // If the `sales` table doesn't exist yet in this Supabase project,
+    // fail quietly to $0 rather than breaking the whole Lobby screen.
+    if (!error && data) setSales(data as any);
+  };
 
  useEffect(() => {
     localStorage.setItem(`${locKey}_session_active`, String(sessionActive));
@@ -388,8 +408,17 @@ if (!tourId || !sessionActive) {
   });
   
   const monthName = new Date().toLocaleString(language === 'EN' ? 'en-US' : 'es-ES', { month: 'long' });
-  const allTimeEarnings = recentTours.length * 10;
-  const thisMonthEarnings = thisMonthTours.length * 10;
+
+  // Real earnings — subdivided by the two actual revenue points (passport
+  // sales vs. tips), each summed to the guide's own payout share, not the
+  // guest-facing price. All-time only (not month-filtered) since a sale's
+  // `created_at` is its own timestamp, independent of tour date.
+  const passportSales = sales.filter((s) => s.type === 'passport');
+  const tipSales = sales.filter((s) => s.type === 'tip');
+  const passportEarnings = passportSales.reduce((sum, s) => sum + s.amount, 0);
+  const tipEarnings = tipSales.reduce((sum, s) => sum + s.amount, 0);
+  const allTimeEarnings = passportEarnings + tipEarnings;
+  const locationCommerce = LOCATIONS[locKey]?.commerce ?? LOCATIONS.corcovado.commerce;
   
   // Calculate average species
   const totalSpeciesLogged = recentTours.reduce((sum, t) => sum + (t.tour_logs?.length || 0), 0);
@@ -432,7 +461,15 @@ if (!tourId || !sessionActive) {
             <p className="text-white/50 text-[9px] font-bold uppercase tracking-wider mb-1 text-center">
               {language === 'EN' ? 'Earnings' : 'Ganancias'}
             </p>
-            <p className="text-xl font-black text-white">${allTimeEarnings}</p>
+            <p className="text-xl font-black text-white">{formatMoney(allTimeEarnings, locationCommerce.currency)}</p>
+            {/* Passport sales vs. tips breakdown — the two real revenue
+                points. Both are genuinely $0 until Stripe checkout is
+                wired up and `sales` rows start coming in for real. */}
+            <p className="text-white/40 text-[8px] font-semibold mt-1 text-center leading-tight">
+              {language === 'EN'
+                ? `${passportSales.length} passport · ${tipSales.length} tips`
+                : `${passportSales.length} pasaportes · ${tipSales.length} propinas`}
+            </p>
           </div>
 
           {/* Avg Species Block */}
