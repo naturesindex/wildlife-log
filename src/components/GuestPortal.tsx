@@ -1,9 +1,9 @@
 import { useEffect, useState, useRef } from 'react';
 import { useParams } from 'react-router-dom';
-import { supabase } from '../supabase';
+import { supabase, supabaseUrl } from '../supabase';
 import { initialSpecies } from '../data/corcovado';
 import { uticaSpecies } from '../data/utica';
-import { getLocationConfig } from '../data/locations';
+import { getLocationConfig, formatMoney } from '../data/locations';
 import { Species } from '../types';
 import { SocialStory } from './SocialStory'; // Reusing your fixed graphic component
 import { WildlifePassport } from './WildlifePassport';
@@ -17,9 +17,18 @@ export function GuestPortal() {
   const [guideName, setGuideName] = useState('Your Guide');
   const [loggedSpecies, setLoggedSpecies] = useState<Species[]>([]);
   const [locKey, setLocKey] = useState('corcovado');
+  const [guideId, setGuideId] = useState<string | null>(null);
   const [guestName, setGuestName] = useState('');
   const [language, setLanguage] = useState<'EN' | 'ES'>('EN');
   const config = getLocationConfig(locKey);
+
+  // Tip selection state — a guest picks one of the location's preset
+  // amounts, or types a custom one. Only one of the two is "active" at a
+  // time; picking a preset clears any custom entry and vice versa.
+  const [selectedTipPreset, setSelectedTipPreset] = useState<number | null>(null);
+  const [showCustomTip, setShowCustomTip] = useState(false);
+  const [customTipAmount, setCustomTipAmount] = useState('');
+  const tipAmount = showCustomTip ? Number(customTipAmount) || 0 : selectedTipPreset ?? 0;
   
   const snapshotRef = useRef<HTMLDivElement>(null);
   const checkoutRef = useRef<HTMLDivElement>(null);
@@ -40,6 +49,7 @@ export function GuestPortal() {
       .single();
 
     if (tourData) {
+      setGuideId(tourData.guide_id);
       // 2. Get the Guide's Name
       const { data: guideData } = await supabase
         .from('guides')
@@ -67,6 +77,46 @@ export function GuestPortal() {
       setLoggedSpecies(matchedSpecies);
     }
     setLoading(false);
+  };
+
+  const [checkoutLoading, setCheckoutLoading] = useState<'passport' | 'tip' | null>(null);
+
+  // Calls the create-checkout-session Edge Function and redirects the
+  // guest to Stripe's hosted checkout page. Handles both the passport
+  // purchase and a tip the same way — the split (guide's flat $1 / 3,000
+  // COP for a passport, or 100% for a tip) happens server-side.
+  const startCheckout = async (type: 'passport' | 'tip') => {
+    if (!guideId) return;
+    if (type === 'tip' && tipAmount <= 0) return;
+    setCheckoutLoading(type);
+    try {
+      const res = await fetch(
+        `${supabaseUrl}/functions/v1/create-checkout-session`,
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            tourId,
+            guideId,
+            location: locKey,
+            type,
+            guestName: guestName || undefined,
+            tipAmount: type === 'tip' ? tipAmount : undefined,
+          }),
+        }
+      );
+      const data = await res.json();
+      if (data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(data.error || 'Something went wrong starting checkout.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Could not reach checkout. Please try again.');
+    } finally {
+      setCheckoutLoading(null);
+    }
   };
 
   const handleDownloadFreebie = async () => {
@@ -226,15 +276,54 @@ export function GuestPortal() {
            <h3 className="text-xl font-bold mb-2 relative z-10">{language === 'EN' ? `Loved your trek with ${guideName}?` : `¿Te encantó tu caminata con ${guideName}?`}</h3>
            <p className="text-emerald-400 text-sm mb-4 relative z-10">{language === 'EN' ? '100% of tips go directly to your guide.' : 'El 100% de las propinas van a tu guía.'}</p>
            <div className="flex gap-2 relative z-10">
-              {['$5', '$10', '$20'].map(amt => (
-                <button key={amt} className="flex-1 bg-white/10 hover:bg-[#C86A27] transition-colors py-3 rounded-xl font-bold border border-white/20 hover:border-[#C86A27]">
-                  {amt}
+              {config.commerce.tipPresets.map((amt) => (
+                <button
+                  key={amt}
+                  onClick={() => { setSelectedTipPreset(amt); setShowCustomTip(false); }}
+                  className={`flex-1 transition-colors py-3 rounded-xl font-bold border ${
+                    selectedTipPreset === amt && !showCustomTip
+                      ? 'bg-[#C86A27] border-[#C86A27]'
+                      : 'bg-white/10 hover:bg-[#C86A27] border-white/20 hover:border-[#C86A27]'
+                  }`}
+                >
+                  {formatMoney(amt, config.commerce.currency)}
                 </button>
               ))}
-              <button className="flex-1 bg-white/10 hover:bg-white/20 transition-colors py-3 rounded-xl font-bold border border-white/20">
+              <button
+                onClick={() => setShowCustomTip(true)}
+                className={`flex-1 transition-colors py-3 rounded-xl font-bold border ${
+                  showCustomTip ? 'bg-[#C86A27] border-[#C86A27]' : 'bg-white/10 hover:bg-white/20 border-white/20'
+                }`}
+              >
                 {language === 'EN' ? 'Custom' : 'Otro'}
               </button>
            </div>
+           {showCustomTip && (
+             <div className="relative z-10 mt-3">
+               <input
+                 type="number"
+                 min={0}
+                 inputMode="decimal"
+                 placeholder={config.commerce.currency === 'cop' ? 'e.g., 15000' : 'e.g., 15'}
+                 value={customTipAmount}
+                 onChange={(e) => setCustomTipAmount(e.target.value)}
+                 className="w-full bg-white/10 border border-white/20 rounded-xl p-3 text-white text-center outline-none focus:border-[#C86A27] font-bold"
+               />
+             </div>
+           )}
+           <button
+             onClick={() => startCheckout('tip')}
+             disabled={tipAmount <= 0 || checkoutLoading === 'tip'}
+             className={`relative z-10 w-full mt-4 py-3 rounded-xl font-black transition-all ${
+               tipAmount > 0 ? 'bg-emerald-500 hover:bg-emerald-400 text-white' : 'bg-white/10 text-white/30 cursor-not-allowed'
+             }`}
+           >
+             {checkoutLoading === 'tip'
+               ? '...'
+               : language === 'EN'
+               ? `Send Tip${tipAmount > 0 ? ` — ${formatMoney(tipAmount, config.commerce.currency)}` : ''}`
+               : `Enviar Propina${tipAmount > 0 ? ` — ${formatMoney(tipAmount, config.commerce.currency)}` : ''}`}
+           </button>
         </div>
 
         {/* 5. PERSONALIZATION & CHECKOUT */}
@@ -252,14 +341,17 @@ export function GuestPortal() {
           />
 
           <button 
-            disabled={!guestName.trim()}
+            disabled={!guestName.trim() || checkoutLoading === 'passport'}
+            onClick={() => startCheckout('passport')}
             className={`w-full py-5 rounded-2xl font-black text-lg transition-all shadow-lg flex items-center justify-center gap-3
               ${guestName.trim() 
                 ? 'bg-[#C86A27] text-white hover:bg-[#b05a1f] hover:scale-[1.02] shadow-[#C86A27]/30' 
                 : 'bg-stone-200 text-stone-400 cursor-not-allowed'}`}
           >
             <Lock className="w-5 h-5" />
-            {language === 'EN' ? `Purchase Passport - $${config.premiumPriceUSD}` : `Comprar Pasaporte - $${config.premiumPriceUSD}`}
+            {checkoutLoading === 'passport'
+              ? '...'
+              : language === 'EN' ? `Purchase Passport - ${formatMoney(config.commerce.passportPrice, config.commerce.currency)}` : `Comprar Pasaporte - ${formatMoney(config.commerce.passportPrice, config.commerce.currency)}`}
           </button>
        <p className="text-center text-xs text-stone-400 mt-4 font-medium">
              {language === 'EN' ? 'Secure payment via Stripe. Instant access.' : 'Pago seguro vía Stripe. Acceso instantáneo.'}
